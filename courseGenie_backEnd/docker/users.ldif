@@ -14,7 +14,7 @@ uidNumber: 1000
 gidNumber: 1000
 homeDirectory: /home/user1
 loginShell: /bin/bash
-userPassword: test1
+userPassword: user1123
 mail: user1@course.com
 
 dn: uid=user2,ou=Users,dc=course,dc=genie
@@ -29,7 +29,7 @@ uidNumber: 1001
 gidNumber: 1000
 homeDirectory: /home/user2
 loginShell: /bin/bash
-userPassword: test2
+userPassword: user2123
 mail: user2@course.com
 
 dn: uid=axacad5,ou=Users,dc=course,dc=genie
@@ -46,3 +46,153 @@ homeDirectory: /home/axacad5
 loginShell: /bin/bash
 userPassword: ali123
 mail: axacad5@rit.edu
+
+dn: uid=axmcad4,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Ahmed Mostafa
+sn: Mostafa
+givenName: Ahmed
+uid: axmcad4
+uidNumber: 1003
+gidNumber: 1000
+homeDirectory: /home/axmcad4
+loginShell: /bin/bash
+userPassword: ahmed123
+mail: axmcad4@rit.edu
+
+dn: uid=hkscad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Huda Saadeh
+sn: Saadeh
+givenName: Huda
+uid: hkscad
+uidNumber: 1004
+gidNumber: 1000
+homeDirectory: /home/hkscad
+loginShell: /bin/bash
+userPassword: huda123
+mail: hkscad@rit.edu
+
+dn: uid=qxhcad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Qusai Hasan
+sn: Hasan
+givenName: Qusai
+uid: qxhcad
+uidNumber: 1005
+gidNumber: 1000
+homeDirectory: /home/qxhcad
+loginShell: /bin/bash
+userPassword: qusai123
+mail: qxhcad@rit.edu
+
+dn: uid=mmtcad1,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Mohamed Abdelraheem
+sn: Abdelraheem
+givenName: Mohamed
+uid: mmtcad1
+uidNumber: 1006
+gidNumber: 1000
+homeDirectory: /home/mmtcad1
+loginShell: /bin/bash
+userPassword: mohamed123
+mail: mmtcad1@rit.edu
+
+dn: uid=kxacad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Khalil Al Hussaeni
+sn: Al Hussaeni
+givenName: Khalil
+uid: kxacad
+uidNumber: 1007
+gidNumber: 1000
+homeDirectory: /home/kxacad
+loginShell: /bin/bash
+userPassword: khalil123
+mail: kxacad@rit.edu
+
+dn: uid=zxacad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Zainab Al Zanbouri
+sn: Al Zanbouri
+givenName: Zainab
+uid: zxacad
+uidNumber: 1008
+gidNumber: 1000
+homeDirectory: /home/zxacad
+loginShell: /bin/bash
+userPassword: zainab123
+mail: zxacad@rit.edu
+
+dn: uid=mgacad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Mahmood Albashayreh
+sn: Albashayreh
+givenName: Mahmood
+uid: mgacad
+uidNumber: 1009
+gidNumber: 1000
+homeDirectory: /home/mgacad
+loginShell: /bin/bash
+userPassword: mahmood123
+mail: mgacad@rit.edu
+
+dn: uid=omacad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Omar Abdul Latif
+sn: Abdul Latif
+givenName: Omar
+uid: omacad
+uidNumber: 1010
+gidNumber: 1000
+homeDirectory: /home/omacad
+loginShell: /bin/bash
+userPassword: omar123
+mail: omacad@rit.edu
+
+dn: uid=kxocad1,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Kevser Akpinar
+sn: Akpinar
+givenName: Kevser
+uid: kxocad1
+uidNumber: 1011
+gidNumber: 1000
+homeDirectory: /home/kxocad1
+loginShell: /bin/bash
+userPassword: kevser123
+mail: kxocad1@rit.edu
+
+dn: uid=wxacad,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Wesam Almobaideen
+sn: Almobaideen
+givenName: Wesam
+uid: wxacad
+uidNumber: 1012
+gidNumber: 1000
+homeDirectory: /home/wxacad
+loginShell: /bin/bash
+userPassword: wesam123
+mail: wxacad@rit.edu
