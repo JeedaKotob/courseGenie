@@ -35,7 +35,7 @@ VALUES
   (10,'SWEN 261','Introduction to Software Engineering','An introductory course in software engineering, emphasizing the organizational aspects of software development and software design and implementation by individuals and small teams within a process/product framework.',3,'SWEN','June 2022','June 2022',1,0,0,0, 'CSCI-140 or CSCI-142 or CSCI-242 or SWEN-124 or CSEC-124 or GCIS-124 or equivalent course.', 'None', 0),
   (11,'ISTE 260','Designing the User Experience','The user experience is an important design element in the development of interactive systems. This course presents the foundations of user-centered design principles within the context of human-computer interaction (HCI).',3, 'ISTE','Fall 2013','July 2019',1,0,0,0, 'ISTE-140 or IGME-230 or NACA-172 or equivalent course.', 'None', 0),
   (12,'ISTE 470','Data Mining & Exploration','Rapidly expanding volumes of data from all areas of society are becoming available in digital form. High value information and knowledge is embedded in many of these data volumes.',3,'ISTE','Feb 2018','August 2020',1,0,0,0, '(STAT-145 OR MATH- 251) and (GCIS-124 OR ISTE-121 OR CSCI- 140 OR CSCI-142 OR CSCI-242 OR ISTE-200 OR IGME-201 OR IGME-106) or equivalent courses', 'None', 0),
-  (13,'ISTE 330','Database Conectivity & Access','In this course, students will build applications that interact with databases. Through programming exercises, students will work with multiple databases and programmatically invoke the advanced database processing operations that are integral to contemporary computing applications. ',3,'ISTE','Fall 2013','July 2019',1,0,0,0, '(ISTE-230 or CSCI-320) and (ISTE-120 or GCIS-124 or CSCI-140 or CSCI-142 or CSCI-242) or equivalent courses.', 'None', 0),
+  (13,'ISTE 330','Database Connectivity & Access','In this course, students will build applications that interact with databases. Through programming exercises, students will work with multiple databases and programmatically invoke the advanced database processing operations that are integral to contemporary computing applications. ',3,'ISTE','Fall 2013','July 2019',1,0,0,0, '(ISTE-230 or CSCI-320) and (ISTE-120 or GCIS-124 or CSCI-140 or CSCI-142 or CSCI-242) or equivalent courses.', 'None', 0),
   (14,'ISTE 430','Information Requirements Modeling','Students will survey and apply contemporary techniques used in analyzing and modeling information requirements. Requirements will be elicited in a variety of domains and abstracted at conceptual, logical, and physical levels of detail.',3,'ISTE','Fall 2013','July 2019',1,0,0,0, 'ISTE-230 or CSCI-320 or equivalent course', 'None', 0),
   (15,'NSSA 245','Network Services','This course will investigate the protocols used to support network-based services and the tasks involved in configuring and administering those services in virtualized Linux and Windows internetworking environments.',3,'NSSA','Fall 2013','Dec 2023',1,0,0,0, 'NSSA-241 and (NSSA-220 or CSCI- 141 or GCIS-123) and NSSA-221 or equivalent courses', 'None', 1),
   (16,'NSSA 443','Network Design & Performance','This course will examine the design and performance of networks. Students will learn to design networks based on identified needs and analyze the performance of that network.',3,'NSSA','Fall 2013','May 2020',1,0,0,0, 'NSSA-241', 'None', 1),
@@ -49,10 +49,23 @@ VALUES
 INSERT INTO course_genie.section (section_id, code, term, class_number, schedule, room, teaching_methodology, configured, course_id, professor_id)
 VALUES
   -- Dr. Ali Assi (1)
+#   -- Fall 2024
+#   (1,'607','Fall 2024','17861','MWF 9:00 - 10:50','H107','In Person',1,2,1), -- GCIS 123
+#   (2,'600','Fall 2024','17121','TR 12:00 - 1:20','D114','In Person',1,10,1), -- SWEN 261
+#   (3,'602','Fall 2024','17208','TR 9:00 - 10:20','H106','In Person',1,5,1), -- ISTE 140
+#   (4,'604','Fall 2024','17855','TR 3:00 - 4:20','H106','In Person',1,5,1), -- ISTE 140
+#
+#   -- Spring 2025
+#   (5,'600','Spring 2025','56026','MWF 9:00 - 9:55','D113','In Person',1,1,1), -- ISTE 230
+#   (6,'601','Spring 2025','56295','TR 10:30 - 11:50','H107','In Person',1,1,1), -- ISTE 230
+#   (7,'600','Spring 2025','56027','MWF 10:05 - 11:00','H106','In Person',1,8,1), -- ISTE 240
+#   (8,'601','Spring 2025','56277','TR 1:30 - 2:50','H106','In Person',1,8,1), -- ISTE 240
+
+  -- Fall 2025
   (1,'602','Fall 2025','17638','MW 1:05 - 3:55','D207','In Person',1,2,1), -- GCIS 123
   (2,'600','Fall 2025','17791','TR 3:00 - 4:20','H106','In Person',1,1,1), -- ISTE 230
   (3,'602','Fall 2025','17928','TR 9:00 - 10:20','D113','In Person',1,1,1), -- ISTE 230
-  (4,'600','Fall 2025','17703','TR 1:30 - 2:50','D313','In Person',1,10,1), -- ISTE 230
+  (4,'600','Fall 2025','17703','TR 1:30 - 2:50','D313','In Person',1,10,1), -- SWEN 261
 
   -- Dr. Ahmed Mostafa (2)
   (5,'606','Fall 2025','17840','MW 3:00 - 5:50','D313','In Person',1,2,2), -- GCIS 123
