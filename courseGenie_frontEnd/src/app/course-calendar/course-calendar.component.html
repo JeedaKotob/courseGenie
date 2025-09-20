@@ -1,0 +1,79 @@
+<div class="m-3" cdkDropListGroup>
+  <div class="main-container">
+    <app-course-header
+      [course]="course"
+      [buttons]="headerButtons"
+      (buttonClick)="handleHeaderAction($event)">
+    </app-course-header>
+
+    <!-- ✅ Success message -->
+    <div class="alert-box success" *ngIf="showSuccess">
+      <div class="alert-content">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span>Course calendar saved successfully!</span>
+      </div>
+      <button class="alert-close" (click)="showSuccess = false">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="calendar-content">
+      <!-- Unscheduled Section -->
+      <section class="unscheduled-section">
+        <div class="section-header">
+          <h3>Unscheduled Assessments</h3>
+        </div>
+
+        <div class="dropzone unscheduled-dropzone" cdkDropList [cdkDropListData]="assessments"
+             (cdkDropListDropped)="dropUnscheduled($event)">
+          <div *ngFor="let assessment of assessments" class="assessment-item" cdkDrag>
+            <div class="assessment-content">
+              <span class="assessment-name">{{ assessment.name }}</span>
+              <span class="assessment-points">{{ assessment.maxPoints }}%</span>
+            </div>
+            <div class="drag-placeholder" *cdkDragPlaceholder></div>
+          </div>
+
+          <div class="empty-message" *ngIf="assessments.length === 0">
+            No unscheduled assessments. Drag items here to unschedule.
+          </div>
+        </div>
+      </section>
+
+      <!-- Course Calendar -->
+      <section class="course-calendar">
+        <div class="section-header calendar-header">
+          <h3>Course Calendar</h3>
+        </div>
+
+        <div class="weeks-container">
+          <div *ngFor="let week of weeks" [ngClass]="getWeekClass(week)" class="week">
+            <div class="week-card">
+              <div class="week-header">
+                <h4>Week {{ week.week }}</h4>
+              </div>
+
+              <div class="week-dropzone" cdkDropList [cdkDropListData]="week.assessments"
+                   (cdkDropListDropped)="dropWeek($event)">
+                <div *ngFor="let assessment of week.assessments" class="assessment-item" cdkDrag>
+                  <div class="assessment-content">
+                    <span class="assessment-name">{{ assessment.name }}</span>
+                    <span class="assessment-points">{{ assessment.maxPoints }}%</span>
+                  </div>
+                  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+                </div>
+
+                <div class="empty-message" *ngIf="week.assessments.length === 0">
+                  Drag assessments here
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    </div>
+  </div>
+

@@ -1,0 +1,391 @@
+<div class="m-3">
+  <!-- Course Header Component -->
+  <app-course-header
+    [course]="course"
+    >
+  </app-course-header>
+
+  <div class="report-card">
+    <!-- Benchmark Selectors -->
+    <div class="selector-container p-4 bg-light border-bottom">
+      <div class="benchmark-selectors">
+        <div class="custom-select">
+          <label>First Benchmark</label>
+          <select [(ngModel)]="bm1Id" (change)="getBenchmarkResults()">
+            <option [ngValue]="null" disabled>Select the first benchmark</option>
+            <option *ngFor="let benchmark of benchmarks" [ngValue]="benchmark.benchmarkId">
+              {{ benchmark.description }}
+            </option>
+          </select>
+        </div>
+        <div class="custom-select">
+          <label>Second Benchmark</label>
+          <select [(ngModel)]="bm2Id" (change)="getBenchmarkResults()">
+            <option [ngValue]="null" disabled>Select the second benchmark</option>
+            <option *ngFor="let benchmark of benchmarks" [ngValue]="benchmark.benchmarkId">
+              {{ benchmark.description }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box m-4" *ngIf="!reportings">
+      <div class="info-icon">
+        <i class="bi bi-info-circle-fill"></i>
+      </div>
+      <div class="info-content">
+        <h5>CLO Benchmark Report</h5>
+        <p>Select two benchmarks above to generate a report that shows how well each Course Learning Outcome (CLO) meets the selected benchmark criteria.</p>
+      </div>
+    </div>
+
+    <div class="report-content" *ngIf="reportings">
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+          <tr>
+            <th>CLO</th>
+            <th>Description</th>
+            <th>Assessment Instruments</th>
+            <th>Benchmark Score</th>
+            <th>Result</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let report of reportings">
+            <td class="clo-cell">{{ report.CLO }}</td>
+            <td>{{ report.Description }}</td>
+            <td>{{ report.Assessment_Instruments }}</td>
+            <td [innerHTML]="report.Benchmark_Score" class="benchmark-score"></td>
+            <td>
+                <span class="result-badge" [ngClass]="'result-' + report.Result?.toLowerCase().replace(' ', '-')">
+                  {{ report.Result }}
+                </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Legend -->
+      <div class="result-legend">
+        <h6>Result Legend:</h6>
+        <div class="legend-items">
+          <div class="legend-item">
+            <span class="result-badge result-met">Met</span>
+            <span>CLO has met the benchmark</span>
+          </div>
+          <div class="legend-item">
+            <span class="result-badge result-not-met">Not Met</span>
+            <span>CLO has not met the benchmark</span>
+          </div>
+          <div class="legend-item">
+            <span class="result-badge result-partially">Partially</span>
+            <span>CLO has partially met the benchmark</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="reportings && reportings.length === 0">
+      <div class="empty-icon">
+        <i class="bi bi-clipboard-data"></i>
+      </div>
+      <h5>No Results Available</h5>
+      <p>There are no benchmark results available for the selected criteria. Try selecting different benchmarks.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Main container */
+  .report-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .course-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #024964;
+    margin-bottom: 0;
+    margin-right: 16px;
+  }
+
+  /* Benchmark selectors */
+  .benchmark-selectors {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .custom-select {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+  }
+
+  .custom-select label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .custom-select select {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .custom-select select:focus {
+    border-color: #0394CA;
+    box-shadow: 0 0 0 0.2rem rgba(3, 148, 202, 0.25);
+    outline: none;
+  }
+
+  /* Info box */
+  .info-box {
+    display: flex;
+    margin: 20px;
+    padding: 16px;
+    background-color: #e8f4f8;
+    border-radius: 8px;
+    border-left: 4px solid #0394CA;
+  }
+
+  .info-icon {
+    font-size: 1.5rem;
+    color: #0394CA;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .info-content h5 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+    color: #024964;
+  }
+
+  .info-content p {
+    margin-bottom: 0;
+    color: #495057;
+  }
+
+  /* Report content */
+  .report-content {
+    padding: 20px;
+  }
+
+  /* Custom table */
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .custom-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .custom-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+  }
+
+  .custom-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .custom-table tr:hover {
+    background-color: #f1f9fb;
+  }
+
+  .clo-cell {
+    font-weight: 600;
+    color: #024964;
+  }
+
+  .benchmark-score {
+    font-weight: 500;
+  }
+
+  /* Result badges */
+  .result-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .result-met {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .result-not-met {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .result-partially {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  /* Legend */
+  .result-legend {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .result-legend h6 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #495057;
+  }
+
+  .legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: #6c757d;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    color: #adb5bd;
+  }
+
+  .empty-state h5 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #495057;
+  }
+
+  .empty-state p {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-header > div {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .benchmark-selectors {
+      margin-top: 16px;
+      width: 100%;
+    }
+
+    .custom-select {
+      width: 100%;
+    }
+
+
+  }
+  /* Benchmark selectors container */
+  .selector-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  /* Benchmark selectors layout */
+  .benchmark-selectors {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Individual selector styling */
+  .custom-select {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    flex: 1;
+  }
+
+  /* Label styling */
+  .custom-select label {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  /* Select element styling */
+  .custom-select select {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: white;
+    color: #495057;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  /* Focus state */
+  .custom-select select:focus {
+    border-color: #0394CA;
+    box-shadow: 0 0 0 3px rgba(3, 148, 202, 0.15);
+    outline: none;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .benchmark-selectors {
+      flex-direction: column;
+    }
+
+    .custom-select {
+      width: 100%;
+    }
+  }
+</style>

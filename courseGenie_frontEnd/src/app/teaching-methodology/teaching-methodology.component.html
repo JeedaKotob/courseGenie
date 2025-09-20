@@ -1,0 +1,260 @@
+<div class="methodology-container">
+  <!-- Using the reusable course-header component -->
+  <app-course-header
+    [course]="course"
+    [buttons]="headerButtons"
+    (buttonClick)="handleHeaderAction($event)">
+  </app-course-header>
+
+  <!-- Success Message (when needed) -->
+  <div class="alert-box success" *ngIf="showSuccess">
+    <div class="alert-content">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      <span>Teaching methodology updated successfully!</span>
+    </div>
+    <button class="alert-close" (click)="showSuccess = false">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="content-card">
+    <div class="card-header">
+      <h3 class="section-title">
+        <i class="bi bi-book"></i> Teaching & Learning Methodology
+      </h3>
+      <p class="section-subtitle">Define your approach to teaching and learning for this course</p>
+    </div>
+
+    <div class="card-body">
+      <div class="form-group">
+        <label for="methodology" class="form-label">Methodology Description</label>
+        <textarea
+          id="methodology"
+          [(ngModel)]="inputText"
+          rows="12"
+          placeholder="Describe your teaching methodology, learning activities, and instructional approaches..."
+          class="methodology-textarea"
+        ></textarea>
+
+        <div class="methodology-tips">
+          <h4 class="tips-title">Suggested Topics to Include:</h4>
+          <ul class="tips-list">
+            <li>Instructional methods (lectures, discussions, demonstrations)</li>
+            <li>Student engagement strategies</li>
+            <li>Assessment approaches</li>
+            <li>Technology integration in teaching</li>
+            <li>Active learning techniques</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button
+        (click)="submitText()"
+        [disabled]="isLoading"
+        class="submit-btn"
+      >
+        <i class="bi" [ngClass]="isLoading ? 'bi-hourglass-split' : 'bi-check-circle'"></i>
+        {{ isLoading ? 'Saving...' : 'Save Methodology' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Main container */
+  .methodology-container {
+    padding: 1.5rem;
+    background-color: #f5f7fa;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Alert box */
+  .alert-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .alert-box.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  .alert-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  /* Content Card */
+  .content-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* Form styling */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    color: #495057;
+  }
+
+  .methodology-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 250px;
+    transition: all 0.2s ease;
+  }
+
+  .methodology-textarea:focus {
+    outline: none;
+    border-color: #0394CA;
+    box-shadow: 0 0 0 3px rgba(3, 148, 202, 0.15);
+  }
+
+  /* Tips section */
+  .methodology-tips {
+    margin-top: 1.5rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #0394CA;
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .tips-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .tips-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: #495057;
+  }
+
+  .tips-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .tips-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background-color: #0394CA;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(3, 148, 202, 0.2);
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background-color: #0288b8;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(3, 148, 202, 0.3);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-footer {
+      padding: 1rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+    }
+  }
+</style>

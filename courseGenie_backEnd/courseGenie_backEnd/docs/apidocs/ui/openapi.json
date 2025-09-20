@@ -1,0 +1,3549 @@
+{
+  "openapi": "3.0.3",
+  "info" : {
+    "description" : "<h1>course-genie-backend<\/h1><p>Demo project for Spring Boot<\/p>",
+    "version" : "0.0.1-SNAPSHOT",
+    "title" : "course-genie-backend"
+  },
+  "servers" : [
+    {
+      "url" : "/"
+    }
+  ],
+  "tags" : [
+    {
+      "name" : "AssessmentController"
+    }
+    ,
+    {
+      "name" : "BenchmarkController"
+    }
+    ,
+    {
+      "name" : "BookController"
+    }
+    ,
+    {
+      "name" : "CLOController"
+    }
+    ,
+    {
+      "name" : "CourseController"
+    }
+    ,
+    {
+      "name" : "GradeController"
+    }
+    ,
+    {
+      "name" : "JWTAuthenticationController"
+    }
+    ,
+    {
+      "name" : "RoleManagementController"
+    }
+    ,
+    {
+      "name" : "SectionController"
+    }
+    ,
+    {
+      "name" : "StudentController"
+    }
+    ,
+    {
+      "name" : "SyllabusController"
+    }
+  ],
+  "components" : {
+    "schemas" : {
+      "Assessment" : {
+"type" : "object",
+"title" : "Assessment",
+"example" : { },
+"description" : ""
+      }
+      ,
+      "AssessmentDTO" : {
+"type" : "object",
+"title" : "AssessmentDTO",
+"required" : ["maxPoints", "sectionId", "assessmentId", "week"],
+"properties" : {
+  "maxPoints" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "sectionId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "assessmentId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "category" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "clos" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CLODTO"
+}
+  },
+  "week" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "shortName" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "name" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "maxPoints" : 12345,
+  "sectionId" : 12345,
+  "assessmentId" : 12345,
+  "category" : "...",
+  "clos" : [ {
+    "description" : "...",
+    "name" : "...",
+    "cloId" : 12345,
+    "courseId" : 12345
+  }, {
+    "description" : "...",
+    "name" : "...",
+    "cloId" : 12345,
+    "courseId" : 12345
+  } ],
+  "week" : 12345,
+  "shortName" : "...",
+  "name" : "..."
+},
+"description" : ""
+      }
+      ,
+      "AuthQuery" : {
+"type" : "object",
+"title" : "AuthQuery",
+"properties" : {
+  "username" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "password" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "username" : "...",
+  "password" : "..."
+},
+"description" : ""
+      }
+      ,
+      "BenchmarkDTO" : {
+"type" : "object",
+"title" : "BenchmarkDTO",
+"required" : ["threshold", "benchmarkId", "percentage"],
+"properties" : {
+  "threshold" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "benchmarkId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "percentage" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "benchmarkType" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "description" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "threshold" : 12345,
+  "benchmarkId" : 12345,
+  "percentage" : 12345,
+  "benchmarkType" : "...",
+  "description" : "..."
+},
+"description" : ""
+      }
+      ,
+      "BookDTO" : {
+"type" : "object",
+"title" : "BookDTO",
+"required" : ["requiredReading", "suggestedReading"],
+"properties" : {
+  "id" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "isbn" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "title" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "url" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sectionIds" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "type" : "integer"
+}
+  },
+  "requiredReading" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  },
+  "suggestedReading" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  }
+},
+"example" : {
+  "id" : 12345,
+  "isbn" : "...",
+  "title" : "...",
+  "url" : "...",
+  "sectionIds" : [ 12345, 12345 ],
+  "requiredReading" : true,
+  "suggestedReading" : true
+},
+"description" : ""
+      }
+      ,
+      "CLODTO" : {
+"type" : "object",
+"title" : "CLODTO",
+"required" : ["cloId", "courseId"],
+"properties" : {
+  "description" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "name" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "cloId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "courseId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  }
+},
+"example" : {
+  "description" : "...",
+  "name" : "...",
+  "cloId" : 12345,
+  "courseId" : 12345
+},
+"description" : ""
+      }
+      ,
+      "CourseDTO" : {
+"type" : "object",
+"title" : "CourseDTO",
+"required" : ["courseId"],
+"properties" : {
+  "code" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "courseId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "name" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sections" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/SectionDTO"
+}
+  },
+  "credits" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "clos" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CLODTO"
+}
+  },
+  "description" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "code" : "...",
+  "courseId" : 12345,
+  "name" : "...",
+  "sections" : [ {
+    "courseId" : 12345,
+    "assessments" : [ {
+      "maxPoints" : 12345,
+      "sectionId" : 12345,
+      "assessmentId" : 12345,
+      "category" : "...",
+      "clos" : [ { }, { } ],
+      "week" : 12345,
+      "shortName" : "...",
+      "name" : "..."
+    }, {
+      "maxPoints" : 12345,
+      "sectionId" : 12345,
+      "assessmentId" : 12345,
+      "category" : "...",
+      "clos" : [ { }, { } ],
+      "week" : 12345,
+      "shortName" : "...",
+      "name" : "..."
+    } ],
+    "class_number" : "...",
+    "code" : "...",
+    "term" : "...",
+    "teachingMethodology" : "...",
+    "sectionId" : 12345,
+    "professorId" : 12345,
+    "configured" : true
+  }, {
+    "courseId" : 12345,
+    "assessments" : [ {
+      "maxPoints" : 12345,
+      "sectionId" : 12345,
+      "assessmentId" : 12345,
+      "category" : "...",
+      "clos" : [ { }, { } ],
+      "week" : 12345,
+      "shortName" : "...",
+      "name" : "..."
+    }, {
+      "maxPoints" : 12345,
+      "sectionId" : 12345,
+      "assessmentId" : 12345,
+      "category" : "...",
+      "clos" : [ { }, { } ],
+      "week" : 12345,
+      "shortName" : "...",
+      "name" : "..."
+    } ],
+    "class_number" : "...",
+    "code" : "...",
+    "term" : "...",
+    "teachingMethodology" : "...",
+    "sectionId" : 12345,
+    "professorId" : 12345,
+    "configured" : true
+  } ],
+  "credits" : "...",
+  "clos" : [ {
+    "description" : "...",
+    "name" : "...",
+    "cloId" : 12345,
+    "courseId" : 12345
+  }, {
+    "description" : "...",
+    "name" : "...",
+    "cloId" : 12345,
+    "courseId" : 12345
+  } ],
+  "description" : "..."
+},
+"description" : ""
+      }
+      ,
+      "GradeDTO" : {
+"type" : "object",
+"title" : "GradeDTO",
+"required" : ["score", "gradeId", "assessmentId"],
+"properties" : {
+  "score" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "number",
+"format" : "double"
+  },
+  "gradeId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "assessmentId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "studentId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "score" : 12345.0,
+  "gradeId" : 12345,
+  "assessmentId" : 12345,
+  "studentId" : "..."
+},
+"description" : ""
+      }
+      ,
+      "SectionDTO" : {
+"type" : "object",
+"title" : "SectionDTO",
+"required" : ["courseId", "sectionId", "professorId", "configured"],
+"properties" : {
+  "courseId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "assessments" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/AssessmentDTO"
+}
+  },
+  "class_number" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "code" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "term" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "teachingMethodology" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sectionId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "professorId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "configured" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  }
+},
+"example" : {
+  "courseId" : 12345,
+  "assessments" : [ {
+    "maxPoints" : 12345,
+    "sectionId" : 12345,
+    "assessmentId" : 12345,
+    "category" : "...",
+    "clos" : [ {
+      "description" : "...",
+      "name" : "...",
+      "cloId" : 12345,
+      "courseId" : 12345
+    }, {
+      "description" : "...",
+      "name" : "...",
+      "cloId" : 12345,
+      "courseId" : 12345
+    } ],
+    "week" : 12345,
+    "shortName" : "...",
+    "name" : "..."
+  }, {
+    "maxPoints" : 12345,
+    "sectionId" : 12345,
+    "assessmentId" : 12345,
+    "category" : "...",
+    "clos" : [ {
+      "description" : "...",
+      "name" : "...",
+      "cloId" : 12345,
+      "courseId" : 12345
+    }, {
+      "description" : "...",
+      "name" : "...",
+      "cloId" : 12345,
+      "courseId" : 12345
+    } ],
+    "week" : 12345,
+    "shortName" : "...",
+    "name" : "..."
+  } ],
+  "class_number" : "...",
+  "code" : "...",
+  "term" : "...",
+  "teachingMethodology" : "...",
+  "sectionId" : 12345,
+  "professorId" : 12345,
+  "configured" : true
+},
+"description" : ""
+      }
+      ,
+      "StudentDTO" : {
+"type" : "object",
+"title" : "StudentDTO",
+"properties" : {
+  "lastName" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "firstName" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "email" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "studentId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+},
+"example" : {
+  "lastName" : "...",
+  "firstName" : "...",
+  "email" : "...",
+  "studentId" : "..."
+},
+"description" : ""
+      }
+      ,
+      "SyllabusDTO" : {
+"type" : "object",
+"title" : "SyllabusDTO",
+"required" : ["syllabusId", "sectionId"],
+"properties" : {
+  "content" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "syllabusId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "sectionId" : {
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  }
+},
+"example" : {
+  "content" : "...",
+  "syllabusId" : 12345,
+  "sectionId" : 12345
+},
+"description" : ""
+      }
+      ,
+      "xml_ns0_assessment" : {
+"type" : "object",
+"title" : "assessment",
+"allOf" : [
+  {
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_assessmentDTO" : {
+"type" : "object",
+"title" : "assessmentDTO",
+"required" : ["assessmentId", "maxPoints", "sectionId", "week"],
+"allOf" : [
+  {
+"properties" : {
+  "assessmentId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "category" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "clos" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_CLODTO"
+}
+  },
+  "maxPoints" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "name" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sectionId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "shortName" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "week" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_benchmarkDTO" : {
+"type" : "object",
+"title" : "benchmarkDTO",
+"required" : ["benchmarkId", "percentage", "threshold"],
+"allOf" : [
+  {
+"properties" : {
+  "benchmarkId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "benchmarkType" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "description" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "percentage" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  },
+  "threshold" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int32"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_bookDTO" : {
+"type" : "object",
+"title" : "bookDTO",
+"required" : ["requiredReading", "suggestedReading"],
+"allOf" : [
+  {
+"properties" : {
+  "id" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "isbn" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "requiredReading" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  },
+  "sectionIds" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "type" : "integer"
+}
+  },
+  "suggestedReading" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  },
+  "title" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "url" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_CLODTO" : {
+"type" : "object",
+"title" : "CLODTO",
+"required" : ["cloId", "courseId"],
+"allOf" : [
+  {
+"properties" : {
+  "cloId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "courseId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "description" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "name" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_courseDTO" : {
+"type" : "object",
+"title" : "courseDTO",
+"required" : ["courseId"],
+"allOf" : [
+  {
+"properties" : {
+  "clos" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_CLODTO"
+}
+  },
+  "code" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "courseId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "credits" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "description" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "name" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sections" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_sectionDTO"
+}
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_gradeDTO" : {
+"type" : "object",
+"title" : "gradeDTO",
+"required" : ["assessmentId", "gradeId", "score"],
+"allOf" : [
+  {
+"properties" : {
+  "assessmentId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "gradeId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "score" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "number",
+"format" : "double"
+  },
+  "studentId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_sectionDTO" : {
+"type" : "object",
+"title" : "sectionDTO",
+"required" : ["configured", "courseId", "professorId", "sectionId"],
+"allOf" : [
+  {
+"properties" : {
+  "assessments" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_assessmentDTO"
+}
+  },
+  "class_number" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "code" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "configured" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "boolean"
+  },
+  "courseId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "professorId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "sectionId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "teachingMethodology" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "term" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_authQuery" : {
+"type" : "object",
+"title" : "authQuery",
+"allOf" : [
+  {
+"properties" : {
+  "password" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "username" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_studentDTO" : {
+"type" : "object",
+"title" : "studentDTO",
+"allOf" : [
+  {
+"properties" : {
+  "email" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "firstName" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "lastName" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "studentId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  }
+}
+  }
+],
+"description" : ""
+      }
+      ,
+      "xml_ns0_syllabusDTO" : {
+"type" : "object",
+"title" : "syllabusDTO",
+"required" : ["sectionId", "syllabusId"],
+"allOf" : [
+  {
+"properties" : {
+  "content" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "string"
+  },
+  "sectionId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  },
+  "syllabusId" : {
+    "xml" : {
+    },
+    "readOnly" : false,
+"description" : "",
+"type" : "integer",
+"format" : "int64"
+  }
+}
+  }
+],
+"description" : ""
+      }
+    }
+  },
+  "paths": {
+    "\/api/admin/roles/assign" : {
+      "post" : {
+        "tags" : [ "RoleManagementController" ],
+        "operationId" : "assignRole",
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "role",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "username",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/admin/roles/remove" : {
+      "post" : {
+        "tags" : [ "RoleManagementController" ],
+        "operationId" : "removeRole",
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "role",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "username",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/assessments" : {
+      "get" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "getAllAssessments",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/AssessmentDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <a-----\u003E\n    <week>...<\/week>\n    <category>...<\/category>\n    <clos>\n      <name>...<\/name>\n      <description>...<\/description>\n      <courseId>...<\/courseId>\n      <cloId>...<\/cloId>\n    <\/clos>\n    <shortName>...<\/shortName>\n    <sectionId>...<\/sectionId>\n    <name>...<\/name>\n    <maxPoints>...<\/maxPoints>\n    <assessmentId>...<\/assessmentId>\n  <\/a-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_assessmentDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "createAssessment",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "put" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "updateAssessment",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/assessments/{assassmentId}/clo/{cloId}" : {
+      "post" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "mapCloToAssessment",
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "assassmentId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "cloId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "put" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "unmapCloToAssessment",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "assassmentId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "cloId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/assessments/{assessmentId}/week" : {
+      "put" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "updateAssessmentWeek",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{ }"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/Assessment",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<a-----/>\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessment",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "assessmentId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/assessments/{id}" : {
+      "delete" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "deleteAssessment",
+        "responses" : {
+          "204" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "getAssessmentById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"maxPoints\" : 12345,\n  \"sectionId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"category\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"week\" : 12345,\n  \"shortName\" : \"...\",\n  \"name\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/AssessmentDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<a-----\u003E\n  <week>...<\/week>\n  <category>...<\/category>\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <shortName>...<\/shortName>\n  <sectionId>...<\/sectionId>\n  <name>...<\/name>\n  <maxPoints>...<\/maxPoints>\n  <assessmentId>...<\/assessmentId>\n<\/a-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_assessmentDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/assessments/{sectionId}/category-description/{categoryName}" : {
+      "delete" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "deleteCategoryDescription",
+        "responses" : {
+          "204" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "categoryName",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "getCategoryDescription",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "categoryName",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "post" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "createCategoryDescription",
+        "responses" : {
+          "201" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "categoryName",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "description",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "put" : {
+        "tags" : [ "AssessmentController" ],
+        "operationId" : "updateCategoryDescription",
+        "responses" : {
+          "204" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "categoryName",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "description",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/auth/authenticate" : {
+      "post" : {
+        "tags" : [ "JWTAuthenticationController" ],
+        "operationId" : "authenticate",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"username\" : \"...\",\n  \"password\" : \"...\"\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/AuthQuery",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<a-----\u003E\n  <username>...<\/username>\n  <password>...<\/password>\n<\/a-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_authQuery",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/benchmarks" : {
+      "get" : {
+        "tags" : [ "BenchmarkController" ],
+        "operationId" : "findAll",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"threshold\" : 12345,\n  \"benchmarkId\" : 12345,\n  \"percentage\" : 12345,\n  \"benchmarkType\" : \"...\",\n  \"description\" : \"...\"\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/BenchmarkDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <b-----\u003E\n    <description>...<\/description>\n    <percentage>...<\/percentage>\n    <benchmarkType>...<\/benchmarkType>\n    <benchmarkId>...<\/benchmarkId>\n    <threshold>...<\/threshold>\n  <\/b-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_benchmarkDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/benchmarks/section/{sectionId}/firstBm/{bm1Id}/secondBm/{bm2Id}" : {
+      "get" : {
+        "tags" : [ "BenchmarkController" ],
+        "operationId" : "getBenchmarkResults",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+"type" : "object",
+"additionalProperties" : {
+  "type" : "object"
+}
+}
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "type" : "object"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "bm1Id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "bm2Id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/books" : {
+      "get" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "getAllBooks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/BookDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <b-----\u003E\n    <id>...<\/id>\n    <isbn>...<\/isbn>\n    <title>...<\/title>\n    <url>...<\/url>\n    <sectionIds>...<\/sectionIds>\n    <requiredReading>...<\/requiredReading>\n    <suggestedReading>...<\/suggestedReading>\n  <\/b-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_bookDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "createBook",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/books/import" : {
+      "post" : {
+        "tags" : [ "BookController" ],
+        "description" : "Import a book by ISBN and associate it with a course.\nExample: POST /api/books/import?isbn=9780134685991&courseId=123",
+        "operationId" : "importBook",
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "isbn",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/books/{bookId}/updateMapping" : {
+      "put" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "updateMapping",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "bookId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "mapped",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "boolean"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "requiredReading",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "boolean"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionId",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "suggestedReading",
+            "in" : "query",
+            "required" : true,
+            "schema" : {
+              "type" : "boolean"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/books/{id}" : {
+      "delete" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "deleteBook",
+        "responses" : {
+          "204" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "getBookById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "put" : {
+        "tags" : [ "BookController" ],
+        "operationId" : "updateBook",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"id\" : 12345,\n  \"isbn\" : \"...\",\n  \"title\" : \"...\",\n  \"url\" : \"...\",\n  \"sectionIds\" : [ 12345, 12345 ],\n  \"requiredReading\" : true,\n  \"suggestedReading\" : true\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/BookDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<b-----\u003E\n  <id>...<\/id>\n  <isbn>...<\/isbn>\n  <title>...<\/title>\n  <url>...<\/url>\n  <sectionIds>...<\/sectionIds>\n  <requiredReading>...<\/requiredReading>\n  <suggestedReading>...<\/suggestedReading>\n<\/b-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_bookDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "id",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/clos" : {
+      "get" : {
+        "tags" : [ "CLOController" ],
+        "operationId" : "getAllClos",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CLODTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <c-----\u003E\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/c-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_CLODTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "CLOController" ],
+        "operationId" : "createClo",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/CLODTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<c-----\u003E\n  <name>...<\/name>\n  <description>...<\/description>\n  <courseId>...<\/courseId>\n  <cloId>...<\/cloId>\n<\/c-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_CLODTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/CLODTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<c-----\u003E\n  <name>...<\/name>\n  <description>...<\/description>\n  <courseId>...<\/courseId>\n  <cloId>...<\/cloId>\n<\/c-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_CLODTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "put" : {
+        "tags" : [ "CLOController" ],
+        "operationId" : "updateClo",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/CLODTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<c-----\u003E\n  <name>...<\/name>\n  <description>...<\/description>\n  <courseId>...<\/courseId>\n  <cloId>...<\/cloId>\n<\/c-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_CLODTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/CLODTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<c-----\u003E\n  <name>...<\/name>\n  <description>...<\/description>\n  <courseId>...<\/courseId>\n  <cloId>...<\/cloId>\n<\/c-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_CLODTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/clos/{cloId}" : {
+      "delete" : {
+        "tags" : [ "CLOController" ],
+        "operationId" : "deleteClo",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "cloId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "CLOController" ],
+        "operationId" : "getCloById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"description\" : \"...\",\n  \"name\" : \"...\",\n  \"cloId\" : 12345,\n  \"courseId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/CLODTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<c-----\u003E\n  <name>...<\/name>\n  <description>...<\/description>\n  <courseId>...<\/courseId>\n  <cloId>...<\/cloId>\n<\/c-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_CLODTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "cloId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/courses" : {
+      "get" : {
+        "tags" : [ "CourseController" ],
+        "operationId" : "getAllCourses",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"...\" : {\n    \"code\" : \"...\",\n    \"courseId\" : 12345,\n    \"name\" : \"...\",\n    \"sections\" : [ {\n      \"courseId\" : 12345,\n      \"assessments\" : [ {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      }, {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      } ],\n      \"class_number\" : \"...\",\n      \"code\" : \"...\",\n      \"term\" : \"...\",\n      \"teachingMethodology\" : \"...\",\n      \"sectionId\" : 12345,\n      \"professorId\" : 12345,\n      \"configured\" : true\n    }, {\n      \"courseId\" : 12345,\n      \"assessments\" : [ {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      }, {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      } ],\n      \"class_number\" : \"...\",\n      \"code\" : \"...\",\n      \"term\" : \"...\",\n      \"teachingMethodology\" : \"...\",\n      \"sectionId\" : 12345,\n      \"professorId\" : 12345,\n      \"configured\" : true\n    } ],\n    \"credits\" : \"...\",\n    \"clos\" : [ {\n      \"description\" : \"...\",\n      \"name\" : \"...\",\n      \"cloId\" : 12345,\n      \"courseId\" : 12345\n    }, {\n      \"description\" : \"...\",\n      \"name\" : \"...\",\n      \"cloId\" : 12345,\n      \"courseId\" : 12345\n    } ],\n    \"description\" : \"...\"\n  }\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "object",
+"additionalProperties" : {
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CourseDTO"
+}
+}
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "CourseController" ],
+        "operationId" : "createCourse",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"code\" : \"...\",\n  \"courseId\" : 12345,\n  \"name\" : \"...\",\n  \"sections\" : [ {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  }, {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  } ],\n  \"credits\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"description\" : \"...\"\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/CourseDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<c-----\u003E\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <sections>\n    <class_number>...<\/class_number>\n    <code>...<\/code>\n    <professorId>...<\/professorId>\n    <configured>...<\/configured>\n    <assessments>\n      <week>...<\/week>\n      <category>...<\/category>\n      <clos/>\n      <shortName>...<\/shortName>\n      <sectionId>...<\/sectionId>\n      <name>...<\/name>\n      <maxPoints>...<\/maxPoints>\n      <assessmentId>...<\/assessmentId>\n    <\/assessments>\n    <term>...<\/term>\n    <teachingMethodology>...<\/teachingMethodology>\n    <courseId>...<\/courseId>\n    <sectionId>...<\/sectionId>\n  <\/sections>\n  <description>...<\/description>\n  <credits>...<\/credits>\n  <code>...<\/code>\n  <courseId>...<\/courseId>\n  <name>...<\/name>\n<\/c-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_courseDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"code\" : \"...\",\n  \"courseId\" : 12345,\n  \"name\" : \"...\",\n  \"sections\" : [ {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  }, {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  } ],\n  \"credits\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"description\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/CourseDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<c-----\u003E\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <sections>\n    <class_number>...<\/class_number>\n    <code>...<\/code>\n    <professorId>...<\/professorId>\n    <configured>...<\/configured>\n    <assessments>\n      <week>...<\/week>\n      <category>...<\/category>\n      <clos/>\n      <shortName>...<\/shortName>\n      <sectionId>...<\/sectionId>\n      <name>...<\/name>\n      <maxPoints>...<\/maxPoints>\n      <assessmentId>...<\/assessmentId>\n    <\/assessments>\n    <term>...<\/term>\n    <teachingMethodology>...<\/teachingMethodology>\n    <courseId>...<\/courseId>\n    <sectionId>...<\/sectionId>\n  <\/sections>\n  <description>...<\/description>\n  <credits>...<\/credits>\n  <code>...<\/code>\n  <courseId>...<\/courseId>\n  <name>...<\/name>\n<\/c-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_courseDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/courses/course" : {
+      "get" : {
+        "tags" : [ "CourseController" ],
+        "description" : "GET /api/courses/dtos\nReturns a flat list of all courses as CourseDTOs.",
+        "operationId" : "getAllCourseDTOs",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"code\" : \"...\",\n  \"courseId\" : 12345,\n  \"name\" : \"...\",\n  \"sections\" : [ {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  }, {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  } ],\n  \"credits\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"description\" : \"...\"\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CourseDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <c-----\u003E\n    <clos>\n      <name>...<\/name>\n      <description>...<\/description>\n      <courseId>...<\/courseId>\n      <cloId>...<\/cloId>\n    <\/clos>\n    <sections>\n      <class_number>...<\/class_number>\n      <code>...<\/code>\n      <professorId>...<\/professorId>\n      <configured>...<\/configured>\n      <assessments>\n        <week>...<\/week>\n        <category>...<\/category>\n        <clos/>\n        <shortName>...<\/shortName>\n        <sectionId>...<\/sectionId>\n        <name>...<\/name>\n        <maxPoints>...<\/maxPoints>\n        <assessmentId>...<\/assessmentId>\n      <\/assessments>\n      <term>...<\/term>\n      <teachingMethodology>...<\/teachingMethodology>\n      <courseId>...<\/courseId>\n      <sectionId>...<\/sectionId>\n    <\/sections>\n    <description>...<\/description>\n    <credits>...<\/credits>\n    <code>...<\/code>\n    <courseId>...<\/courseId>\n    <name>...<\/name>\n  <\/c-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_courseDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/courses/{courseCode}/section/{sectionCode}" : {
+      "get" : {
+        "tags" : [ "CourseController" ],
+        "operationId" : "getCourseById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"code\" : \"...\",\n  \"courseId\" : 12345,\n  \"name\" : \"...\",\n  \"sections\" : [ {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  }, {\n    \"courseId\" : 12345,\n    \"assessments\" : [ {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    }, {\n      \"maxPoints\" : 12345,\n      \"sectionId\" : 12345,\n      \"assessmentId\" : 12345,\n      \"category\" : \"...\",\n      \"clos\" : [ { }, { } ],\n      \"week\" : 12345,\n      \"shortName\" : \"...\",\n      \"name\" : \"...\"\n    } ],\n    \"class_number\" : \"...\",\n    \"code\" : \"...\",\n    \"term\" : \"...\",\n    \"teachingMethodology\" : \"...\",\n    \"sectionId\" : 12345,\n    \"professorId\" : 12345,\n    \"configured\" : true\n  } ],\n  \"credits\" : \"...\",\n  \"clos\" : [ {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  }, {\n    \"description\" : \"...\",\n    \"name\" : \"...\",\n    \"cloId\" : 12345,\n    \"courseId\" : 12345\n  } ],\n  \"description\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/CourseDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<c-----\u003E\n  <clos>\n    <name>...<\/name>\n    <description>...<\/description>\n    <courseId>...<\/courseId>\n    <cloId>...<\/cloId>\n  <\/clos>\n  <sections>\n    <class_number>...<\/class_number>\n    <code>...<\/code>\n    <professorId>...<\/professorId>\n    <configured>...<\/configured>\n    <assessments>\n      <week>...<\/week>\n      <category>...<\/category>\n      <clos/>\n      <shortName>...<\/shortName>\n      <sectionId>...<\/sectionId>\n      <name>...<\/name>\n      <maxPoints>...<\/maxPoints>\n      <assessmentId>...<\/assessmentId>\n    <\/assessments>\n    <term>...<\/term>\n    <teachingMethodology>...<\/teachingMethodology>\n    <courseId>...<\/courseId>\n    <sectionId>...<\/sectionId>\n  <\/sections>\n  <description>...<\/description>\n  <credits>...<\/credits>\n  <code>...<\/code>\n  <courseId>...<\/courseId>\n  <name>...<\/name>\n<\/c-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_courseDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "courseCode",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          {
+            "name" : "sectionCode",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "string"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/courses/{professorId}" : {
+      "get" : {
+        "tags" : [ "CourseController" ],
+        "operationId" : "getCoursesByProfessorId",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"...\" : {\n    \"code\" : \"...\",\n    \"courseId\" : 12345,\n    \"name\" : \"...\",\n    \"sections\" : [ {\n      \"courseId\" : 12345,\n      \"assessments\" : [ {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      }, {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      } ],\n      \"class_number\" : \"...\",\n      \"code\" : \"...\",\n      \"term\" : \"...\",\n      \"teachingMethodology\" : \"...\",\n      \"sectionId\" : 12345,\n      \"professorId\" : 12345,\n      \"configured\" : true\n    }, {\n      \"courseId\" : 12345,\n      \"assessments\" : [ {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      }, {\n        \"maxPoints\" : 12345,\n        \"sectionId\" : 12345,\n        \"assessmentId\" : 12345,\n        \"category\" : \"...\",\n        \"clos\" : [ { }, { } ],\n        \"week\" : 12345,\n        \"shortName\" : \"...\",\n        \"name\" : \"...\"\n      } ],\n      \"class_number\" : \"...\",\n      \"code\" : \"...\",\n      \"term\" : \"...\",\n      \"teachingMethodology\" : \"...\",\n      \"sectionId\" : 12345,\n      \"professorId\" : 12345,\n      \"configured\" : true\n    } ],\n    \"credits\" : \"...\",\n    \"clos\" : [ {\n      \"description\" : \"...\",\n      \"name\" : \"...\",\n      \"cloId\" : 12345,\n      \"courseId\" : 12345\n    }, {\n      \"description\" : \"...\",\n      \"name\" : \"...\",\n      \"cloId\" : 12345,\n      \"courseId\" : 12345\n    } ],\n    \"description\" : \"...\"\n  }\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "object",
+"additionalProperties" : {
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/CourseDTO"
+}
+}
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "professorId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/grades" : {
+      "get" : {
+        "tags" : [ "GradeController" ],
+        "operationId" : "getAllGrades",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"score\" : 12345.0,\n  \"gradeId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"studentId\" : \"...\"\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/GradeDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <g-----\u003E\n    <assessmentId>...<\/assessmentId>\n    <score>...<\/score>\n    <studentId>...<\/studentId>\n    <gradeId>...<\/gradeId>\n  <\/g-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_gradeDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "GradeController" ],
+        "operationId" : "createGrade",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "[ {\n  \"score\" : 12345.0,\n  \"gradeId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"studentId\" : \"...\"\n} ]"
+                }
+              },
+              "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/GradeDTO"
+}
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<list>\n  <g-----\u003E\n    <assessmentId>...<\/assessmentId>\n    <score>...<\/score>\n    <studentId>...<\/studentId>\n    <gradeId>...<\/gradeId>\n  <\/g-----\u003E\n<\/list>\n"
+                }
+              },
+              "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_gradeDTO"
+}
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "put" : {
+        "tags" : [ "GradeController" ],
+        "operationId" : "updateGrade",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"score\" : 12345.0,\n  \"gradeId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"studentId\" : \"...\"\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/GradeDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<g-----\u003E\n  <assessmentId>...<\/assessmentId>\n  <score>...<\/score>\n  <studentId>...<\/studentId>\n  <gradeId>...<\/gradeId>\n<\/g-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_gradeDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"score\" : 12345.0,\n  \"gradeId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"studentId\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/GradeDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<g-----\u003E\n  <assessmentId>...<\/assessmentId>\n  <score>...<\/score>\n  <studentId>...<\/studentId>\n  <gradeId>...<\/gradeId>\n<\/g-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_gradeDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/grades/{gradeId}" : {
+      "delete" : {
+        "tags" : [ "GradeController" ],
+        "operationId" : "deleteGrade",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "gradeId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "GradeController" ],
+        "operationId" : "getGradeById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"score\" : 12345.0,\n  \"gradeId\" : 12345,\n  \"assessmentId\" : 12345,\n  \"studentId\" : \"...\"\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/GradeDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<g-----\u003E\n  <assessmentId>...<\/assessmentId>\n  <score>...<\/score>\n  <studentId>...<\/studentId>\n  <gradeId>...<\/gradeId>\n<\/g-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_gradeDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "gradeId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/sections/{sectionId}" : {
+      "put" : {
+        "tags" : [ "SectionController" ],
+        "operationId" : "saveConfiguration",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/sections/{sectionId}/teaching-methodology" : {
+      "get" : {
+        "tags" : [ "SectionController" ],
+        "operationId" : "getTeachingMethodology",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "post" : {
+        "tags" : [ "SectionController" ],
+        "operationId" : "setTeachingMethodology",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+"description" : "",
+"type" : "string"
+              }
+            }, 
+            "application/xml" : {
+              "schema" : {
+"description" : "",
+"type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+            },
+            "description" : "Success"
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/students/{sectionId}" : {
+      "get" : {
+        "tags" : [ "StudentController" ],
+        "operationId" : "getAllStudents",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"...\" : {\n    \"score\" : 12345.0,\n    \"gradeId\" : 12345,\n    \"assessmentId\" : 12345,\n    \"studentId\" : \"...\"\n  }\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "object",
+"additionalProperties" : {
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/GradeDTO"
+}
+}
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/syllabuses" : {
+      "get" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "getAllSyllabuses",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "[ {\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n} ]"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/SyllabusDTO"
+}
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<list>\n  <s-----\u003E\n    <sectionId>...<\/sectionId>\n    <content>...<\/content>\n    <syllabusId>...<\/syllabusId>\n  <\/s-----\u003E\n<\/list>\n"
+                  }
+                },
+                "schema" : {
+"description" : "",
+"type" : "array",
+"items" : {
+  "$ref" : "#/components/schemas/xml_ns0_syllabusDTO"
+}
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "post" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "createSyllabus",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      },
+      "put" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "updateSyllabus",
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "example" : {
+                  "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+              }
+            }, 
+            "application/xml" : {
+              "examples" : {
+                "example" : {
+                  "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                }
+              },
+              "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+        ]
+      }
+    },
+    "\/api/syllabuses/generate/{sectionId}" : {
+      "post" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "generateSyllabus",
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "sectionId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    },
+    "\/api/syllabuses/{syllabusId}" : {
+      "delete" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "deleteSyllabus",
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }, 
+              "application/xml" : {
+                "schema" : {
+"description" : "",
+"type" : "boolean"
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "syllabusId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      },
+      "get" : {
+        "tags" : [ "SyllabusController" ],
+        "operationId" : "getSyllabusById",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "{\n  \"content\" : \"...\",\n  \"syllabusId\" : 12345,\n  \"sectionId\" : 12345\n}"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/SyllabusDTO",
+"description" : ""
+                }
+              }, 
+              "application/xml" : {
+                "examples" : {
+                  "example" : {
+                    "value" : "<s-----\u003E\n  <sectionId>...<\/sectionId>\n  <content>...<\/content>\n  <syllabusId>...<\/syllabusId>\n<\/s-----\u003E\n"
+                  }
+                },
+                "schema" : {
+"$ref" : "#/components/schemas/xml_ns0_syllabusDTO",
+"description" : ""
+                }
+              }
+            },
+            "description" : ""
+          }
+        },
+        "parameters" : [
+          {
+            "name" : "syllabusId",
+            "in" : "path",
+            "required" : true,
+            "schema" : {
+              "type" : "number"
+            },
+            "description" : ""
+          }
+        ]
+      }
+    }
+  }
+}

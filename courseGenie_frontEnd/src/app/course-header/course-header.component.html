@@ -1,0 +1,18 @@
+<!-- course-header.component.html -->
+<div class="course-header">
+  <div class="course-info">
+    <h2 class="course-title">
+      {{ course?.code }} - {{ course?.sections?.[0]?.code || 'No section available' }}
+    </h2>
+    <p class="course-name">{{ course?.name }}</p>
+  </div>
+
+  <div class="header-actions">
+    <button *ngFor="let btn of buttons"
+            class="action-btn {{ btn.class || '' }}"
+            [class.hidden]="btn.hidden"
+            (click)="onButtonClick(btn.action)">
+      <i class="bi bi-{{ btn.icon }} me-2"></i>{{ btn.label }}
+    </button>
+  </div>
+</div>

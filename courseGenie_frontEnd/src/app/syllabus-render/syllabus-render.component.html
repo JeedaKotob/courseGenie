@@ -1,0 +1,286 @@
+<div class="syllabus-container">
+  <!-- Header with course info -->
+  <div class="syllabus-header">
+    <div class="course-info">
+      <h2 class="course-title">
+        {{ course?.code }} - {{ course?.sections?.[0]?.code || 'No section available' }}
+      </h2>
+      <p class="course-name">{{ course?.name }}</p>
+    </div>
+
+    <div class="syllabus-actions">
+      <button class="action-btn generate-btn" (click)="generatePdf()">
+        <i class="bi bi-file-pdf me-2"></i>Generate PDF
+      </button>
+
+      <button class="action-btn download-btn" (click)="downloadSyllabus()" [class.hidden]="!pdfUrl">
+        <i class="bi bi-download me-2"></i>Download
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-card">
+    <!-- PDF Preview (when available) -->
+    <div class="pdf-preview" *ngIf="pdfUrl">
+      <div class="preview-header">
+        <h3 class="preview-title">
+          <i class="bi bi-file-earmark-pdf"></i> PDF Preview
+        </h3>
+      </div>
+      <div class="preview-container">
+        <iframe [src]="pdfUrl" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <!-- Syllabus HTML Preview -->
+    <div id="syllabusPreview" [innerHTML]="trustedHtmlContent" [class.hidden]="pdfUrl" class="syllabus-html-content"></div>
+  </div>
+</div>
+
+<style>
+  /* Main container */
+  .syllabus-container {
+    padding: 1.5rem;
+    background-color: #f5f7fa;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Header styling */
+  .syllabus-header {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #024964, #0394CA);
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(3, 148, 202, 0.2);
+  }
+
+  .course-title {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .course-name {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.1rem;
+    margin: 8px 0 0 0;
+  }
+
+  /* Action buttons */
+  .syllabus-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .generate-btn {
+    background-color: white;
+    color: #024964;
+  }
+
+  .generate-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .download-btn {
+    background-color: #0394CA;
+    color: white;
+  }
+
+  .download-btn:hover {
+    background-color: #0288b8;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  /* Content card */
+  .content-card {
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* PDF Preview section */
+  .pdf-preview {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .preview-header {
+    padding: 1.2rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .preview-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .preview-title i {
+    color: #dc3545;
+  }
+
+  .preview-container {
+    padding: 1rem;
+    height: 100%;
+  }
+
+  .preview-container iframe {
+    width: 100%;
+    height: 750px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Syllabus HTML content */
+  .syllabus-html-content {
+    padding: 2rem;
+    line-height: 1.6;
+  }
+
+  /* Make the syllabus content look nice */
+  .syllabus-html-content h1,
+  .syllabus-html-content h2,
+  .syllabus-html-content h3,
+  .syllabus-html-content h4 {
+    color: #024964;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .syllabus-html-content h1 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+  }
+
+  .syllabus-html-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .syllabus-html-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .syllabus-html-content h4 {
+    font-size: 1.1rem;
+  }
+
+  .syllabus-html-content p {
+    margin-bottom: 1rem;
+  }
+
+  .syllabus-html-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .syllabus-html-content th {
+    background-color: #f8f9fa;
+    text-align: left;
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+    font-weight: 600;
+  }
+
+  .syllabus-html-content td {
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+  }
+
+  .syllabus-html-content tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .syllabus-html-content ul,
+  .syllabus-html-content ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .syllabus-html-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .syllabus-header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem;
+    }
+
+    .syllabus-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .action-btn {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .preview-container iframe {
+      height: 500px;
+    }
+
+    .syllabus-html-content {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .preview-container iframe {
+      height: 400px;
+    }
+
+    .syllabus-html-content {
+      padding: 1rem;
+    }
+  }
+</style>

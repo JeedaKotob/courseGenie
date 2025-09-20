@@ -1,0 +1,66 @@
+@import "primeicons/primeicons.css";
+
+/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #e5e5e5;
+    font-family: 'Inter';
+    overflow-x: hidden;
+}
+
+.container {
+    height: 90vh;
+}
+
+.guest-container {
+    height: 100vh !important;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+input {
+    border-radius: 24px !important;
+}
+
+button {
+    border-radius: 24px !important;
+}
+
+.grey-text {
+    color: #a4a4a4;
+}
+
+.centered-card {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 16px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+}
+
+.border-top-left-radius-16 {
+    border-top-left-radius: 16px;
+}
+
+.border-bottom-left-radius-16 {
+    border-bottom-left-radius: 16px;
+}
+
+.guest-form-container {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60%;
+    left: 10%;
+}
+
+.white {
+    color: white;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

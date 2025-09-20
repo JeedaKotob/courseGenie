@@ -1,0 +1,45 @@
+.welcome-bg {
+  background-image: url("/assets/welcome.png");
+  height: 80vh;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-field {
+  border-color: transparent;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.input-field:focus,
+.input-field:active,
+.input-field:focus-visible,
+.input-field:hover {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

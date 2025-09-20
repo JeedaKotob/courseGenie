@@ -1,0 +1,31 @@
+<button class="btn btn-success bold me-2" (click)="openVerticallyCentered(addCLOModal)">Add CLO</button>
+<ng-template #addCLOModal let-modal>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">CLO : {{course?.code}}-{{ course?.sections?.[0]?.code || 'No section available'
+            }}</h4>
+        <i class="pi pi-times pointer" (click)="close()"></i>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="cloForm" novalidate (ngSubmit)="saveCLO()">
+            <div class="modal-body">
+                <fieldset class="form-group position-relative">
+                    <label class="bold" for="name">Name</label>
+                    <input
+                        [class]="{'form-control': true, 'is-invalid': cloForm.controls['name'].invalid && isSubmitted}"
+                        formControlName="name" type="text" name="name" id="name">
+                </fieldset>
+                <fieldset class="form-group position-relative">
+                    <label class="bold" for="description">Category</label>
+                    <input
+                        [class]="{'form-control': true, 'is-invalid': cloForm.controls['description'].invalid && isSubmitted}"
+                        formControlName="description" type="text" name="description" id="description">
+                </fieldset>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="submit" class="btn btn-primary float-left"
+                    [disabled]="isSubmitted && !cloForm.invalid">Save</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

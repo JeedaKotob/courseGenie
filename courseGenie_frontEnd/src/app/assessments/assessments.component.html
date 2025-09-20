@@ -1,0 +1,338 @@
+<div class="assessments-container">
+  <!-- Using the reusable course-header component -->
+  <app-course-header
+    [course]="course"
+    [buttons]="headerButtons"
+    (buttonClick)="handleHeaderAction($event)">
+  </app-course-header>
+
+  <!-- Main Content Card -->
+  <div class="content-card">
+    <!-- Assessment Categories Section -->
+    <div class="card-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="bi bi-list-check"></i> Assessment Categories
+        </h3>
+
+      </div>
+      <div class="section-body">
+        <div class="table-container">
+          <angular2-smart-table
+            [settings]="settings"
+            [source]="tableData"
+            class="assessments-table">
+          </angular2-smart-table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Descriptions Section -->
+    <div class="card-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="bi bi-card-text"></i> Category Descriptions
+        </h3>
+
+      </div>
+      <div class="section-body">
+        <div class="descriptions-grid">
+          <div class="description-item" *ngFor="let item of categoryDescriptions">
+            <div class="category-badge">{{ item.category }}</div>
+            <div class="description-input">
+              <textarea
+                [(ngModel)]="item.description"
+                rows="2"
+                placeholder="Enter description for {{ item.category }}...">
+              </textarea>
+            </div>
+          </div>
+
+          <!-- Empty state message when no descriptions -->
+          <div class="empty-state" *ngIf="categoryDescriptions.length === 0">
+            <i class="bi bi-exclamation-circle"></i>
+            <p>No assessment categories found. Create an assessment first.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Steps Navigation -->
+    <div class="next-steps" *ngIf="!course?.sections?.[0]?.configured">
+      <div class="next-step-text">
+        <i class="bi bi-arrow-right-circle"></i>
+        <span>After configuring assessments, proceed to CLO Listing</span>
+      </div>
+      <button
+        class="action-btn next-btn"
+        [routerLink]="'/clos-listing/'+course?.code+'/'+course?.sections?.[0]?.code">
+        Continue to CLO Listing
+      </button>
+    </div>
+  </div>
+
+  <!-- Add the CreateAssessmentComponent here -->
+  <app-create-assessment [course]="course"></app-create-assessment>
+</div>
+
+<style>
+  /* Main container */
+  .assessments-container {
+    padding: 1.5rem;
+    background-color: #f5f7fa;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Main content card */
+  .content-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-top: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Card sections */
+  .card-section {
+    border-bottom: 1px solid #eee;
+  }
+
+  .card-section:last-child {
+    border-bottom: none;
+  }
+
+  .section-header {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title i {
+    color: #0394CA;
+  }
+
+  .section-body {
+    padding: 1.5rem;
+  }
+
+  /* Action buttons */
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .create-btn {
+    background-color: #0394CA;
+    color: white;
+  }
+
+  .create-btn:hover {
+    background-color: #0288b8;
+  }
+
+  .save-btn {
+    background-color: #198754;
+    color: white;
+  }
+
+  .save-btn:hover {
+    background-color: #157347;
+  }
+
+  .next-btn {
+    background-color: #6610f2;
+    color: white;
+  }
+
+  .next-btn:hover {
+    background-color: #5a0cbe;
+  }
+
+  /* Table container */
+  .table-container {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+  }
+
+  /* Smart Table styling */
+  :host ::ng-deep .assessments-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  :host ::ng-deep .assessments-table table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 2px solid #dee2e6;
+    text-align: left;
+  }
+
+  :host ::ng-deep .assessments-table table tbody tr {
+    transition: background-color 0.2s;
+  }
+
+  :host ::ng-deep .assessments-table table tbody tr:hover {
+    background-color: #f1f9fb;
+  }
+
+  :host ::ng-deep .assessments-table table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+  }
+
+  :host ::ng-deep .assessments-table table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Category descriptions styling */
+  .descriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 1rem;
+  }
+
+  .description-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .description-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .category-badge {
+    background-color: #0394CA;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    display: inline-block;
+    align-self: flex-start;
+  }
+
+  .description-input {
+    width: 100%;
+  }
+
+  .description-input textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    resize: none;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+  }
+
+  .description-input textarea:focus {
+    outline: none;
+    border-color: #0394CA;
+    box-shadow: 0 0 0 3px rgba(3, 148, 202, 0.15);
+  }
+
+  /* Empty state */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Next steps section */
+  .next-steps {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .next-step-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #024964;
+    font-weight: 500;
+  }
+
+  .next-step-text i {
+    font-size: 1.2rem;
+    color: #0394CA;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .descriptions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .next-steps {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

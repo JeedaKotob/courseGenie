@@ -1,0 +1,114 @@
+<div>
+  <!-- Remove this button as we'll be triggering the modal from the course header -->
+  <!-- <app-button
+    [label]="'Add Assessment'"
+    (click)="openVerticallyCentered(addAssessmentModal)"
+  ></app-button> -->
+</div>
+
+<ng-template #addAssessmentModal let-modal>
+  <div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title">
+      Assessment : {{ course?.code }}-{{ course?.sections?.[0]?.code || 'No section available' }}
+    </h4>
+    <i class="pi pi-times pointer" (click)="close()"></i>
+  </div>
+  <div class="modal-body">
+    <!-- Form to add one assessment category -->
+    <form [formGroup]="assessmentForm" (ngSubmit)="addCategory()" novalidate>
+      <div class="modal-body">
+        <fieldset class="form-group">
+          <label for="categoryOption" class="bold">Category</label>
+          <select formControlName="categoryOption" id="categoryOption" class="form-control">
+            <option value="Quiz">Quiz</option>
+            <option value="Practical Examination">Practical Examination</option>
+            <option value="Midterm">Midterm</option>
+            <option value="Final">Final</option>
+            <option value="Other">Other</option>
+          </select>
+        </fieldset>
+        <div *ngIf="assessmentForm.get('categoryOption')?.value === 'Other'">
+          <fieldset class="form-group">
+            <label for="customCategory" class="bold">Custom Category</label>
+            <input type="text" formControlName="customCategory" id="customCategory" class="form-control"
+                   [ngClass]="{'is-invalid': assessmentForm.get('customCategory')?.invalid && isSubmitted}">
+          </fieldset>
+          <fieldset class="form-group">
+            <label for="customShortName" class="bold">Custom Short Name</label>
+            <input type="text" formControlName="customShortName" id="customShortName" class="form-control"
+                   [ngClass]="{'is-invalid': assessmentForm.get('customShortName')?.invalid && isSubmitted}">
+          </fieldset>
+        </div>
+        <fieldset class="form-group">
+          <label for="numAssessments" class="bold">Number of Assessments</label>
+          <input type="number" formControlName="numAssessments" id="numAssessments" class="form-control"
+                 [ngClass]="{'is-invalid': assessmentForm.get('numAssessments')?.invalid && isSubmitted}">
+        </fieldset>
+        <fieldset class="form-group">
+          <label for="maxPoints" class="bold">Total Weight (%) for the Category</label>
+          <input type="number" step="0.01" formControlName="maxPoints" id="maxPoints" class="form-control"
+                 [ngClass]="{'is-invalid': assessmentForm.get('maxPoints')?.invalid && isSubmitted}">
+        </fieldset>
+        <fieldset class="form-group">
+          <label for="isBonus" class="bold">Bonus</label>
+          <select formControlName="isBonus" id="isBonus" class="form-control">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </fieldset>
+      </div>
+
+      <div class="modal-footer justify-content-end">
+        <app-button
+          [label]="getSubmitButtonLabel()"
+          type="submit"
+          [disabled]="assessmentForm.invalid"
+        ></app-button>
+      </div>
+
+    </form>
+
+    <div *ngIf="pendingAssessments.length > 0" class="pending-table mt-3">
+      <h5>Current Assessments</h5>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Category</th>
+          <th>Short Name</th>
+          <th>Number of Assessments</th>
+          <th>Total Weight (%)</th>
+          <th>Bonus</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cat of pendingAssessments; let i = index">
+          <td>{{ cat.category }}</td>
+          <td>{{ cat.shortName }}</td>
+          <td>{{ cat.numAssessments }}</td>
+          <td>{{ cat.totalWeight }}</td>
+          <td>{{ cat.isBonus ? 'Yes' : 'No' }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="removeCategory(i)">Remove</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="progress my-3">
+        <div class="progress-bar" role="progressbar" [style.width.%]="getPendingTotal()" aria-valuemin="0" aria-valuemax="100">
+          {{ getPendingTotal() }}%
+        </div>
+      </div>
+
+      <div class="text-end">
+        <app-button
+          [label]="'Save All'"
+          type="button"
+          (click)="commitAssessments()"
+          [disabled]="getPendingTotal() !== 100"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+</ng-template>

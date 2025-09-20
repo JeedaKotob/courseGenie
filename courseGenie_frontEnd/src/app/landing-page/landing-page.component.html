@@ -1,0 +1,242 @@
+<!-- landing-page.component.html -->
+<div class="landing-page">
+  <!-- Particle Animation Background -->
+  <canvas #canvas class="particles-canvas"></canvas>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/courseGenie-logo.svg" alt="CourseGenie Logo" class="logo">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#demo">Demo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#testimonials">Testimonials</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#team">Team</a>
+          </li>
+        </ul>
+        <button class="login-btn pulse-animation" (click)="navigateToLogin()">
+          <i class="fas fa-user-circle me-2"></i>Login
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="hero-content" @fadeInUp>
+            <h1 class="hero-title">Reimagine Course Management</h1>
+            <p class="hero-subtitle">An intelligent platform designed for professors to streamline course planning, assessment, and outcome mapping.</p>
+            <div class="hero-buttons">
+              <button class="btn btn-primary btn-lg me-3 floating-btn" (click)="navigateToLogin()">
+                Get Started
+              </button>
+              <a class="btn btn-outline-light btn-lg" href="#demo">
+                Learn More
+                <i class="fas fa-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 d-flex justify-content-center">
+          <div class="hero-image" @fadeIn>
+            <img src="assets/img.png" alt="CourseGenie Dashboard" class="img-fluid floating-animation">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wave-bottom">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#ffffff" fill-opacity="1" d="M0,128L48,144C96,160,192,192,288,176C384,160,480,96,576,80C672,64,768,96,864,128C960,160,1056,192,1152,186.7C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2>Powerful Features for Educators</h2>
+        <p class="lead">All the tools you need to manage your courses effectively</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" *ngFor="let feature of features; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas {{ feature.icon }}"></i>
+            </div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demonstration Section -->
+  <section class="demo" id="demo">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6" data-aos="fade-right">
+          <h2>Intuitive Dashboard</h2>
+          <p class="lead">Get a comprehensive view of your courses, assessments, and student performance at a glance.</p>
+          <ul class="demo-list">
+            <li><i class="fas fa-check-circle"></i> Track learning outcomes across assessments</li>
+            <li><i class="fas fa-check-circle"></i> Visualize grade distributions</li>
+            <li><i class="fas fa-check-circle"></i> Manage course calendar effortlessly</li>
+            <li><i class="fas fa-check-circle"></i> Generate comprehensive reports</li>
+          </ul>
+          <button class="btn btn-primary mt-3" (click)="navigateToLogin()">See Demo</button>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="demo-image">
+            <img src="assets/img2.png" alt="CourseGenie Dashboard" class="img-fluid shadow-lg rounded">
+            <div class="floating-badge top">
+              <span>CLO Mapping</span>
+            </div>
+            <div class="floating-badge bottom">
+              <span>Analytics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials" data-aos="fade-up">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2>What Educators Say</h2>
+        <p class="lead">Join hundreds of satisfied professors using CourseGenie</p>
+      </div>
+
+      <div class="testimonial-slider">
+        <div class="row">
+          <div class="col-md-4" *ngFor="let testimonial of testimonials">
+            <div class="testimonial-card">
+              <div class="testimonial-quote">
+                <i class="fas fa-quote-left"></i>
+                <p>{{ testimonial.quote }}</p>
+              </div>
+              <div class="testimonial-author">
+                <h4>{{ testimonial.author }}</h4>
+                <p>{{ testimonial.position }}</p>
+                <small>{{ testimonial.university }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team" id="team" data-aos="fade-up">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2>Meet Our Team</h2>
+        <p class="lead">The passionate minds behind CourseGenie</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" *ngFor="let member of teamMembers; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+          <div class="team-card">
+            <div class="team-image-wrapper">
+              <img [src]="member.image" [alt]="member.name" class="team-image">
+            </div>
+            <div class="team-info">
+              <h4>{{ member.name }}</h4>
+              <p class="team-title">{{ member.title }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container text-center">
+      <h2>Ready to Transform Your Course Management?</h2>
+      <p class="lead mb-4">Join thousands of professors who are saving time and improving student outcomes.</p>
+      <button class="btn btn-primary btn-lg pulse-animation" (click)="navigateToLogin()">
+        Get Started Today
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <img src="assets/courseGenie-logo.svg" alt="CourseGenie Logo" class="footer-logo">
+          <p class="mt-3">Empowering educators with smart course management tools.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5>Product</h5>
+          <ul class="footer-links">
+            <li><a href="#Features">Features</a></li>
+
+
+            <li><a href="#">Demo</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5>Company</h5>
+          <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5>Resources</h5>
+          <ul class="footer-links">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2">
+          <h5>Legal</h5>
+          <ul class="footer-links">
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 CourseGenie. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>

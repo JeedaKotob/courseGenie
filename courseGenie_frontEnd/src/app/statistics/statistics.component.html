@@ -1,0 +1,470 @@
+<div class="stats-dashboard">
+  <!-- Header with course info -->
+  <div class="dashboard-header">
+    <div class="course-info">
+      <h2 class="course-title">{{ course?.code }} - {{ course?.sections?.[0]?.code || 'No section available' }}</h2>
+      <p class="course-name">{{ course?.name }}</p>
+    </div>
+  </div>
+
+  <!-- Stats Overview Cards Row -->
+  <div class="stats-overview" *ngIf="students.length">
+    <div class="overview-card students-card">
+      <div class="card-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div class="card-data">
+        <h3 class="data-value">{{ totalStudents }}</h3>
+        <p class="data-label">Total Students</p>
+      </div>
+    </div>
+
+    <div class="overview-card average-card">
+      <div class="card-icon">
+        <i class="bi bi-calculator"></i>
+      </div>
+      <div class="card-data">
+        <h3 class="data-value">{{ averageScore }}%</h3>
+        <p class="data-label">Average Score</p>
+      </div>
+    </div>
+
+    <div class="overview-card high-card">
+      <div class="card-icon">
+        <i class="bi bi-trophy-fill"></i>
+      </div>
+      <div class="card-data">
+        <h3 class="data-value">{{ highestScore }}%</h3>
+        <p class="data-label">Highest Score</p>
+      </div>
+    </div>
+
+    <div class="overview-card low-card">
+      <div class="card-icon">
+        <i class="bi bi-arrow-down-circle"></i>
+      </div>
+      <div class="card-data">
+        <h3 class="data-value">{{ lowestScore }}%</h3>
+        <p class="data-label">Lowest Score</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Charts Grid -->
+  <div class="charts-grid">
+    <!-- Score Distribution Chart -->
+    <div class="chart-card distribution-card" *ngIf="students.length">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-bar-chart-line"></i> Score Distribution
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="barChartData"
+                  [options]="barChartOptions"
+                  chartType="bar">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pass/Fail Pie Chart -->
+    <div class="chart-card pass-fail-card" *ngIf="students.length">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-pie-chart-fill"></i> Pass/Fail Rate
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="pie-container">
+          <canvas baseChart
+                  width="250"
+                  height="250"
+                  [data]="pieChartData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'">
+          </canvas>
+        </div>
+        <div class="pass-fail-stats">
+          <div class="pass-stat">
+            <div class="stat-percent">{{ passRate }}%</div>
+            <div class="stat-label">Pass Rate</div>
+          </div>
+          <div class="fail-stat">
+            <div class="stat-percent">{{ failRate }}%</div>
+            <div class="stat-label">Fail Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 5 Performers -->
+    <div class="chart-card performers-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-star-fill"></i> Top Performers
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="topChartData"
+                  [options]="horizontalBarOptions"
+                  chartType="bar">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom 5 Performers -->
+    <div class="chart-card performers-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-arrow-down"></i> Bottom Performers
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="bottomChartData"
+                  [options]="horizontalBarOptions"
+                  chartType="bar">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grade Distribution -->
+    <div class="chart-card grade-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-list-check"></i> Grade Distribution
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="grade-chart">
+          <div *ngFor="let grade of gradeDistribution" class="grade-row">
+            <div class="grade-label">{{ grade.label }}</div>
+            <div class="grade-bar-container">
+              <div class="grade-bar" [style.width.%]="calculateBarWidth(grade.count)">
+                <span class="grade-count" *ngIf="grade.count > 0">{{ grade.count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Average 5 Performers -->
+    <div class="chart-card performers-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="bi bi-bullseye"></i> Average Performers
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="averageChartData"
+                  [options]="horizontalBarOptions"
+                  chartType="bar">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Base styling */
+  .stats-dashboard {
+    background-color: #f5f7fa;
+    padding: 1.5rem;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Header styling */
+  .dashboard-header {
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #024964, #0394CA);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px -5px rgba(3, 148, 202, 0.2);
+  }
+
+  .course-title {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .course-name {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.1rem;
+    margin: 8px 0 0 0;
+  }
+
+  /* Overview cards styling */
+  .stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .overview-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .overview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    margin-right: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-icon i {
+    font-size: 2rem;
+    color: white;
+  }
+
+  .students-card .card-icon {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  }
+
+  .average-card .card-icon {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+  }
+
+  .high-card .card-icon {
+    background: linear-gradient(135deg, #f46b45, #eea849);
+  }
+
+  .low-card .card-icon {
+    background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+  }
+
+  .card-data {
+    flex: 1;
+  }
+
+  .data-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+
+  .data-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 8px 0 0 0;
+  }
+
+  /* Charts grid styling */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .distribution-card {
+    grid-column: span 2;
+  }
+
+  .chart-card {
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    background-color: #fcfcfc;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title i {
+    font-size: 1.2rem;
+    color: #0394CA;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    position: relative;
+  }
+
+  /* Pass/Fail stats styling */
+  .pie-container {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+  }
+
+  .pass-fail-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .pass-stat, .fail-stat {
+    text-align: center;
+  }
+
+  .stat-percent {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  .pass-stat .stat-percent {
+    color: #198754;
+  }
+
+  .fail-stat .stat-percent {
+    color: #dc3545;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  /* Grade distribution styling */
+  .grade-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .grade-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .grade-label {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #495057;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+  }
+
+  .grade-bar-container {
+    flex-grow: 1;
+    height: 26px;
+    background-color: #f1f3f5;
+    border-radius: 13px;
+    overflow: hidden;
+  }
+
+  .grade-bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    border-radius: 13px;
+    min-width: 4px;
+    background: linear-gradient(90deg, rgba(3, 148, 202, 0.7), #0394CA);
+    transition: width 0.5s ease;
+  }
+
+  .grade-count {
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .distribution-card {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-header {
+      padding: 1.5rem;
+    }
+
+    .stats-overview {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .overview-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .card-icon {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .stats-overview {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

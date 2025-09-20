@@ -1,0 +1,502 @@
+<div class="books-container">
+  <!-- Using the reusable course-header component -->
+  <app-course-header
+    [course]="course"
+    [buttons]="headerButtons"
+    (buttonClick)="handleHeaderAction($event)">
+  </app-course-header>
+
+  <!-- Alert Messages -->
+  <div class="alerts-container" *ngIf="showSuccessMessage || error">
+    <div *ngIf="showSuccessMessage" class="alert-box success">
+      <div class="alert-content">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span>Books configuration saved successfully!</span>
+      </div>
+      <button class="alert-close" (click)="closeSuccessMessage()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div *ngIf="error" class="alert-box error">
+      <div class="alert-content">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>{{ error }}</span>
+      </div>
+      <button class="alert-close" (click)="error = ''">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="content-card">
+    <!-- Search Bar and Import Button -->
+    <div class="controls-row">
+      <div class="search-container">
+        <i class="bi bi-search search-icon"></i>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by ISBN or Title"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchTermChange()"
+        >
+      </div>
+
+      <button
+        class="action-btn secondary-btn"
+        (click)="toggleImportForm()"
+      >
+        <i class="bi" [ngClass]="showImportForm ? 'bi-x-circle' : 'bi-plus-circle'"></i>
+        {{ showImportForm ? 'Cancel Import' : 'Find Book (Import)' }}
+      </button>
+    </div>
+
+    <!-- Import Book Form -->
+    <div class="import-form" *ngIf="showImportForm">
+      <div class="form-header">
+        <h3 class="form-title">Import Book by ISBN</h3>
+      </div>
+      <div class="form-content">
+        <div class="form-group">
+          <label for="isbnImport">ISBN Number</label>
+          <input
+            id="isbnImport"
+            type="text"
+            [(ngModel)]="isbnInput"
+            class="form-input"
+            placeholder="Enter ISBN number"
+          >
+        </div>
+        <button
+          class="action-btn primary-btn submit-btn"
+          (click)="importBook()"
+          [disabled]="loading"
+        >
+          <i class="bi" [ngClass]="loading ? 'bi-hourglass-split' : 'bi-cloud-download'"></i>
+          {{ loading ? 'Importing...' : 'Import Book' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="table-container">
+      <table class="books-table">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>ISBN</th>
+          <th>Mapped</th>
+          <th>Required Reading</th>
+          <th>Suggested Reading</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let book of tableData">
+          <td class="book-title">{{ book.title }}</td>
+          <td class="book-isbn">{{ book.isbn }}</td>
+          <td>
+            <label class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="mapping[book.id].mapped"
+                (change)="onCheckboxChange($event, book, 'mapped')"
+              >
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <label class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="mapping[book.id].requiredReading"
+                (change)="onCheckboxChange($event, book, 'requiredReading')"
+              >
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <label class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="mapping[book.id].suggestedReading"
+                (change)="onCheckboxChange($event, book, 'suggestedReading')"
+              >
+              <span class="checkmark"></span>
+            </label>
+          </td>
+        </tr>
+
+        <!-- Empty state row -->
+        <tr *ngIf="tableData.length === 0">
+          <td colspan="5" class="empty-state">
+            <i class="bi bi-book"></i>
+            <p>No books found. Import a book or try a different search term.</p>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Main container */
+  .books-container {
+    padding: 1.5rem;
+    background-color: #f5f7fa;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Alert boxes */
+  .alerts-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .alert-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .alert-box.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  .alert-box.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+  }
+
+  .alert-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  /* Content Card */
+  .content-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Controls Row */
+  .controls-row {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+  }
+
+  .search-container {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    font-size: 1rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #0394CA;
+    box-shadow: 0 0 0 3px rgba(3, 148, 202, 0.15);
+  }
+
+  /* Action buttons */
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .action-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .primary-btn {
+    background-color: white;
+    color: #024964;
+  }
+
+  .primary-btn:hover:not(:disabled) {
+    background-color: #f0f0f0;
+  }
+
+  .secondary-btn {
+    background-color: #0394CA;
+    color: white;
+  }
+
+  .secondary-btn:hover:not(:disabled) {
+    background-color: #0288b8;
+  }
+
+  /* Import Form */
+  .import-form {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .form-header {
+    margin-bottom: 1rem;
+  }
+
+  .form-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0;
+  }
+
+  .form-content {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+
+  .form-group {
+    flex: 1;
+    max-width: 500px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #0394CA;
+    box-shadow: 0 0 0 3px rgba(3, 148, 202, 0.15);
+  }
+
+  .submit-btn {
+    height: 42px;
+  }
+
+  /* Table Styling */
+  .table-container {
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .books-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .books-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .books-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+  }
+
+  .books-table tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .book-title {
+    font-weight: 500;
+    color: #024964;
+  }
+
+  .book-isbn {
+    font-family: monospace;
+    color: #495057;
+  }
+
+  /* Custom Checkbox */
+  .custom-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto;
+  }
+
+  .custom-checkbox input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .custom-checkbox input:checked ~ .checkmark {
+    background-color: #0394CA;
+    border-color: #0394CA;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 8px;
+    top: 4px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  .custom-checkbox:hover .checkmark {
+    border-color: #0394CA;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #adb5bd;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .controls-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .search-container {
+      max-width: 100%;
+    }
+
+    .form-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .form-group {
+      max-width: 100%;
+    }
+
+    .submit-btn {
+      height: auto;
+    }
+  }
+</style>

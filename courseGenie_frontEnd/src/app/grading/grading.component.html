@@ -1,0 +1,278 @@
+<div class="m-3">
+  <app-course-header
+    [course]="course"
+    [buttons]="headerButtons"
+    (buttonClick)="handleHeaderAction($event)">
+  </app-course-header>
+
+  <div class="custom-card">
+    <div *ngIf="showSuccessMessage" class="success-message">
+      <span>Grades saved successfully.</span>
+      <button class="close-btn" (click)="dismissSuccessMessage()">×</button>
+    </div>
+
+    <div class="card-body">
+      <!-- Score legend -->
+      <div class="score-legend">
+        <div class="legend-item">
+          <span class="legend-color top"></span>
+          <span>Top Score</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color average"></span>
+          <span>Average Score</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color low"></span>
+          <span>Low Score</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+          <tr>
+            <th rowspan="3">Student ID</th>
+            <th colspan="2">Assessments</th>
+            <th *ngFor="let assessment of course?.sections?.[0]?.assessments">{{ assessment.shortName }}</th>
+            <th rowspan="3">Total</th>
+          </tr>
+          <tr>
+            <th colspan="2">Mapped CLOs</th>
+            <th *ngFor="let assessment of course?.sections?.[0]?.assessments">
+                <span *ngFor="let clo of assessment?.clos; let last = last">
+                  {{ clo.name }}{{ !last ? ', ' : '' }}
+                </span>
+            </th>
+          </tr>
+          <tr>
+            <th colspan="2">Max Points</th>
+            <th *ngFor="let assessment of course?.sections?.[0]?.assessments">{{ assessment.maxPoints }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let student of students">
+            <td>{{ student.studentId }}</td>
+            <td>{{ student.firstName }}</td>
+            <td>{{ student.lastName }}</td>
+            <td *ngFor="let assessment of course?.sections?.[0]?.assessments">
+              <div class="grade-input-container">
+                <input
+                  type="number"
+                  [ngClass]="getHighlightClass(assessment.assessmentId, student.studentId)"
+                  [value]="gradesMatrix[student.studentId][assessment.assessmentId] == null ? null : gradesMatrix[student.studentId][assessment.assessmentId]"
+                  class="grade-input"
+                  placeholder="Score"
+                  (change)="setGrade(assessment.assessmentId, student.studentId, $event.target)"
+                />
+                <div class="error-message" *ngIf="validationErrors[student.studentId]?.[assessment.assessmentId]">
+                  {{ validationErrors[student.studentId][assessment.assessmentId] }}
+                </div>
+              </div>
+            </td>
+            <td class="total-score">{{ getTotal(student.studentId) }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="randomize-btn" (click)="randomizeScores()">Randomize Scores</button>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  /* Main card styling */
+  .custom-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .course-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #024964;
+    margin: 0;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  /* Success message */
+  .success-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px 20px;
+    border-bottom: 1px solid #c3e6cb;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: #155724;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Score legend */
+  .score-legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  .legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+  }
+
+  .legend-color.top {
+    background-color: #d4edda;
+  }
+
+  .legend-color.average {
+    background-color: #fff3cd;
+  }
+
+  .legend-color.low {
+    background-color: #f8d7da;
+  }
+
+  /* Table styling */
+  .table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .custom-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: center;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    position: sticky;
+    top: 0;
+  }
+
+  .custom-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+  }
+
+  .custom-table tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .total-score {
+    font-weight: 700;
+    color: #024964;
+  }
+
+  /* Grade input styling */
+  .grade-input-container {
+    position: relative;
+  }
+
+  .grade-input {
+    width: 70px;
+    text-align: center;
+    padding: 6px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+
+  .grade-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  .error-message {
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  /* Highlight classes */
+  .highlight-top {
+    background-color: #d4edda;
+  }
+
+  .highlight-average {
+    background-color: #fff3cd;
+  }
+
+  .highlight-low {
+    background-color: #f8d7da;
+  }
+
+  /* Randomize button */
+  .randomize-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .randomize-btn:hover {
+    background-color: #5a6268;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .card-header > div {
+      margin-top: 12px;
+      align-self: flex-end;
+    }
+  }
+</style>

@@ -1,0 +1,87 @@
+<div class="container guest-container py-5">
+  <div class="card centered-card shadow rounded-4 overflow-hidden border-0">
+    <div class="row g-0">
+      <!-- Left column with background image -->
+      <div class="col-6">
+        <div class="welcome-bg h-100 d-flex align-items-center justify-content-center rounded-start" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+          <!-- You can add a logo or welcome image here -->
+          <div class="text-center p-4 text-white">
+            <h2 class="fw-bold mb-3">Welcome Back</h2>
+            <p class="opacity-75">We're excited to see you again!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column with login form -->
+      <div class="col-6">
+        <div class="guest-form-container p-4 p-md-5">
+          <h1 class="fw-bold mb-2">Login</h1>
+          <p class="text-secondary mb-4">Welcome back! Please login to your account</p>
+
+          <form (ngSubmit)="doLogin()">
+            <!-- Username Input -->
+            <div class="form-group mb-4">
+              <label for="username" class="form-label fw-semibold mb-2">Username</label>
+              <div class="input-group">
+                <span class="input-icon">
+                  <i class="bi bi-person"></i> <!-- Bootstrap icon - add bootstrap icons CSS -->
+                </span>
+                <input
+                  type="text"
+                  id="username"
+                  placeholder="Enter your username"
+                  class="input-field"
+                  [(ngModel)]="username"
+                  name="username"
+                  (blur)="validateUsername()"
+                  (input)="validateUsername()"
+                  required
+                />
+              </div>
+              <div class="error-message small text-danger mt-1" *ngIf="usernameError">{{ usernameError }}</div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label for="password" class="form-label fw-semibold mb-0">Password</label>
+                <a href="/reset-password-request" class="text-decoration-none small text-primary">Reset Password</a>
+              </div>
+              <div class="input-group">
+                <span class="input-icon">
+                  <i class="bi bi-lock"></i> <!-- Bootstrap icon -->
+                </span>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Enter your password"
+                  class="input-field"
+                  [(ngModel)]="password"
+                  name="password"
+                  (blur)="validatePassword()"
+                  required
+                />
+              </div>
+              <div class="error-message small text-danger mt-1" *ngIf="passwordError">{{ passwordError }}</div>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-2 mt-2 fw-semibold d-flex align-items-center justify-content-center"
+              [disabled]="loading"
+              style="background: linear-gradient(to right, #2575fc, #6a11cb); border: none;"
+            >
+              <ng-container *ngIf="!loading">Login</ng-container>
+              <ng-container *ngIf="loading">
+                <c-spinner color="light" size="sm" class="me-2" /> Logging in...
+              </ng-container>
+            </button>
+
+            <div class="error-message text-danger text-center small mt-3" *ngIf="generalError">{{ generalError }}</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

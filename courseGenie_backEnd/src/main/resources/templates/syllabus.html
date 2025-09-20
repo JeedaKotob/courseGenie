@@ -1,0 +1,709 @@
+
+<body class="c78 c137 doc-content">
+<div>
+    <p class="c27 c106"><span class="c2"></span></p>
+    <p class="c91"><span class="c2" th:text="${courseCode}">ENGL 301 </span></p>
+</div>
+<p class="c22 title"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 698.00px; height: 129.60px;"><img alt="Logo.jpg" th:src="${logoUrl}" style="width: 698.00px; height: 129.60px; margin-left: -0.00px; margin-top: -0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+<!--<img th:src="@{/images/logo.jpg}" alt="Image Description" />-->
+
+<!-- Header: Course Title and Schedule -->
+<p class="c22 title">
+      <span class="c11 c74" th:text="${courseTitleFull}">
+        Course Code and Course Title
+      </span><br>
+    <span class="c28 c45 c13 c71" th:text="${courseSchedule}">
+        UTR/MW xx:xx-xx:xx, Room xxx
+      </span>
+</p>
+
+<!-- Instructor and course basic info table -->
+<table class="c20">
+    <tr class="c24">
+        <td class="c61 c59">
+            <p class="c22"><span class="c15 c3">Instructor</span></p>
+        </td>
+        <td class="c59 c116">
+            <p class="c22"><span class="c15 c3">Office</span></p>
+        </td>
+        <td class="c81 c59">
+            <p class="c22"><span class="c15 c3">Phone</span></p>
+        </td>
+        <td class="c59 c72">
+            <p class="c22"><span class="c15 c3">Email</span></p>
+        </td>
+        <td class="c76 c59">
+            <p class="c22"><span class="c15 c3">Semester-Year</span></p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c61">
+            <p class="c22">
+                <span class="c2" th:text="${instructorName}">xxxxx</span>
+            </p>
+        </td>
+        <td class="c116">
+            <p class="c22">
+                <span class="c2" th:text="${office}">xxxx</span>
+            </p>
+        </td>
+        <td class="c81">
+            <p class="c22">
+                <span class="c2" th:text="${phone}">Xxxxx</span>
+            </p>
+        </td>
+        <td class="c72">
+            <p class="c22">
+                <span class="c2" th:text="${email}">xxxcad</span>
+            </p>
+        </td>
+        <td class="c76">
+            <p class="c22">
+                <span class="c2" th:text="${semesterYear}">xxxxx-xxxx</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c61">
+            <p class="c22">
+                <span class="c15 c3">Office Hours:</span>
+            </p>
+        </td>
+        <td class="c111" colspan="4">
+            <p class="c37">
+            <span class="c2" th:text="${officeHours}">
+              At least 1 hour for each assigned course. So, faculty with 4 courses load should have at least a total 4 hours here.
+            </span>
+            </p>
+        </td>
+    </tr>
+</table>
+<p class="c37 c27"><span class="c2"></span></p>
+
+<!-- Course details table -->
+<table class="c20">
+    <tr class="c24">
+        <td class="c73" rowspan="2">
+            <p class="c37"><span class="c15 c3">Discipline:</span></p>
+        </td>
+        <td class="c80" rowspan="2">
+            <p class="c37">
+                <span class="c2" th:text="${discipline}">English</span>
+            </p>
+        </td>
+        <td class="c104" colspan="5">
+            <p class="c37"><span class="c15 c3">Course Approval Date:</span></p>
+        </td>
+        <td class="c113" colspan="2">
+            <p class="c37">
+                <span class="c2" th:text="${courseApprovalDate}">Unlisted</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c104" colspan="5">
+            <p class="c37"><span class="c15 c3">Last Revision Date</span></p>
+        </td>
+        <td class="c113" colspan="2">
+            <p class="c37">
+                <span class="c2" th:text="${lastRevisionDate}">May 4, 2019</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c73">
+            <p class="c37"><span class="c15 c3">Course Number:</span></p>
+        </td>
+        <td class="c64">
+            <p class="c37">
+                <span class="c2" th:text="${courseNumber}">301</span>
+            </p>
+        </td>
+        <td class="c85" colspan="2">
+            <p class="c37"><span class="c15 c3">Course Title:</span></p>
+        </td>
+        <td class="c62" colspan="7">
+            <p class="c37">
+                <span class="c2" th:text="${courseTitle}">The Art of Poetry</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c73">
+            <p class="c37"><span class="c15 c3">Undergraduate:</span></p>
+        </td>
+        <td class="c64">
+            <p class="c37">
+                <span class="c2" th:text="${undergraduate}">Yes</span>
+            </p>
+        </td>
+        <td class="c85" colspan="2">
+            <p class="c37"><span class="c15 c3">New Course:</span></p>
+        </td>
+        <td class="c90">
+            <p class="c37">
+                <span class="c2" th:text="${newCourse}">No</span>
+            </p>
+        </td>
+        <td class="c115" colspan="3">
+            <p class="c37"><span class="c15 c3">Course Deletion:</span></p>
+        </td>
+        <td class="c8">
+            <p class="c37">
+                <span class="c2" th:text="${courseDeletion}">X</span>
+            </p>
+        </td>
+        <td class="c17">
+            <p class="c37"><span class="c15 c3">Credits:</span></p>
+        </td>
+        <td class="c7">
+            <p class="c37">
+                <span class="c2" th:text="${credits}">3</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c73">
+            <p class="c37"><span class="c15 c3">Graduate:</span></p>
+        </td>
+        <td class="c64">
+            <p class="c37">
+                <span class="c2" th:text="${graduate}">No</span>
+            </p>
+        </td>
+        <td class="c85" colspan="2">
+            <p class="c37"><span class="c15 c3">Prerequisites:</span></p>
+        </td>
+        <td class="c112" colspan="2">
+            <p class="c37">
+                <span class="c2" th:text="${prerequisites}">None</span>
+            </p>
+        </td>
+        <td class="c55">
+            <p class="c37"><span class="c15 c3">Co-requisites:</span></p>
+        </td>
+        <td class="c77" colspan="4">
+            <p class="c37">
+                <span class="c2" th:text="${corequisites}">None (UWRT 150 rec)</span>
+            </p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c127" colspan="3">
+            <p class="c37">
+                <span class="c15 c3">Designated Innovation Journey Course: </span>
+            </p>
+        </td>
+        <td class="c10" colspan="8">
+            <p class="c37">
+                <span class="c2" th:text="${innovationJourneyCourse}">No</span>
+            </p>
+        </td>
+    </tr>
+</table>
+<p class="c37 c27"><span class="c2"></span></p>
+
+<!-- Required Books/Readings and Suggested References -->
+<h1 class="c135"><span class="c28 c11 c13">Required Books/Readings:</span></h1>
+<p class="c36 c67 c27"><span class="c2"></span></p>
+<ul class="c31 lst-kix_list_4-0 start">
+    <li class="c37 c67 c119 li-bullet-0">
+        <span class="c2" th:text="${requiredReadings}">
+          All readings will be posted in MyCourses/Content. See the Calendar below for complete listing.
+        </span>
+    </li>
+</ul>
+
+<div th:if="${suggestedReadings != null and suggestedReadings != ''}">
+    <p class="c37 c67">
+        <h1 class="c28 c71 c45 c13">Suggested References/Readings:</h1>
+    </p>
+    <ul class="c31 lst-kix_list_2-0 start">
+        <li class="c53 c119 c67 li-bullet-0">
+      <span class="c2" th:text="${suggestedReadings}">
+        Post suggested readings here.
+      </span>
+        </li>
+    </ul>
+</div>
+
+<!-- Official Course Description and Learning Outcomes -->
+<h1 class="c53">
+    <span class="c28 c11 c13">Official Course Description:</span>
+</h1>
+<p class="c121">
+      <span class="c2" th:text="${courseDescription}">
+        This area holds course description per university catalogue. Therefore, you cannot edit it.
+      </span>
+</p>
+<p class="c121 c27"><span class="c2"></span></p>
+<h1 class="c102">
+    <span class="c28 c11 c13">Course Learning Outcomes:</span>
+</h1>
+<p class="c139">
+    <span class="c2">At the end of this course, a student will be able to:</span>
+</p>
+<div class="c36" th:utext="${courseLearningOutcomesStr}">
+    <!-- Fallback if not processed -->
+    CLO - 1: Description<br/>
+    CLO - 2: Description<br/>
+    CLO - 3: Description
+</div>
+<p class="c27 c36"><span class="c2"></span></p>
+<h1 class="c102">
+    <span class="c114">Innovation Outcomes (if applicable):</span>
+</h1>
+<p class="c37 c60 c27"><span class="c2"></span></p>
+<table class="c128">
+    <tr class="c24">
+        <td class="c21 c59">
+            <p class="c37 c60"><span class="c2">Innovation Outcome</span></p>
+        </td>
+        <td class="c59 c118">
+            <p class="c37 c60"><span class="c2">Associated CLO</span></p>
+        </td>
+        <td class="c39">
+            <p class="c37 c60"><span class="c2">Assessment Method</span></p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c21">
+            <p class="c37 c60"><span class="c2">(CLO from innovation course material)</span></p>
+        </td>
+        <td class="c118">
+            <p class="c37 c60"><span class="c2">(Associated CLO from list above)</span></p>
+        </td>
+        <td class="c52">
+            <p class="c37 c60">
+                <span class="c2">(Map to assessments)</span>
+            </p>
+            <p class="c37 c60">
+                <span class="c2">Needs to be specific. For example, it could be a particular section of a report</span>
+            </p>
+        </td>
+    </tr>
+</table>
+<p class="c37 c27"><span class="c2"></span></p>
+<p class="c37" id="h.gjdgxs">
+    <span class="c11">Mapping of CLOs to PLOs:</span>
+</p>
+<p class="c37" id="h.7ogsur5kbn0l">
+      <span class="c13 c78">
+        Please refer to the table below to see the mapping of the Course Learning Outcomes to the Program Learning Outcomes:&nbsp;&#8203;
+      </span>
+</p>
+<p class="c37 c27"><span class="c2"></span></p>
+
+<!-- Teaching & Learning Methodologies -->
+<p class="c60 c97">
+    <span class="c28 c11 c13">Teaching &amp; Learning Methodologies:</span>
+</p>
+<p class="c102 c75 c110">
+      <span class="c2" th:text="${teachingMethodologies}">
+
+      </span>
+</p>
+<p class="c102 c75 c110">
+      <span class="c2" th:text="${additionalTeachingMethodologies}">
+
+      </span>
+</p>
+<p class="c102 c75 c110">
+    <span class="c3"></span>
+    <span class="c13"></span>
+</p>
+<p class="c102 c75 c110">
+    <span class="c3"></span>
+    <span class="c13">
+
+      </span>
+</p>
+<p class="c37">
+    <br>
+    <span class="c114">Grading Scheme (please edit as per the course)</span>
+    <br>
+</p>
+
+<!-- Grading Scheme Table (static in this example) -->
+<table class="c20">
+    <tr class="c24">
+        <td class="c18">
+            <p class="c37"><span class="c87 c3">Excellent</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c87 c3">Good</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c3 c87">Satisfactory</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c87 c3">Minimal Pass</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c87 c3">Fail</span></p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c18 c103">
+            <p class="c37"><span class="c5">&nbsp; &nbsp; &nbsp; &nbsp;</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c5">B+ 87-89.99</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c5">C+ 77-79.99</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c5">D &nbsp; 60-69.99</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c5">F &nbsp; 0-59.99</span></p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c18">
+            <p class="c37"><span class="c5">A &nbsp; 94-100</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c5">B &nbsp; 83-86.99</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c5">C &nbsp; 73-76.99</span></p>
+        </td>
+        <td class="c18 c103">
+            <p class="c37 c27"><span class="c5"></span></p>
+        </td>
+        <td class="c89 c103">
+            <p class="c37 c27"><span class="c5"></span></p>
+        </td>
+    </tr>
+    <tr class="c24">
+        <td class="c18">
+            <p class="c37"><span class="c5">A- &nbsp;90-93.99</span></p>
+        </td>
+        <td class="c89">
+            <p class="c37"><span class="c5">B- &nbsp;80-82.99</span></p>
+        </td>
+        <td class="c18">
+            <p class="c37"><span class="c5">C- &nbsp;70-72.99</span></p>
+        </td>
+        <td class="c18 c103">
+            <p class="c37 c27"><span class="c5"></span></p>
+        </td>
+        <td class="c89 c103">
+            <p class="c37 c27"><span class="c5"></span></p>
+        </td>
+    </tr>
+</table>
+
+<!-- Coursework and Distribution (with a loop for assessments) -->
+<h1 class="c97 c60 c140">
+    <span class="c114">Coursework and Distribution </span>
+    <span class="c50">(please edit as per the course)</span>
+    <span class="c28 c11 c13">:</span>
+</h1>
+<p class="c37 c86 c60">
+      <span class="c2" th:text="${courseworkDistributionIntro}">
+        The final grade for the course will be calculated based on the following assessments:
+      </span>
+</p>
+<table class="c134">
+    <tr class="c82">
+        <td class="c99">
+            <p class="c27 c33"><span class="c2"></span></p>
+            <table class="c107">
+                <tr class="c109">
+                    <td class="c57 c59">
+                        <p class="c53 c60 c122"><span class="c15 c3">Assessment</span></p>
+                    </td>
+                    <td class="c47 c59">
+                        <p class="c14"><span class="c15 c3">CLO Mapping</span></p>
+                    </td>
+                    <td class="c44 c59">
+                        <p class="c53 c60 c101"><span class="c15 c3">Weight</span></p>
+                    </td>
+                </tr>
+                <!-- Loop through each assessment -->
+                <tr th:each="assessment : ${assessments}">
+                    <td class="c57">
+                        <p class="c46">
+                  <span class="c2" th:text="${assessment.name}">
+                    Workshop (best 4 of 5)
+                  </span>
+                        </p>
+                    </td>
+                    <td class="c47">
+                        <p class="c35">
+    <span class="c2">
+      <span th:each="clo, iterStat : ${assessment.clos}">
+        <span th:text="${clo.name}">Name</span><span th:text="${iterStat.last ? '' : ', '}"></span>
+      </span>
+    </span>
+                        </p>
+                    </td>
+                    <td class="c44">
+                        <p class="c32">
+                  <span class="c2" th:text="${assessment.maxPoints}">
+                    20%
+                  </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="c93">
+                    <td class="c131" colspan="2">
+                        <p class="c32"><span class="c15 c3">Total</span></p>
+                    </td>
+                    <td class="c44">
+                        <p class="c32"><span class="c15 c3">100%</span></p>
+                    </td>
+                </tr>
+            </table>
+            <p class="c27 c41"><span class="c2"></span></p>
+        </td>
+    </tr>
+</table>
+
+<!-- Description of Assessments -->
+<h1 class="c102">
+    <span class="c28 c11 c13">Description of Assessments: </span>
+</h1>
+<!-- Category descriptions rendered from the service -->
+<div th:if="${categoryDescriptions != null and categoryDescriptions != ''}"
+     th:utext="${categoryDescriptions}">
+    <!-- Runtime HTML: <b>Quiz:</b> … -->
+</div>
+
+<p class="c37 c27 c49"><span class="c2"></span></p>
+<p class="c53 c49">
+      <span class="c3" th:text="${presentationInfo}">
+        Presentations 1 and 2
+      </span>
+    <span class="c13" th:text="${presentationDescription}">
+        let you work with a partner in preparing a portion of that day’s material…
+      </span>
+</p>
+<p class="c53 c49">
+      <span style="overflow: hidden; display: inline-block; width: 46.00px; height: 3.33px;">
+        <img alt="" src="../static/images/image1.png" style="width: 46.00px; height: 3.33px;" />
+      </span>
+</p>
+<p class="c37 c27"><span class="c28 c13 c54"></span></p>
+
+<!-- Course Calendar -->
+<h1 class="c23">
+    <span class="c114">Course Calendar:<br></span>
+</h1>
+<table class="c20">
+    <tr class="c24">
+        <td class="c30 c59">
+            <h1 class="c23">
+                <span class="c15 c3">Week/<br>Day</span>
+            </h1>
+        </td>
+        <td class="c1 c59">
+            <h1 class="c23">
+                <span class="c15 c3">Topic</span>
+            </h1>
+        </td>
+        <td class="c6 c59">
+            <h1 class="c23">
+                <span class="c15 c3">Assigned Readings</span>
+            </h1>
+        </td>
+        <td class="c51 c59">
+            <h1 class="c23">
+                <span class="c15 c3">Assessments</span>
+            </h1>
+        </td>
+    </tr>
+    <tbody>
+    <!-- Iterate over the map entries.
+         'weekEntry' holds both key (week label) and value (a list of assessment objects) -->
+    <tr th:each="weekEntry : ${courseCalendar}">
+        <!-- Week column: display the key (e.g., "Week 1") -->
+        <td class="c30">
+            <h1 class="c23" th:text="${weekEntry.key}">Week 1</h1>
+        </td>
+
+        <!-- Topic column: For example, you might decide to show the course schedule
+             from the first assessment’s section data or another related property.
+             (Adjust this as needed for your case.) -->
+        <td class="c1">
+            <h1 class="c23"
+                th:text="${#lists.isEmpty(weekEntry.value) ? 'N/A' : weekEntry.value[0].section.schedule}">
+                Nothing Yet
+            </h1>
+        </td>
+
+        <!-- Readings column:
+             Your received Assessment objects do not include readings;
+             you can either add them to your data model or leave this as a placeholder -->
+        <td class="c6">
+            <h1 class="c23">No reading yet</h1>
+        </td>
+
+        <!-- Assessment column: list all assessment names for the week.
+             You can either join them or use a nested loop. Here’s one method using a nested loop. -->
+        <td class="c51">
+            <h1 class="c23">
+        <span th:each="assessment, iterStat : ${weekEntry.value}"
+              th:text="${assessment.name + (iterStat.last ? '' : ', ')}">
+          Assessment Name
+        </span>
+            </h1>
+        </td>
+    </tr>
+    </tbody>
+</table>
+    <tr class="c138">
+        <td class="c30 c59">
+            <h1 class="c12"><span class="c2"></span></h1>
+        </td>
+        <td class="c59 c98" colspan="3">
+            <h1 class="c63">
+                <span class="c34" th:text="${finalExamInfo}">Final Exam – TBA</span>
+            </h1>
+        </td>
+    </tr>
+</table>
+<h1 class="c12"><span class="c28 c11 c13"></span></h1>
+
+<!-- Course Policies and Attendance -->
+<h1 class="c23 c60">
+    <span class="c28 c11 c13">Course Policies:</span>
+</h1>
+<p class="c37 c60">
+    <span class="c45 c43">Classroom conduct</span>
+</p>
+<ul class="c31 lst-kix_list_1-0 start">
+    <li class="c53 c119 c60 li-bullet-0">
+        <span class="c13">
+          The rules of decorum apply in class: be respectful of me and of peers, ask productive questions, make appropriate and helpful observations…
+        </span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c13">
+          Electronic devices—mobiles, tablets, and laptops—must be off and put away during class unless used for a specific activity.
+        </span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c13">
+          No naps, no snacks. If you are too tired or hungry, take the absence.
+        </span>
+    </li>
+    <li class="c94 li-bullet-0">
+        <span class="c2">
+          If you work consistently and conscientiously, I will “round up” the “ones” before posting final grades.
+        </span>
+    </li>
+</ul>
+<p class="c37">
+    <span class="c2">Infractions of these rules of conduct will negatively impact your final grade.</span>
+</p>
+<p class="c37 c60">
+    <span class="c71 c45 c74 c43 c13 c108">Course Management</span>
+</p>
+<ul class="c31 lst-kix_list_1-0">
+    <li class="c58 c60 li-bullet-0">
+        <span class="c13">
+          You are responsible for knowing what’s due and when by referring to the syllabus.
+        </span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c13">
+          Coursework is cumulative—complete them conscientiously.
+        </span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c3">Type-written work</span><span class="c2"> must be turned in through MyCourses and in hard copy by the fixed deadlines.</span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c13">
+          Individual work must be your own.
+        </span>
+    </li>
+    <li class="c58 li-bullet-0">
+        <span class="c3">Late work</span><span class="c2"> will be deducted 10% every calendar day without exception.</span>
+    </li>
+    <li class="c94 li-bullet-0">
+        <span class="c3">Things may change</span> <span class="c13">but such changes will be communicated in writing.</span>
+    </li>
+</ul>
+<p class="c37 c60">
+    <span class="c45 c43">Attendance Policy:</span>
+</p>
+<p class="c37 c60">
+    <span class="c3 c15">Please select one of these two options:</span>
+</p>
+<!-- Show one of the two options based on a Boolean variable -->
+<ul class="c31 lst-kix_list_5-0 start" th:if="${attendanceMandatory ?: false}">
+    <li class="c53 c133 li-bullet-0">
+        <span class="c15 c3">Attendance is mandatory for this course</span>
+    </li>
+</ul>
+<p class="c37 c100" th:if="${attendanceMandatory ?: false}">
+      <span class="c96 c71 c74 c43 c13">
+        (If you chose to apply the attendance policy, then you must clearly state the following here in the syllabus and you must take attendance and upload the attendance record.)
+      </span>
+</p>
+<ul class="c31 lst-kix_list_5-0" th:if="${!(attendanceMandatory ?: false)}">
+    <li class="c53 c133 li-bullet-0">
+        <span class="c15 c3">Attendance is not mandatory for this course</span>
+    </li>
+</ul>
+<p class="c37 c100" th:if="${!(attendanceMandatory ?: false)}">
+      <span class="c71 c74 c43 c13 c96">
+        (If you chose not to apply the attendance policy, then you must clearly state the following here in the syllabus and attendance record is not applicable in this case.)
+      </span>
+</p>
+<p class="c53 c83">
+      <span class="c2" th:text="${attendanceStatement}">
+        Attendance is not mandatory for this class.
+      </span>
+</p>
+<p class="c53 c83">
+    <span class="c2">Refer to university policy 3.1.14-B.</span>
+</p>
+
+<!-- RIT Dubai Honor Principles and Academic Integrity -->
+<p class="c23">
+    <span class="c28 c11 c13">RIT Dubai Honor Principles:</span>
+</p>
+<p class="c53 c65">
+      <span class="c13 c125">
+        Refer to Policy 5.1.1- RIT Dubai Honor Code in the Student Handbook
+      </span>
+</p>
+<h1 class="c37">
+    <span class="c28 c11 c13">Academic Integrity:</span>
+</h1>
+<p class="c53 c70">
+      <span class="c125" th:text="${academicIntegrityDescription}">
+        Refer to Policy 3.1.7- Policy on Academic Responsibility in the Student Handbook.
+      </span>
+</p>
+<p class="c53 c70">
+      <span th:text="${academicIntegrityDetails}">
+        A description of what constitutes academic integrity and resources that can help you properly credit others…
+      </span>
+</p>
+<p class="c53 c70">
+      <span th:text="${academicCheatingDetails}">
+        Other forms of cheating … will be penalized accordingly.
+      </span>
+</p>
+<p class="c53 c70">
+      <span th:text="${academicAdvice}">
+        More importantly: plagiarism is counter-productive. It hampers your intellectual development…
+      </span>
+</p>
+<p class="c53 c70">
+    <span class="c28 c50 c13">Procedures for handling Academic Dishonesty:</span>
+</p>
+<p class="c53 c70" id="h.30j0zll">
+      <span class="c125" th:text="${academicDishonestyProcedures}">
+        Refer to Section 2. Academic Conduct of Policy 3.1.7 in the student handbook.
+      </span>
+</p>
+<p class="c27 c105"><span class="c0"></span></p>
+</body>

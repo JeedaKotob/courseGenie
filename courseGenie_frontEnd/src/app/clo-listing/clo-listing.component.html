@@ -1,0 +1,155 @@
+<div class="m-3">
+  <!-- Course Header Component -->
+  <app-course-header
+    [course]="course"
+ >
+  </app-course-header>
+
+  <!-- Main Content Card -->
+  <div class="custom-card shadow-sm border-0 rounded-lg">
+    <div class="card-content p-4">
+      <!-- Info Box -->
+      <div class="info-box mb-4">
+        <div class="info-icon">
+          <i class="bi bi-info-circle-fill"></i>
+        </div>
+        <div class="info-content">
+          <h5>Course Learning Outcomes</h5>
+          <p>Below is the list of Course Learning Outcomes (CLOs) for this course. These represent the knowledge and skills students should gain by the end of the course.</p>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <angular2-smart-table [settings]="settings" [source]="tableData" (editConfirm)="updateClo($event)" class="clo-table"></angular2-smart-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  /* Main container */
+  .custom-card {
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .card-content {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .course-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #024964;
+  }
+
+  /* Info box */
+  .info-box {
+    display: flex;
+    padding: 16px;
+    background-color: #e8f4f8;
+    border-radius: 8px;
+    border-left: 4px solid #0394CA;
+  }
+
+  .info-icon {
+    font-size: 1.5rem;
+    color: #0394CA;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .info-content h5 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+    color: #024964;
+  }
+
+  .info-content p {
+    margin-bottom: 0;
+    color: #495057;
+  }
+
+  /* Button styling */
+  .btn-next {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-next:hover {
+    background-color: #218838;
+  }
+
+  /* Table container */
+  .table-container {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+  }
+
+  /* Smart table styling */
+  :host ::ng-deep .clo-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  :host ::ng-deep .clo-table table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 2px solid #dee2e6;
+    text-align: left;
+  }
+
+  :host ::ng-deep .clo-table table tbody tr {
+    transition: background-color 0.2s;
+  }
+
+  :host ::ng-deep .clo-table table tbody tr:hover {
+    background-color: #f1f9fb;
+  }
+
+  :host ::ng-deep .clo-table table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+  }
+
+  :host ::ng-deep .clo-table table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  :host ::ng-deep .clo-table .ng2-smart-action-edit-edit {
+    color: #0394CA;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-header-custom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-group {
+      margin-top: 12px;
+    }
+
+    .course-title {
+      font-size: 1.2rem;
+    }
+  }
+</style>

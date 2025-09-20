@@ -1,0 +1,48 @@
+dn: ou=Users,dc=course,dc=genie
+objectClass: organizationalUnit
+ou: Users
+
+dn: uid=user1,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: First User
+sn: User
+givenName: First
+uid: user1
+uidNumber: 1000
+gidNumber: 1000
+homeDirectory: /home/user1
+loginShell: /bin/bash
+userPassword: test1
+mail: user1@course.com
+
+dn: uid=user2,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: User Two
+sn: Two
+givenName: User
+uid: user2
+uidNumber: 1001
+gidNumber: 1000
+homeDirectory: /home/user2
+loginShell: /bin/bash
+userPassword: test2
+mail: user2@course.com
+
+dn: uid=axacad5,ou=Users,dc=course,dc=genie
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Ali Assi
+sn: Assi
+givenName: Ali
+uid: axacad5
+uidNumber: 1002
+gidNumber: 1000
+homeDirectory: /home/axacad5
+loginShell: /bin/bash
+userPassword: ali123
+mail: axacad5@rit.edu
