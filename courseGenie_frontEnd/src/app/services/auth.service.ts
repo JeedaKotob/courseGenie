@@ -17,6 +17,21 @@ export class AuthService {
     this.currentUserSubject = new BehaviorSubject<any>(this.getCurrentUserFromStorage());
     this.currentUser = this.currentUserSubject.asObservable();
   }
+  private getTokenRaw(): string | null {
+    const raw = localStorage.getItem('token') || localStorage.getItem('access_token');
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return raw; }
+  }
+
+  private readTokenPayload(): any | null {
+    const tok = this.getTokenRaw();
+    if (!tok) return null;
+    try { return JSON.parse(atob(tok.split('.')[1])); } catch { return null; }
+  }
+
+  private normalizeRole(r: string): string {
+    return String(r).toUpperCase().replace(/^ROLE_/, '');
+  }
 
   private getCurrentUserFromStorage(): any {
     const userStr = localStorage.getItem('currentUser');
@@ -33,16 +48,30 @@ export class AuthService {
   }
 
   // Check if user has a specific role
+  // hasRole(role: string): boolean {
+  //   const user = this.currentUserValue;
+  //   if (!user || !user.roles) return false;
+  //
+  //   // Make sure the role has the ROLE_ prefix
+  //   if (!role.startsWith('ROLE_')) {
+  //     role = 'ROLE_' + role;
+  //   }
+  //
+  //   return user.roles.includes(role);
+  // }
   hasRole(role: string): boolean {
+    const need = this.normalizeRole(role);
+
     const user = this.currentUserValue;
-    if (!user || !user.roles) return false;
-
-    // Make sure the role has the ROLE_ prefix
-    if (!role.startsWith('ROLE_')) {
-      role = 'ROLE_' + role;
+    let have: string[] = Array.isArray(user?.roles)
+    ? user.roles.map((r: string)=> this.normalizeRole(r))
+      : [];
+    if (have.length === 0) {
+      const payload = this.readTokenPayload();
+      const raw = (payload?.roles ?? payload?.authorities ?? []) as string[];
+      have = raw.map(r => this.normalizeRole(r));
     }
-
-    return user.roles.includes(role);
+    return have.includes(need);
   }
 
   // Check if user has any of the specified roles
