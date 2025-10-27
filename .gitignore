@@ -10,3 +10,6 @@
 
 # Environment files
 .env
+
+# Office temp files
+~$*
