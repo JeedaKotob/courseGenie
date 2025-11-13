@@ -41,10 +41,10 @@ rectangle "CourseGenie+ System" {
   usecase "Complete Peer Review Evaluation" as UC_PeerReview
   usecase "Provide Peer Review Reflection" as UC_PeerReflection
 
-  UC01 ..> UC01a : <<extend>>\n[multi-role only]
+  UC01 <.. UC01a : <<extend>>\n[multi-role only]
 
-  UC01 ..> UC_AdminDash : <<extend>>\n[role = Admin]
-  UC01 ..> UC_ProfDash  : <<extend>>\n[role = Professor]
+  UC01 <.. UC_AdminDash : <<extend>>\n[role = Admin]
+  UC01 <.. UC_ProfDash  : <<extend>>\n[role = Professor]
 
   UC_AdminDash ..> UC_CourseConfig : <<include>>
   UC_AdminDash ..> UC_SyllabusMgmt : <<include>>
