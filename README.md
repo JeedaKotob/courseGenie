@@ -6,8 +6,8 @@
 | Activity Diagram | — | Not Started | |
 | Sequence Diagram | — | Not Started | |
 | State Diagram | — | Not Started | |
-| Components Diagram (whole subsystems) | — | Not Started | |
-| Deployment Diagram (whole subsystems) | — | Not Started | |
+| Components Diagram (whole subsystems) | ibraheem | Not Started | |
+| Deployment Diagram (whole subsystems) | ibraheem | Not Started | |
 | Inputs, Outputs, or Deliverables Diagram | — | Not Started | |
 | Storage / Database Design Diagram | — | Not Started | |
 | MSD II Plan (first draft with project-specific detail) | — | Not Started | |
