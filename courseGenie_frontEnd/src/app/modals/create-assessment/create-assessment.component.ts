@@ -179,8 +179,7 @@ export class CreateAssessmentComponent {
           this.course?.sections?.[0].assessments.push(data);
           createdCount++;
           if (createdCount === assessmentPayloads.length) {
-            this.sharedDataService.setSharedVariable(this.course);
-            AssessmentsComponent.updateList.next(true);
+            this.sharedDataService.setSelectedCourse(this.course);
             this.pendingAssessments = [];
             this.close();
             this.isCommitting = false;

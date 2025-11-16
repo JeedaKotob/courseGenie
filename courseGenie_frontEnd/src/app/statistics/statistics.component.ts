@@ -86,7 +86,7 @@ export class StatisticsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     this.getAllStudents();
   }
   // Add this method to your component class

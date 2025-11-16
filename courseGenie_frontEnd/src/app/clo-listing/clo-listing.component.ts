@@ -68,13 +68,13 @@ export class CloListingComponent implements OnInit {
 
   constructor(private sharedDataService: SharedDataService, private cloService: CloService) {
     CloListingComponent.updateList.subscribe(res => {
-      this.course = this.sharedDataService.getSharedVariable();
+      this.course = this.sharedDataService.selectedCourseValue;
       this.getCLOSData();
     });
   }
 
   ngOnInit() {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     this.getCLOSData();
   }
 
@@ -91,7 +91,7 @@ export class CloListingComponent implements OnInit {
         if (elementIndex !== undefined && elementIndex !== -1 && this.course?.clos) {
           this.course.clos[elementIndex].description = data.description;
           this.course.clos[elementIndex].name = data.name;
-          this.sharedDataService.setSharedVariable(this.course);
+          this.sharedDataService.setSelectedCourse(this.course);
         }
       },
       error: () => {

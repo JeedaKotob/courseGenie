@@ -35,7 +35,7 @@ export class CloReportingComponent implements OnInit {
 
   ngOnInit(): void {
     // Retrieve the course from shared data service
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     if (!this.course) {
       console.error('No course data found in shared data service.');
     }
