@@ -1,10 +1,8 @@
 package com.course_genie.benchmark;
+import com.course_genie.program.Program;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
+import jakarta.persistence.*;
 
 @Entity
 @Builder
@@ -19,4 +17,9 @@ public class Benchmark {
     private String description;
     private int threshold;
     private int percentage;
+
+//    @ManyToOne
+//    @JoinColumn(name="program_id",nullable=false)
+//    private Program program;
+
 }
