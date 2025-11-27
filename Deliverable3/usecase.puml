@@ -1,0 +1,83 @@
+@startuml
+left to right direction
+skinparam shadowing false
+
+actor User
+actor Admin
+actor Professor
+actor Reviewer
+actor Reviewee
+
+User -[hidden]- Admin
+Admin -[hidden]- Professor
+Professor -[hidden]- Reviewer
+Reviewer -[hidden]- Reviewee
+
+User <|-- Admin
+User <|-- Professor
+Professor <|-- Reviewer
+Professor <|-- Reviewee
+
+rectangle "CourseGenie+ System" {
+
+  usecase "Log In" as UC01
+  usecase "Choose Role" as UC01a
+
+  usecase "Access Admin Dashboard" as UC_AdminDash
+  usecase "Access Professor Dashboard" as UC_ProfDash
+
+  usecase "Configure Course Sections" as UC_CourseConfig
+  usecase "View & Track Syllabus Submissions" as UC_SyllabusMgmt
+  usecase "View & Track Submissions" as UC_CARMgmt
+  usecase "Manage Peer Review Assignments" as UC_PeerMgmt
+  usecase "Allocate Course Exam Rooms" as UC_ExamPlan  
+
+  usecase "Generate and Submit CAR" as UC_CARSubmit
+  usecase "Assign Exam Rooms" as UC_ExamReview      
+  usecase "View Grade Analytics" as UC_Grades
+  usecase "View Course Calendar" as UC_Calendar
+  usecase "Collaborate Across Courses" as UC_Collab
+  usecase "View and Edit Profile" as UC_Profile
+  usecase "Complete Peer Review Evaluation" as UC_PeerReview
+  usecase "Provide Peer Review Reflection" as UC_PeerReflection
+
+  UC01 <.. UC01a : <<extend>>\n[multi-role only]
+
+  UC01 <.. UC_AdminDash : <<extend>>\n[role = Admin]
+  UC01 <.. UC_ProfDash  : <<extend>>\n[role = Professor]
+
+  UC_AdminDash ..> UC_CourseConfig : <<include>>
+  UC_AdminDash ..> UC_SyllabusMgmt : <<include>>
+  UC_AdminDash ..> UC_CARMgmt      : <<include>>
+  UC_AdminDash ..> UC_PeerMgmt     : <<include>>
+  UC_AdminDash ..> UC_ExamPlan     : <<include>>
+
+  UC_ProfDash ..> UC_CARSubmit   : <<include>>
+  UC_ProfDash ..> UC_ExamReview  : <<include>>
+  UC_ProfDash ..> UC_Grades      : <<include>>
+  UC_ProfDash ..> UC_Calendar    : <<include>>
+  UC_ProfDash ..> UC_Collab      : <<include>>
+  UC_ProfDash ..> UC_Profile     : <<include>>
+  UC_PeerReflection ..> UC_PeerReview : <<include>>
+}
+
+database "Database" as DB
+
+User --> UC01
+
+Admin --> UC_AdminDash
+Professor --> UC_ProfDash
+Reviewer --> UC_PeerReview
+Reviewee --> UC_PeerReflection
+
+UC01 --> DB
+UC_SyllabusMgmt --> DB
+UC_CARMgmt --> DB
+UC_CARSubmit --> DB
+UC_PeerMgmt --> DB
+UC_ExamPlan --> DB
+UC_ExamReview --> DB
+UC_Grades --> DB
+UC_Calendar --> DB
+
+@enduml
