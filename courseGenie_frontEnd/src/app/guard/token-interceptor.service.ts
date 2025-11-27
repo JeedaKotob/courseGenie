@@ -7,9 +7,7 @@ export class TokenInterceptorService implements HttpInterceptor {
     const isAuthRequest = request.url.endsWith("authenticate");
 
     if (!isAuthRequest) {
-      // token is stored as JSON string, e.g. "\"eyJ...\""
-      const raw = localStorage.getItem("token");
-      const token = raw ? raw.replace(/"/g, '') : null;
+      const token = localStorage.getItem("token");
 
       if (token) {
         request = request.clone({
