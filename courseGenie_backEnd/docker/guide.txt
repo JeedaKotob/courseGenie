@@ -1,4 +1,3 @@
 1 : run the docker compose
 2 : run the command ->  docker cp users.ldif openldap:/tmp/users.ldif
 3 : run the command ->  docker exec -it openldap ldapadd -x -D "cn=admin,dc=course,dc=genie" -w root -f /tmp/users.ldif
-4 : now you have 2 users in the active directory

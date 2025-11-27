@@ -71,6 +71,7 @@ export interface User {
   userName: string;
   email: string;
   jwtToken: string;
+  roles: string[];
 }
 
 export interface Benchmark {

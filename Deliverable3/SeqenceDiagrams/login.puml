@@ -1,0 +1,30 @@
+@startuml
+actor User
+participant LoginPage
+participant AuthService
+database Database
+participant DashboardComponent
+
+User -> LoginPage: enterCredentials(username, password)
+LoginPage -> AuthService: authenticate(username, password)
+
+AuthService -> Database: fetchUserRecord(userId)
+Database --> AuthService: userRecord + roles
+AuthService --> LoginPage: authResult + roles
+
+opt invalidCredentials
+    LoginPage --> User: showError("Invalid username or password")
+end
+
+LoginPage -> DashboardComponent: loadDashboard(role)
+DashboardComponent --> User: displayDashboard()
+
+alt userHasMultipleRoles
+    LoginPage --> User: displayRoleSelection()
+    User -> LoginPage: selectRole(role)
+    LoginPage -> DashboardComponent: loadDashboard(role)
+    DashboardComponent --> User: displayDashboard()
+end
+
+
+@enduml
