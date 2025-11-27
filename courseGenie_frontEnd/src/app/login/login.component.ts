@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SharedDataService } from '../services/shared-data.sevice';
-import { Professor } from '../home/course.model';
+import { User } from '../home/course.model';
 
 @Component({
   selector: 'app-login',
@@ -54,7 +54,7 @@ export class LoginComponent {
     this.generalError = null;
 
     this.authService.doLogin(payload).subscribe({
-      next: (loggedInUser: Professor) => {
+      next: (loggedInUser: User) => {
         this.sharedDataService.setCurrentUser(loggedInUser);
         this.loading = false;
         this.router.navigate(['/home']);

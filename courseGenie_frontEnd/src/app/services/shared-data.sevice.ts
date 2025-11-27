@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Professor, Course } from '../home/course.model';
+import { User, Course } from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedDataService {
-  private currentUserSubject = new BehaviorSubject<Professor | null>(null);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   private selectedCourseSubject = new BehaviorSubject<Course | null>(null);
@@ -19,7 +19,7 @@ export class SharedDataService {
     }
   }
 
-  setCurrentUser(user: Professor): void {
+  setCurrentUser(user: User): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
@@ -29,7 +29,7 @@ export class SharedDataService {
     this.currentUserSubject.next(null);
   }
 
-  public get currentUserValue(): Professor | null {
+  public get currentUserValue(): User | null {
     return this.currentUserSubject.getValue();
   }
 

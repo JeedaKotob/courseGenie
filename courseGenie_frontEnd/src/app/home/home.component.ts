@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const coursesBySemester$ = this.sharedDataService.currentUser$.pipe(
       filter(user => !!user),
-      switchMap(user => this.courseService.getCoursesByProfessorId(user!.professorId))
+      switchMap(user => this.courseService.getCoursesByProfessorId(user!.userId))
     );
 
     this.semestersWithSections$ = coursesBySemester$.pipe(
