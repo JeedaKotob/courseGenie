@@ -13,7 +13,7 @@ public class SectionDTOMapper implements Function<Section, SectionDTO> {
                 .code(section.getCode())
                 .term(section.getTerm())
                 .configured(section.isConfigured())
-                .professorId(section.getProfessor().getProfessorId())
+                .professorId(section.getProfessor().getUserId())
                 .courseId(section.getCourse().getCourseId())
                 .class_number(section.getClass_number())
                 .teachingMethodology(String.valueOf(section.getTeachingMethodology()))

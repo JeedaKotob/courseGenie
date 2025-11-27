@@ -1,6 +1,6 @@
 package com.course_genie.peerReview;
 
-import com.course_genie.professor.Professor;
+import com.course_genie.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,11 +27,11 @@ public class PeerReview {
 
     @ManyToOne
     @JoinColumn(name="reviewer_id",nullable=false)
-    private Professor reviewer;
+    private User reviewer;
 
     @ManyToOne
     @JoinColumn(name="reviewee_id",nullable=false)
-    private Professor reviewee;
+    private User reviewee;
 
 
 }

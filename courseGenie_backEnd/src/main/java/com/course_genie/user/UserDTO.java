@@ -1,4 +1,4 @@
-package com.course_genie.professor;
+package com.course_genie.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfessorDTO {
-    long professorId;
+public class UserDTO {
+    long userId;
     String firstName;
     String lastName;
     String userName;

@@ -1,6 +1,6 @@
 package com.course_genie.security;
 
-import com.course_genie.professor.*;
+import com.course_genie.user.*;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQuery;
@@ -16,38 +16,38 @@ import java.util.Set;
 public class LdapService {
 
     private final LdapTemplate ldapTemplate;
-    private final ProfessorRepository professorRepository;
+    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final ProfessorDTOMapper professorDTOMapper;
+    private final UserDTOMapper userDTOMapper;
 
-    public LdapService(LdapTemplate ldapTemplate, ProfessorRepository professorRepository, JwtUtil jwtUtil, ProfessorDTOMapper professorDTOMapper) {
+    public LdapService(LdapTemplate ldapTemplate, UserRepository userRepository, JwtUtil jwtUtil, UserDTOMapper userDTOMapper) {
         this.ldapTemplate = ldapTemplate;
-        this.professorRepository = professorRepository;
+        this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
-        this.professorDTOMapper = professorDTOMapper;
+        this.userDTOMapper = userDTOMapper;
     }
 
-    public ProfessorDTO authenticate(String username, String password) {
+    public UserDTO authenticate(String username, String password) {
         try {
             if (ldapTemplate.authenticate("ou=Users", "(uid=" + username + ")", password)) {
-                Professor professor = professorRepository.findByUserName(username).orElse(new Professor());
-                if (professor.getProfessorId() == null) {
+                User user = userRepository.findByUserName(username).orElse(new User());
+                if (user.getUserId() == null) {
                     Attributes attributes = searchUser(username);
-                    professor.setEmail(attributes.get("mail").toString().replaceAll("^mail:\\s*", ""));
-                    professor.setFirstName(attributes.get("givenName").toString().replaceAll("^givenName:\\s*", ""));
-                    professor.setLastName(attributes.get("sn").toString().replaceAll("^sn:\\s*", ""));
-                    professor.setUserName(username);
+                    user.setEmail(attributes.get("mail").toString().replaceAll("^mail:\\s*", ""));
+                    user.setFirstName(attributes.get("givenName").toString().replaceAll("^givenName:\\s*", ""));
+                    user.setLastName(attributes.get("sn").toString().replaceAll("^sn:\\s*", ""));
+                    user.setUserName(username);
 
                     // Assign default role for new user
                     Set<String> roles = new HashSet<>();
                     roles.add("ROLE_USER");
-                    professor.setRoles(roles);
+                    user.setRoles(roles);
 
-                    professorRepository.save(professor);
+                    userRepository.save(user);
                 }
-                ProfessorDTO professorDTO = professorDTOMapper.apply(professor);
-                professorDTO.setJwtToken(jwtUtil.generateToken(username, professor.getRoles()));
-                return professorDTO;
+                UserDTO userDTO = userDTOMapper.apply(user);
+                userDTO.setJwtToken(jwtUtil.generateToken(username, user.getRoles()));
+                return userDTO;
             }
             return null;
         } catch (Exception e) {

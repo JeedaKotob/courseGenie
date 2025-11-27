@@ -4,7 +4,7 @@ import com.course_genie.book.Book;
 
 import com.course_genie.booksection.*;
 import com.course_genie.course.Course;
-import com.course_genie.professor.Professor;
+import com.course_genie.user.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import lombok.*;
@@ -38,7 +38,7 @@ public class Section {
 
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
+    private User professor;
 
     public Section(long sectionId) {
         this.sectionId = sectionId;

@@ -27,7 +27,7 @@ public class SectionService {
         Section sectionToReplicate = sectionRepository.findById(sectionId).orElseThrow(() -> new EntityNotFoundException("Section not found"));
         sectionToReplicate.setConfigured(Boolean.TRUE);
         sectionRepository.save(sectionToReplicate);
-        List<Section> sections= sectionRepository.findSectionByCourseCourseIdAndProfessorProfessorIdAndConfigured(sectionToReplicate.getCourse().getCourseId(), sectionToReplicate.getProfessor().getProfessorId(), Boolean.FALSE).orElse(new ArrayList<>());
+        List<Section> sections= sectionRepository.findSectionByCourseCourseIdAndProfessorUserIdAndConfigured(sectionToReplicate.getCourse().getCourseId(), sectionToReplicate.getProfessor().getUserId(), Boolean.FALSE).orElse(new ArrayList<>());
         List<Assessment> assessmentsToReplicate = assessmentRepository.findAssessmentBySectionSectionId(sectionToReplicate.getSectionId()).orElse(new ArrayList<>());
         List<Assessment> assessmentsReplicat = new ArrayList<>();
         for (Section section : sections) {

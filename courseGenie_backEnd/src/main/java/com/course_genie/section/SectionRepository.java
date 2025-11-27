@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface SectionRepository extends JpaRepository<Section, Long> {
     Optional<List<Section>> findByCourseCourseId(Long courseCourseId);
 
-    Optional<List<Section>> findByCourseCourseIdAndProfessorProfessorId(Long courseCourseId, Long professorId);
+    Optional<List<Section>> findByCourseCourseIdAndProfessorUserId(Long courseCourseId, Long userId);
 
     Optional<Section> findSectionByCode(String code);
 
     Optional<Section> findSectionByCodeAndCourseCode(String sectionCode, String courseCode);
 
-    Optional<List<Section>> findSectionByCourseCourseIdAndProfessorProfessorIdAndConfigured(long courseId, long professorId, boolean isConfigure);
+    Optional<List<Section>> findSectionByCourseCourseIdAndProfessorUserIdAndConfigured(long courseId, long userId, boolean isConfigure);
 }

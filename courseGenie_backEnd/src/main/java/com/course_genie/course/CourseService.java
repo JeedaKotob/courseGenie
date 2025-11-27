@@ -119,7 +119,7 @@ public class CourseService {
         // For each course, fetch its sections and add them to the courseDTO.
         for (CourseDTO courseDTO : courseDTOList) {
             List<SectionDTO> sectionDTOS = sectionRepository
-                    .findByCourseCourseIdAndProfessorProfessorId(courseDTO.courseId(), professorId)
+                    .findByCourseCourseIdAndProfessorUserId(courseDTO.courseId(), professorId)
                     .orElse(new ArrayList<>())
                     .stream()
                     .map(sectionDTOMapper)

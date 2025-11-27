@@ -2,7 +2,7 @@ package com.course_genie.booking;
 
 import com.course_genie.assessment.Assessment;
 import com.course_genie.examRoom.ExamRoom;
-import com.course_genie.professor.Professor;
+import com.course_genie.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +33,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name="proctor_id",nullable=false)
-    private Professor professor;
+    private User professor;
 
     @OneToOne
     @JoinColumn(name="assessment_id",nullable=false)
