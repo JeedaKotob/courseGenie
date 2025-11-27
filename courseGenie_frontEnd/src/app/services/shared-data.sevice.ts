@@ -1,27 +1,43 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Course, Professor } from '../home/course.model';
+import { User, Course } from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedDataService {
-  
-  public static currentUser: Professor = JSON.parse(localStorage.getItem("currentUser") || "{}");
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-  // Use a BehaviorSubject to store and emit the shared variable
-  private sharedVariable = new BehaviorSubject<Course | null>(null);
-  
-  // Observable for other components to subscribe to
-  sharedVariable$ = this.sharedVariable.asObservable();
+  private selectedCourseSubject = new BehaviorSubject<Course | null>(null);
+  public selectedCourse$ = this.selectedCourseSubject.asObservable();
 
-  // Method to set the shared variable
-  setSharedVariable(value: Course | null): void {
-    this.sharedVariable.next(value);   
+  constructor() {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
+    }
   }
 
-  // Method to get the current value
-  getSharedVariable(): Course | null {
-    return this.sharedVariable.getValue();
+  setCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
+
+  public get currentUserValue(): User | null {
+    return this.currentUserSubject.getValue();
+  }
+
+  setSelectedCourse(course: Course | null): void {
+    this.selectedCourseSubject.next(course);
+  }
+
+  public get selectedCourseValue(): Course | null {
+    return this.selectedCourseSubject.getValue();
   }
 }

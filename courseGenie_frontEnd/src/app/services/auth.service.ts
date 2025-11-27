@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Professor } from '../home/course.model';
+import { User } from '../home/course.model';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -86,7 +86,7 @@ export class AuthService {
   }
 
   doLogin(payload: any) {
-    return this.http.post<Professor>(`${this.apiUrl}/authenticate`, payload)
+    return this.http.post<User>(`${this.apiUrl}/authenticate`, payload)
       .pipe(
         tap(response => {
           localStorage.setItem('currentUser', JSON.stringify(response));

@@ -28,7 +28,7 @@ export class SyllabusRenderComponent {
   ) {}
 
   ngOnInit(): void {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     if (this.course && this.course.sections && this.course.sections.length > 0) {
       this.generateSyllabus(this.course.sections[0].sectionId);
     }

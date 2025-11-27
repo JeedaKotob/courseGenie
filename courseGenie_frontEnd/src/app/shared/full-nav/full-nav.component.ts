@@ -37,7 +37,7 @@ export class FullNavComponent implements OnInit {
     this.courseCode = pathSegments[2];
     this.sectionCode = pathSegments[3];
 
-    this.sharedDataService.sharedVariable$.subscribe(value => {
+    this.sharedDataService.selectedCourse$.subscribe(value => {
       this.sharedValue = value;
     });
 
@@ -76,7 +76,7 @@ export class FullNavComponent implements OnInit {
     localStorage.setItem('sidebarCollapsed', this.isCollapsed.toString());
   }
   get currentUser() {
-    return SharedDataService.currentUser;
+    return this.sharedDataService.currentUserValue;
   }
 
   getCourseByCourseCodeAndSectionCode() {
@@ -94,7 +94,7 @@ export class FullNavComponent implements OnInit {
   }
 
   updateSharedVariable(newValue: Course): void {
-    this.sharedDataService.setSharedVariable(newValue);
+    this.sharedDataService.setSelectedCourse(newValue);
   }
 
   toggleMenu(label: string): void {
@@ -122,7 +122,7 @@ export class FullNavComponent implements OnInit {
     return url.replace(/\/:[^\/]+\/:[^\/]+/, '');
   }
   getcurrentUser() {
-    return SharedDataService.currentUser;
+    return this.sharedDataService.currentUserValue;
   }
 
 

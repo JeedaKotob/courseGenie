@@ -32,7 +32,7 @@ export class TeachingMethodologyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.course = this.sharedService.getSharedVariable();
+    this.course = this.sharedService.selectedCourseValue;
     if (this.course && this.course.sections && this.course.sections.length > 0) {
       this.sectionId = this.course.sections[0].sectionId;
       this.loadMethodology();

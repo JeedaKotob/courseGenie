@@ -1,6 +1,6 @@
 package com.course_genie.security;
 
-import com.course_genie.professor.ProfessorDTO;
+import com.course_genie.user.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +16,9 @@ public class JWTAuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthQuery authQuery) {
-        ProfessorDTO professorDTO = ldapService.authenticate(authQuery.username(), authQuery.password());
-        if (professorDTO != null) {
-            return ResponseEntity.ok(professorDTO);
+        UserDTO userDTO = ldapService.authenticate(authQuery.username(), authQuery.password());
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }

@@ -2,16 +2,14 @@ import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {SpinnerModule} from '@coreui/angular';
+import { SharedDataService } from '../services/shared-data.sevice';
+import { User } from '../home/course.model';
 
 @Component({
   selector: 'app-login',
   standalone: false,
-
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   username: string = '';
@@ -19,34 +17,24 @@ export class LoginComponent {
   usernameError: string | null = null;
   passwordError: string | null = null;
   generalError: string | null = null;
+  loading = false;
 
-  private usernameValidationTriggered: boolean = false; // To track if username validations should show
+  private usernameValidationTriggered: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {
-  }
-
-  // validateUsername(): void {
-  //   if (!this.username) {
-  //     this.usernameError = 'Username is required';
-  //   } else if (!this.username.includes('cad')) {
-  //     this.usernameError = 'Invalid Username';
-  //   } else if (this.username.length < 6) {
-  //     this.usernameError = 'Invalid Username';
-  //   } else {
-  //     this.usernameError = null;
-  //   }
-  // }
-
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService,
+    private sharedDataService: SharedDataService
+  ) {}
 
   validatePassword(): void {
     this.passwordError = !this.password ? 'Password is required' : null;
   }
 
   validateUsername(): void {
-    this.passwordError = !this.password ? 'Password is required' : null;
+    this.usernameError = !this.username ? 'Username is required' : null;
   }
-
-  loading = false;
 
   doLogin() {
     this.usernameValidationTriggered = true;
@@ -57,26 +45,23 @@ export class LoginComponent {
       return;
     }
 
-    let payload = {
+    const payload = {
       username: this.username,
       password: this.password
     };
 
     this.loading = true;
-
-    // Navigate immediately to Overview page with a query param like loading=true
-    this.router.navigate(['/overview'], { queryParams: { loading: 'true' } });
+    this.generalError = null;
 
     this.authService.doLogin(payload).subscribe({
-      next: (data) => {
+      next: (loggedInUser: User) => {
+        this.sharedDataService.setCurrentUser(loggedInUser);
         this.loading = false;
-        this.router.navigate(['/home']);  // or wherever you want after successful login
+        this.router.navigate(['/home']);
       },
-      error: () => {
+      error: (err) => {
         this.generalError = 'Username or Password is incorrect';
         this.loading = false;
-        // Optionally, navigate back to login if error
-        this.router.navigate(['/login']);
       }
     });
   }

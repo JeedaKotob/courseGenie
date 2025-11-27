@@ -1,5 +1,5 @@
-INSERT INTO course_genie.professor
-  (professor_id, first_name, last_name, user_name, email, office, phone, office_hours)
+INSERT INTO course_genie.user
+  (user_id, first_name, last_name, user_name, email, office, phone, office_hours)
 VALUES
   (1,'Ali','Assi','axacad5','axacad5@rit.edu','D002','2060','Mon.: 11- 12 and 1 - 2:30, Wed.: 1 - 2-30'),
   (2,'Ahmed','Mostafa','axmcad4','axmcad4@rit.edu','D003','2070','Mon.: 11- 12 and 1 - 2:30, Wed.: 1 - 2-30'),
@@ -159,7 +159,7 @@ VALUES
   (3,75,1,'396001488'),
   (4,75,1,'396078872');
 
-INSERT INTO course_genie.professor_roles (professor_id, role)
+INSERT INTO course_genie.user_roles (user_id, role)
 VALUES 
   (1, 'PROFESSOR'),
   (2, 'PROFESSOR'),
@@ -173,18 +173,3 @@ INSERT INTO course_genie.category_description (id, category_name, description, s
 VALUES 
   (1,'Exam','Exam description',1);
 
-
--- | assessment             | done
--- | assessment_clo         | done
--- | benchmark              | done
--- | book                   | done
--- | book_section           | done
--- | category_description   | done
--- | clo                    | done
--- | course                 | done
--- | grade                  | done
--- | professor              | done
--- | professor_roles        | done
--- | section                | done
--- | student                | done
--- | syllabus               | done

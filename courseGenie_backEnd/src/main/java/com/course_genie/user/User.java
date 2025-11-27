@@ -1,4 +1,4 @@
-package com.course_genie.professor;
+package com.course_genie.user;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,11 +12,11 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Professor {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
-    private Long professorId;
+    private Long userId;
 
     private String firstName;
     private String lastName;
@@ -27,7 +27,7 @@ public class Professor {
     private String officeHours;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "professor_roles", joinColumns = @JoinColumn(name = "professor_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
 }

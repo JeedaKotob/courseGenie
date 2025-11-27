@@ -1,12 +1,7 @@
 package com.course_genie.course;
 
-import com.course_genie.assessment.Assessment;
-import com.course_genie.professor.Professor;
-import com.course_genie.syllabus.Syllabus;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Builder

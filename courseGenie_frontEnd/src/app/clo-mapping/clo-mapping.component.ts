@@ -28,7 +28,7 @@ export class CloMappingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
 
     this.course?.sections?.[0]?.assessments?.forEach(assessment => {
       this.selectedMappings[assessment.assessmentId] = assessment.clos?.map(clo => clo.cloId) || [];
@@ -124,7 +124,7 @@ export class CloMappingComponent implements OnInit {
         });
 
         this.course!.sections![0].configured = true;
-        this.sharedDataService.setSharedVariable(this.course);
+        this.sharedDataService.setSelectedCourse(this.course);
 
         this.showSuccessMessage = true;
         this.showAssessmentError = false;

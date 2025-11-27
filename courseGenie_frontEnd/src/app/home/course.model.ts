@@ -64,8 +64,8 @@ export interface Syllabus {
   sectionId: number;
 }
 
-export interface Professor {
-  professorId: number;
+export interface User {
+  userId: number;
   firstName: string;
   lastName: string;
   userName: string;

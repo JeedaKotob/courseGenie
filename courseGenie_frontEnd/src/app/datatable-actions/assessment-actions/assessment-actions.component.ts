@@ -47,7 +47,7 @@ export class AssessmentActionsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     this.loadAssessments();
   }
 
@@ -141,9 +141,9 @@ export class AssessmentActionsComponent implements OnInit {
             this.course.sections[0].assessments = this.course.sections[0].assessments.filter(
               (a: any) => a.id !== assessmentId && a.assessmentId !== assessmentId
             );
-            this.sharedDataService.setSharedVariable(this.course);
+            this.sharedDataService.setSelectedCourse(this.course);
           }
-          AssessmentsComponent.updateList.next(true);
+          // AssessmentsComponent.updateList.next(true);
         },
         error: () => event.confirm.reject()
       });

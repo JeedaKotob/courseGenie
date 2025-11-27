@@ -1,13 +1,8 @@
 package com.course_genie.course;
 
-import com.course_genie.assessment.Assessment;
-import com.course_genie.assessment.AssessmentDTOMapper;
-import com.course_genie.professor.ProfessorDTOMapper;
-import com.course_genie.syllabus.SyllabusDTOMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseDTOMapper implements Function<Course, CourseDTO> {

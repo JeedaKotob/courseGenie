@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { LocalDataSource, Settings } from 'angular2-smart-table';
 import { Course } from '../home/course.model';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { AssessmentService } from '../services/assessment.service';
 import { AssessmentActionsComponent } from '../datatable-actions/assessment-actions/assessment-actions.component';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CreateAssessmentComponent } from '../modals/create-assessment/create-assessment.component';
 
 @Component({
@@ -13,7 +14,8 @@ import { CreateAssessmentComponent } from '../modals/create-assessment/create-as
   templateUrl: './assessments.component.html',
   styleUrls: ['./assessments.component.scss']
 })
-export class AssessmentsComponent implements OnInit {
+
+export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: ADD OnDestroy HERE
   @ViewChild(CreateAssessmentComponent) createAssessmentComponent!: CreateAssessmentComponent;
 
   settings: Settings = {
@@ -39,11 +41,6 @@ export class AssessmentsComponent implements OnInit {
     }
   };
 
-  categoryDescriptionsSource: LocalDataSource = new LocalDataSource();
-  source: LocalDataSource = new LocalDataSource();
-
-  categoryDescriptions: { category: string, description: string, actionName: string }[] = [];
-
   categoryDescriptionSettings: Settings = {
     hideSubHeader: true,
     actions: false,
@@ -66,23 +63,39 @@ export class AssessmentsComponent implements OnInit {
     }
   };
 
+  categoryDescriptionsSource: LocalDataSource = new LocalDataSource();
   tableData: LocalDataSource = new LocalDataSource();
+  categoryDescriptions: { category: string, description: string, actionName: string }[] = [];
   course: Course | null = null;
-  public static updateList: Subject<boolean> = new Subject();
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private sharedDataService: SharedDataService,
     private assessmentService: AssessmentService
-  ) {
-    AssessmentsComponent.updateList.subscribe(res => {
-      this.course = this.sharedDataService.getSharedVariable();
-      this.prepareTableData();
-      this.prepareCategoryDescriptions();
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.sharedDataService.selectedCourse$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(currentCourse => {
+        this.course = currentCourse;
+
+        if (this.course) {
+          this.initializeComponentData();
+        } else {
+          this.tableData.load([]);
+          this.categoryDescriptionsSource.load([]);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  initializeComponentData() {
     this.prepareTableData();
 
     const sectionId = this.course?.sections?.[0]?.sectionId;
@@ -100,7 +113,6 @@ export class AssessmentsComponent implements OnInit {
           description: desc ?? '',
           actionName: categories[i].category
         }));
-
         this.categoryDescriptionsSource.load(this.categoryDescriptions);
       }).catch(err => {
         console.error("Error fetching category descriptions", err);
@@ -109,6 +121,7 @@ export class AssessmentsComponent implements OnInit {
       });
     }
   }
+
 
   headerButtons = [
     {
@@ -125,14 +138,12 @@ export class AssessmentsComponent implements OnInit {
     }
   ];
 
-  // Handle header button clicks
   handleHeaderAction(action: string): void {
     if (action === 'save-descriptions') {
       this.onSaveCategoryDescription({
         newData: this.categoryDescriptions
       });
     } else if (action === 'create-assessment') {
-      // Now we actually call the createAssessmentComponent to open the modal
       if (this.createAssessmentComponent) {
         this.createAssessmentComponent.openVerticallyCentered(this.createAssessmentComponent.addAssessmentModal);
       }
@@ -148,17 +159,15 @@ export class AssessmentsComponent implements OnInit {
     }> = {};
 
     this.course?.sections?.[0].assessments?.forEach((assessment: any) => {
-      const key = assessment.category; // ✅ Only group by category
-
+      const key = assessment.category;
       if (!assessmentCount[key]) {
         assessmentCount[key] = {
           category: assessment.category,
-          shortName: assessment.shortName.replace(/[0-9]+$/, ''), // ✅ Strip numbers from short name like QZ1 -> QZ
+          shortName: assessment.shortName.replace(/[0-9]+$/, ''),
           number: 0,
-          actionName: assessment.shortName.replace(/[0-9]+$/, '') // Or just use shortName without numbers
+          actionName: assessment.shortName.replace(/[0-9]+$/, '')
         };
       }
-
       assessmentCount[key].number++;
     });
 
@@ -173,7 +182,6 @@ export class AssessmentsComponent implements OnInit {
       }
     });
 
-    // Build the categoryDescriptions array and load it into the table
     this.categoryDescriptions = Array.from(uniqueCategories).map(category => ({
       category,
       description: '',
@@ -182,31 +190,24 @@ export class AssessmentsComponent implements OnInit {
     this.categoryDescriptionsSource.load(this.categoryDescriptions);
   }
 
-  /**
-   * Bulk–save all category descriptions at once.
-   */
   onSaveCategoryDescription(event: { newData: Array<{ category: string; description: string; }> }) {
     const updatedList = event.newData;
     const sectionId = this.course?.sections?.[0]?.sectionId;
-    console.log('Saving category descriptions:', {sectionId, updatedList});
 
     if (!sectionId) {
       console.warn('No section ID available; aborting save.');
       return;
     }
 
-    // For each category, try to create it; if it already exists (409), then update it
     updatedList.forEach(cd => {
       this.assessmentService.createCategoryDescription(sectionId, cd.category, cd.description)
         .subscribe({
-          next: () => { /* created */
-          },
+          next: () => {},
           error: err => {
             if (err.status === 409) {
               this.assessmentService.updateCategoryDescription(sectionId, cd.category, cd.description)
                 .subscribe({
-                  next: () => { /* updated */
-                  },
+                  next: () => {},
                   error: updateErr => console.error(`Failed to update "${cd.category}"`, updateErr)
                 });
             } else {
@@ -216,7 +217,6 @@ export class AssessmentsComponent implements OnInit {
         });
     });
 
-    // Reload the table so the user sees the saved values
     this.categoryDescriptionsSource.load(this.categoryDescriptions);
   }
 }

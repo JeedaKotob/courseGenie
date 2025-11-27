@@ -35,7 +35,7 @@ export class GradingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     this.getAllStudents();
   }
 

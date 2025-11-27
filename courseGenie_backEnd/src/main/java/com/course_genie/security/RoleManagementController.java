@@ -1,9 +1,9 @@
 package com.course_genie.security;
 
-import com.course_genie.professor.Professor;
-import com.course_genie.professor.ProfessorDTO;
-import com.course_genie.professor.ProfessorDTOMapper;
-import com.course_genie.professor.ProfessorRepository;
+import com.course_genie.user.User;
+import com.course_genie.user.UserDTO;
+import com.course_genie.user.UserDTOMapper;
+import com.course_genie.user.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,20 +15,20 @@ import java.util.Set;
 @RequestMapping("/api/admin/roles")
 public class RoleManagementController {
 
-    private final ProfessorRepository professorRepository;
-    private final ProfessorDTOMapper professorDTOMapper;
+    private final UserRepository userRepository;
+    private final UserDTOMapper userDTOMapper;
 
-    public RoleManagementController(ProfessorRepository professorRepository, ProfessorDTOMapper professorDTOMapper) {
-        this.professorRepository = professorRepository;
-        this.professorDTOMapper = professorDTOMapper;
+    public RoleManagementController(UserRepository userRepository, UserDTOMapper userDTOMapper) {
+        this.userRepository = userRepository;
+        this.userDTOMapper = userDTOMapper;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign")
     public ResponseEntity<?> assignRole(@RequestParam String username, @RequestParam String role) {
-        Optional<Professor> optionalProfessor = professorRepository.findByUserName(username);
+        Optional<User> optionalProfessor = userRepository.findByUserName(username);
         if (optionalProfessor.isPresent()) {
-            Professor professor = optionalProfessor.get();
+            User professor = optionalProfessor.get();
             Set<String> roles = professor.getRoles();
 
             // Ensure role is properly formatted (should start with ROLE_)
@@ -38,10 +38,10 @@ public class RoleManagementController {
 
             roles.add(role);
             professor.setRoles(roles);
-            professorRepository.save(professor);
+            userRepository.save(professor);
 
-            ProfessorDTO professorDTO = professorDTOMapper.apply(professor);
-            return ResponseEntity.ok(professorDTO);
+            UserDTO userDTO = userDTOMapper.apply(professor);
+            return ResponseEntity.ok(userDTO);
         }
 
         return ResponseEntity.notFound().build();
@@ -50,9 +50,9 @@ public class RoleManagementController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/remove")
     public ResponseEntity<?> removeRole(@RequestParam String username, @RequestParam String role) {
-        Optional<Professor> optionalProfessor = professorRepository.findByUserName(username);
+        Optional<User> optionalProfessor = userRepository.findByUserName(username);
         if (optionalProfessor.isPresent()) {
-            Professor professor = optionalProfessor.get();
+            User professor = optionalProfessor.get();
             Set<String> roles = professor.getRoles();
 
             // Ensure role is properly formatted (should start with ROLE_)
@@ -62,10 +62,10 @@ public class RoleManagementController {
 
             roles.remove(role);
             professor.setRoles(roles);
-            professorRepository.save(professor);
+            userRepository.save(professor);
 
-            ProfessorDTO professorDTO = professorDTOMapper.apply(professor);
-            return ResponseEntity.ok(professorDTO);
+            UserDTO userDTO = userDTOMapper.apply(professor);
+            return ResponseEntity.ok(userDTO);
         }
 
         return ResponseEntity.notFound().build();
