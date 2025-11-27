@@ -28,7 +28,7 @@ export class CourseCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.course = this.sharedService.getSharedVariable();
+    this.course = this.sharedService.selectedCourseValue;
     this.initializeWeeks();
     this.loadAssessments();
   }

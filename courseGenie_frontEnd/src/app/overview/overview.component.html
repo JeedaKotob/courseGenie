@@ -1,9 +1,5 @@
-<div class="overview-container">
-  <div *ngIf="loading" class="loading-container">
-    <p>Loading... Please wait.</p>
-  </div>
-  <div *ngIf="!loading">
-    <!-- Reusable Course Header Component -->
+<div class="overview-container" *ngIf="course$ | async as course">
+
     <app-course-header
       [course]="course">
     </app-course-header>
@@ -37,7 +33,7 @@
             </div>
             <div class="detail-item">
               <div class="detail-label">Term</div>
-              <div class="detail-value">{{ termLabel || 'N/A' }}</div>
+              <div class="detail-value">{{ (termLabel$ | async) || 'N/A' }}</div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Credits</div>
@@ -72,7 +68,7 @@
                 <i class="bi bi-list-check"></i>
               </div>
               <div class="stat-content">
-                <div class="stat-value">{{ cloNumber || 0 }}</div>
+                <div class="stat-value">{{ (cloNumber$ | async) || 0 }}</div>
                 <div class="stat-label">Mapped CLOs</div>
               </div>
             </div>
@@ -110,7 +106,7 @@
       </div>
     </div>
   </div> <!-- closing the *ngIf="!loading" div -->
-</div>
+
 
 <style>
   /* Main container */

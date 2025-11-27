@@ -40,7 +40,7 @@ export class BookManagerComponent implements OnInit {
 
   ngOnInit(): void {
     // Get current course from shared service.
-    this.course = this.sharedDataService.getSharedVariable();
+    this.course = this.sharedDataService.selectedCourseValue;
     if (!this.course || !this.course.sections || this.course.sections.length === 0) {
       this.error = 'No course/section selected or course data is missing.';
     } else {

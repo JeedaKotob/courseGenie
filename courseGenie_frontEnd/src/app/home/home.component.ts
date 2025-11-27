@@ -1,97 +1,100 @@
-import { Component, OnInit } from '@angular/core';
-import { CourseService } from '../services/course.service';
-import { Course, CoursesBySemester, Professor } from './course.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, switchMap, filter, withLatestFrom, tap } from 'rxjs/operators';
+
+import { CourseService } from '../services/course.service';
 import { SharedDataService } from '../services/shared-data.sevice';
+import { Course, CoursesBySemester, Section } from './course.model';
+
+type SemesterViewModel = {
+  semester: string;
+  sections: {
+    sectionId: number;
+    courseName: string;
+    courseCode: string;
+    sectionCode: string;
+    credits: string;
+  }[];
+};
 
 @Component({
   selector: 'app-home',
   standalone: false,
-
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+
+export class HomeComponent implements OnInit, OnDestroy {
   animationClass = '';
-  coursesBySemester: CoursesBySemester = {};
-  semesters: string[] = [];
+  semestersWithSections$!: Observable<SemesterViewModel[]>;
+  private readonly sectionIdToNavigate$ = new Subject<number>();
+  private navigationSubscription!: Subscription;
 
-  navigateToLogin() {
-    this.router.navigate(['/login']);
-  }
-
-
-  constructor(private courseService: CourseService, private router: Router) { }
+  constructor(
+    private courseService: CourseService,
+    private router: Router,
+    private sharedDataService: SharedDataService
+  ) {}
 
   ngOnInit(): void {
-    this.getCoursesByProfessorId();
-    setTimeout(() => {
-      this.animationClass = 'animate-hero';
-    }, 100);
+    const coursesBySemester$ = this.sharedDataService.currentUser$.pipe(
+      filter(user => !!user),
+      switchMap(user => this.courseService.getCoursesByProfessorId(user!.professorId))
+    );
 
-  }
-
-
-  get currentUser() {
-    return SharedDataService.currentUser;
-  }
-
-  getCoursesByProfessorId() {
-    this.courseService.getCoursesByProfessorId(this.currentUser.professorId).subscribe({
-      next: (data: CoursesBySemester) => {
-        console.log(this.coursesBySemester)
-        this.coursesBySemester = data;
-      },
-      error: (error) => {
-        console.error('Error fetching courses', error);
-      },
-      complete: () => {
-        console.log('Course data fetching completed');
-      },
-    });
-  }
-
-  getSemesters() {
-    console.log(this.coursesBySemester);
-    return Object.keys(this.coursesBySemester);
-  }
-
-  getSectionsList(semester: string) {
-    let sections: { sectionId: number,courseName: string, courseCode: string, sectionCode: string, credits: string }[] = [];
-
-
-    this.coursesBySemester[semester].forEach(course => {
-      course.sections.forEach(section => {
-        sections.push({
-          sectionId: section.sectionId,
-          courseName: course.name,
-          courseCode: course.code,
-          sectionCode: section.code,
-          credits: course.credits
+    this.semestersWithSections$ = coursesBySemester$.pipe(
+      map(coursesBySemester => {
+        if (!coursesBySemester) {
+          return [];
+        }
+        return Object.keys(coursesBySemester).map(semester => {
+          const sections = coursesBySemester[semester].flatMap(course =>
+            course.sections.map(section => ({
+              sectionId: section.sectionId,
+              courseName: course.name,
+              courseCode: course.code,
+              sectionCode: section.code,
+              credits: course.credits
+            }))
+          );
+          return { semester, sections };
         });
-      });
-    });
+      })
+    );
 
-    return sections;
+    this.navigationSubscription = this.sectionIdToNavigate$.pipe(
+      withLatestFrom(coursesBySemester$),
+      tap(([sectionId, coursesBySemester]) => {
+        const { course, section } = this.findCourseAndSectionById(sectionId, coursesBySemester);
+        if (course && section) {
+          this.router.navigate(['/overview', course.code, section.code]);
+        }
+      })
+    ).subscribe();
+
+    setTimeout(() => { this.animationClass = 'animate-hero'; }, 100);
   }
 
-  navigateToOverview(sectionId: number) {
-    const course = this.findCourseBySectionId(sectionId);
-    this.router.navigate(['/overview', course?.code, course?.sections[0].code]);
+  navigateToOverview(sectionId: number): void {
+    this.sectionIdToNavigate$.next(sectionId);
   }
 
-  findCourseBySectionId(sectionId: number): Course | undefined {
-    for (const semester in this.coursesBySemester) {
-      if (this.coursesBySemester.hasOwnProperty(semester)) {
-        for (let course of this.coursesBySemester[semester]) {
-          if (course.sections.some(section => section.sectionId === sectionId)) {
-            course.sections = course.sections.filter(e => e.sectionId == sectionId)
-            return course; // Return the course that contains the section
-          }
+  private findCourseAndSectionById(sectionId: number, courses: CoursesBySemester): { course?: Course, section?: Section } {
+    for (const semester in courses) {
+      for (const course of courses[semester]) {
+        const section = course.sections.find(s => s.sectionId === sectionId);
+        if (section) {
+          return { course, section };
         }
       }
     }
-    return undefined; // Return undefined if not found
+    return {};
   }
 
+  ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
 }

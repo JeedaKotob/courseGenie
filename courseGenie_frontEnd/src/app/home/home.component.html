@@ -14,24 +14,24 @@
     </div>
 
     <!-- Enhanced Course Section -->
-    <div class="home-content mt-4">
+    <div *ngIf="semestersWithSections$ | async as semesterData" class="home-content mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">Your courses</h1>
         <div class="semester-filter">
           <select class="form-select">
             <option value="all">All Semesters</option>
-            <option *ngFor="let semester of getSemesters()">{{ semester }}</option>
+            <option *ngFor="let item of semesterData">{{ item.semester }}</option>
           </select>
         </div>
       </div>
 
-      <div *ngFor="let semester of getSemesters()" class="semester-section mb-4">
+      <div *ngFor="let semesterItem of semesterData" class="semester-section mb-4">
         <div class="d-flex align-items-center mb-3">
-          <span class="semester">{{ semester }}</span>
-          <span class="courses-count ms-2">{{ getSectionsList(semester).length }} courses</span>
+          <span class="semester">{{ semesterItem.semester }}</span>
+          <span class="courses-count ms-2">{{ semesterItem.sections.length }} courses</span>
         </div>
 
-        <p-carousel [value]="getSectionsList(semester)"
+        <p-carousel [value]="semesterItem.sections"
                     [numVisible]="3"
                     [numScroll]="1"
                     [circular]="true"
@@ -44,7 +44,7 @@
               <div class="course-details mt-3">
                 <div class="course-detail">
                   <i class="pi pi-calendar"></i>
-                  <span>{{ semester }}</span>
+                  <span>{{ semesterItem.semester }}</span>
                 </div>
                 <div class="course-detail">
                   <i class="pi pi-users"></i>
@@ -59,6 +59,11 @@
           </ng-template>
         </p-carousel>
       </div>
+
+      <div *ngIf="!semesterData || semesterData.length === 0" class="text-center mt-5 mb-4">
+        <h4 class="text-muted">No courses assigned.</h4>
+      </div>
+
     </div>
   </div>
 </div>

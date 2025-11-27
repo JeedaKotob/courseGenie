@@ -49,7 +49,7 @@ export class CreateCLOComponent {
     this.cloService.createCLO(payload).subscribe({
       next: (data: CLO) => {
         this.course?.clos?.push(data);
-        this.sharedDataService.setSharedVariable(this.course == null ? null : this.course);
+        this.sharedDataService.setSelectedCourse(this.course == null ? null : this.course);
         CloListingComponent.updateList.next(true);
         this.close();
       },

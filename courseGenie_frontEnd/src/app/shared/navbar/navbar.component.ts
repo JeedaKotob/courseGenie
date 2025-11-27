@@ -10,10 +10,10 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private sharedDataService: SharedDataService) { }
 
   get currentUser() {
-    return SharedDataService.currentUser;
+    return this.sharedDataService.currentUserValue;
   }
 
   doLogout() {
