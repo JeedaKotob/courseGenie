@@ -5,9 +5,6 @@
 | Complete design output (initial prototype or system interface/UI) | — | Not Started | |
 | Activity Diagram | — | Not Started | |
 | Sequence Diagram | — | Not Started | |
-| State Diagram | — | Not Started | |
-| Components Diagram (whole subsystems) | ibraheem | done with first edit | needs prof ali & huda's reveision|
-| Deployment Diagram (whole subsystems) | ibraheem | Not Started | |
 | Inputs, Outputs, or Deliverables Diagram | — | Not Started | |
 | Storage / Database Design Diagram | — | Not Started | |
 | MSD II Plan (first draft with project-specific detail) | — | Not Started | |
