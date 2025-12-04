@@ -20,6 +20,15 @@
 
         <!-- Dropdown Menu -->
         <div class="custom-dropdown shadow" *ngIf="isDropdownOpen">
+          <!-- SWITCH ROLE (only for multi-role users) -->
+          <div class="dropdown-item"
+               *ngIf="isMultiRole()"
+               (click)="switchRole()">
+            <i class="bi bi-arrow-repeat me-2"></i>Switch Role
+          </div>
+
+          <div class="dropdown-divider" *ngIf="isMultiRole()"></div>
+
           <div class="dropdown-item logout-item" (click)="doLogout()">
             <i class="bi bi-box-arrow-right me-2"></i>Logout
           </div>

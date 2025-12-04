@@ -1,0 +1,21 @@
+@startuml
+title Syllabus Submission Tracking
+
+actor Admin
+participant AdminHomeComponent
+participant SyllabusComponent
+participant SyllabusService
+database Database
+
+Admin -> AdminHomeComponent: selectSyllabusPage()
+AdminHomeComponent -> SyllabusComponent: openSyllabusComponent()
+
+SyllabusComponent -> SyllabusService: getSyllabusSubmissionProgress()
+SyllabusService -> Database: fetchSyllabi()
+Database --> SyllabusService: syllabusRecords
+SyllabusService --> SyllabusComponent: syllabusList
+
+SyllabusComponent -> SyllabusComponent: calculateProgressPerProfessor()
+SyllabusComponent --> Admin: displayProgressBars()
+
+@enduml

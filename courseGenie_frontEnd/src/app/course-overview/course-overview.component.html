@@ -1,0 +1,63 @@
+<div class="m-3">
+  <div class="card shadow-sm border-0 rounded-lg p-5">
+
+    <!-- LOAD COURSE -->
+    <ng-container *ngIf="course$ | async as course">
+
+      <h1 class="bold mb-2">{{ course.name }}</h1>
+      <p class="course-code">{{ course.code }} • {{ course.credits }} Credits</p>
+      <p class="course-description">{{ course.description }}</p>
+
+      <hr class="my-4">
+
+      <h3 class="bold mb-3">Sections</h3>
+
+      <!-- LOAD SECTIONS -->
+      <ng-container *ngIf="sections$ | async as sections">
+
+        <div class="sections-grid" *ngIf="sections.length > 0; else noSections">
+
+          <div class="section-card" *ngFor="let sec of sections">
+
+            <div class="section-header">
+              <span class="section-badge">Section {{ sec.code }}</span>
+              <span class="section-term">{{ sec.term }}</span>
+            </div>
+
+            <div class="section-info">
+
+              <div class="info-row">
+                <i class="pi pi-user"></i>
+                <span>
+                  {{ sec.professorId ? ('Professor #' + sec.professorId) : 'Unassigned' }}
+                </span>
+              </div>
+
+              <div class="info-row">
+                <i class="pi pi-folder"></i>
+                <span>{{ sec.assessments.length }} Assessments</span>
+              </div>
+
+            </div>
+
+            <button class="view-section-btn"
+                    (click)="navigateToSection(course.code, sec.code)">
+              <span>View Section</span>
+              <i class="pi pi-arrow-right"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+        <ng-template #noSections>
+          <div class="text-center mt-4">
+            <h5 class="text-muted">No sections available.</h5>
+          </div>
+        </ng-template>
+
+      </ng-container>
+    </ng-container>
+
+  </div>
+</div>

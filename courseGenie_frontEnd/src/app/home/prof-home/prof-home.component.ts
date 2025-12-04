@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { map, switchMap, filter, withLatestFrom, tap } from 'rxjs/operators';
 
-import { CourseService } from '../services/course.service';
-import { SharedDataService } from '../services/shared-data.sevice';
-import { Course, CoursesBySemester, Section } from './course.model';
+import { CourseService } from '../../services/course.service';
+import { SharedDataService } from '../../services/shared-data.sevice';
+import { Course, CoursesBySemester, Section } from '../course.model';
 
 type SemesterViewModel = {
   semester: string;
@@ -21,11 +21,11 @@ type SemesterViewModel = {
 @Component({
   selector: 'app-home',
   standalone: false,
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './prof-home.component.html',
+  styleUrls: ['./prof-home.component.scss']
 })
 
-export class HomeComponent implements OnInit, OnDestroy {
+export class ProfHomeComponent implements OnInit, OnDestroy {
   animationClass = '';
   semestersWithSections$!: Observable<SemesterViewModel[]>;
   private readonly sectionIdToNavigate$ = new Subject<number>();

@@ -1,0 +1,211 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class action_plan {
+   plan: varchar(2000)
+   peer_review_id: bigint
+   action_plan_id: bigint
+}
+class assessment {
+   category_name: varchar(255)
+   max_points: int
+   name: varchar(255)
+   short_name: varchar(255)
+   topic: int
+   week: int
+   section_id: bigint
+   assessment_id: bigint
+}
+class assessment_clo {
+   assessment_id: bigint
+   clo_id: bigint
+}
+class benchmark {
+   benchmark_type: varchar(255)
+   description: varchar(255)
+   percentage: int
+   threshold: int
+   benchmark_id: bigint
+}
+class book {
+   isbn: varchar(255)
+   title: varchar(255)
+   url: varchar(255)
+   id: bigint
+}
+class book_section {
+   required_reading: bit(1)
+   suggested_reading: bit(1)
+   book_id: bigint
+   section_id: bigint
+   id: bigint
+}
+class booking {
+   date: datetime(6)
+   end_time: time(6)
+   nbr_of_students: int
+   start_time: time(6)
+   assessment_id: bigint
+   room_id: bigint
+   proctor_id: bigint
+   booking_id: bigint
+}
+class car {
+   content: longtext
+   due_date: datetime(6)
+   submission_date: datetime(6)
+   submitted: bit(1)
+   section_id: bigint
+   car_id: bigint
+}
+class category_description {
+   category_name: varchar(255)
+   description: varchar(255)
+   section_id: bigint
+   id: bigint
+}
+class clo {
+   description: varchar(255)
+   name: varchar(255)
+   course_id: bigint
+   clo_id: bigint
+}
+class course {
+   code: varchar(255)
+   corequisites: varchar(255)
+   course_approval_date: varchar(255)
+   course_deletion: bit(1)
+   credits: varchar(255)
+   description: varchar(2000)
+   designated_innovation_journey_course: bit(1)
+   discipline: varchar(255)
+   graduate: bit(1)
+   last_revision_date: varchar(255)
+   name: varchar(255)
+   new_course: bit(1)
+   prerequisites: varchar(255)
+   undergraduate: bit(1)
+   course_id: bigint
+}
+class department {
+   department_name: varchar(255)
+   description: varchar(2000)
+   department_id: bigint
+}
+class enrollment {
+   status: enum('enrolled', 'withdrawn')
+   section_id: bigint
+   student_id: varchar(255)
+   enrollment_id: bigint
+}
+class exam_room {
+   capacity: int
+   room_number: varchar(255)
+   room_type: enum('classroom', 'lab')
+   room_id: bigint
+}
+class grade {
+   score: double
+   assessment_id: bigint
+   student_id: varchar(255)
+   grade_id: bigint
+}
+class peer_review {
+   appendix: longtext
+   criteria: longtext
+   summary: varchar(2000)
+   reviewee_id: bigint
+   reviewer_id: bigint
+   peer_review_id: bigint
+}
+class plo {
+   description: varchar(255)
+   name: varchar(255)
+   program_id: bigint
+   plo_id: bigint
+}
+class plo_clo {
+   plo_id: bigint
+   clo_id: bigint
+}
+class program {
+   description: varchar(2000)
+   program_name: varchar(255)
+   department_id: bigint
+   program_id: bigint
+}
+class section {
+   class_number: varchar(255)
+   code: varchar(255)
+   configured: bit(1)
+   room: varchar(255)
+   schedule: varchar(255)
+   teaching_methodology: varchar(2000)
+   term: varchar(255)
+   course_id: bigint
+   professor_id: bigint
+   section_id: bigint
+}
+class student {
+   email: varchar(255)
+   first_name: varchar(255)
+   last_name: varchar(255)
+   student_id: varchar(255)
+}
+class student_exam {
+   booking_id: bigint
+   enrollment_id: bigint
+   student_exam_id: bigint
+}
+class syllabus {
+   content: longtext
+   section_id: bigint
+   syllabus_id: bigint
+}
+class user {
+   email: varchar(255)
+   first_name: varchar(255)
+   last_name: varchar(255)
+   office: varchar(255)
+   office_hours: varchar(255)
+   phone: varchar(255)
+   user_name: varchar(255)
+   user_id: bigint
+}
+class user_roles {
+   user_id: bigint
+   role: varchar(255)
+}
+
+action_plan           -[#595959,plain]-^  peer_review          : "peer_review_id"
+assessment            -[#595959,plain]-^  section              : "section_id"
+assessment_clo        -[#595959,plain]-^  assessment           : "assessment_id"
+assessment_clo        -[#595959,plain]-^  clo                  : "clo_id"
+book_section          -[#595959,plain]-^  book                 : "book_id:id"
+book_section          -[#595959,plain]-^  section              : "section_id"
+booking               -[#595959,plain]-^  assessment           : "assessment_id"
+booking               -[#595959,plain]-^  exam_room            : "room_id"
+booking               -[#595959,plain]-^  user                 : "proctor_id:user_id"
+car                   -[#595959,plain]-^  section              : "section_id"
+category_description  -[#595959,plain]-^  section              : "section_id"
+clo                   -[#595959,plain]-^  course               : "course_id"
+enrollment            -[#595959,plain]-^  section              : "section_id"
+enrollment            -[#595959,plain]-^  student              : "student_id"
+grade                 -[#595959,plain]-^  assessment           : "assessment_id"
+grade                 -[#595959,plain]-^  student              : "student_id"
+peer_review           -[#595959,plain]-^  user                 : "reviewee_id:user_id"
+peer_review           -[#595959,plain]-^  user                 : "reviewer_id:user_id"
+plo                   -[#595959,plain]-^  program              : "program_id"
+plo_clo               -[#595959,plain]-^  clo                  : "clo_id"
+plo_clo               -[#595959,plain]-^  plo                  : "plo_id"
+program               -[#595959,plain]-^  department           : "department_id"
+section               -[#595959,plain]-^  course               : "course_id"
+section               -[#595959,plain]-^  user                 : "professor_id:user_id"
+student_exam          -[#595959,plain]-^  booking              : "booking_id"
+student_exam          -[#595959,plain]-^  enrollment           : "enrollment_id"
+syllabus              -[#595959,plain]-^  section              : "section_id"
+user_roles            -[#595959,plain]-^  user                 : "user_id"
+@enduml

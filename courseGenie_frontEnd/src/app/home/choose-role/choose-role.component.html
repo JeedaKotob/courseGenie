@@ -1,0 +1,22 @@
+<div class="choose-role-container">
+
+  <h2 class="title">Choose Your Dashboard</h2>
+  <p class="subtitle">You have multiple roles. Select how you want to continue:</p>
+
+  <div class="role-cards">
+
+    <div class="role-card admin" (click)="choose('ADMIN')">
+      <i class="pi pi-cog icon"></i>
+      <h3>Administrator</h3>
+      <p>Manage courses, sections, faculty, and system data.</p>
+    </div>
+
+    <div class="role-card professor" (click)="choose('PROFESSOR')">
+      <i class="pi pi-briefcase icon"></i>
+      <h3>Professor</h3>
+      <p>View your courses and manage assessments and CLOs.</p>
+    </div>
+
+  </div>
+
+</div>

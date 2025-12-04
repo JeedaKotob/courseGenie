@@ -45,4 +45,9 @@ export class CourseService {
     return this.http.get<CoursesBySemester>(`${this.apiUrl}/${professorId}`);
   }
 
+  getCourseByCode(courseCode: string): Observable<Course> {
+    return this.http.get<Course>(`${this.apiUrl}/${courseCode}`);
+  }
+
+
 }

@@ -1,0 +1,59 @@
+<div class="m-3">
+  <div class="card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4">
+
+    <div class="hero-section">
+      <div class="hero-section-bg d-flex align-items-center justify-content-end">
+        <div class="hero-content">
+          <h3 class="hero-text text-white">
+            <span class="hero-line">Manage all courses</span>
+            <span class="hero-line">and their sections</span>
+            <span class="hero-line">from one dashboard</span>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-content mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="bold mb-0">All Courses</h1>
+      </div>
+
+      <div *ngIf="courses.length > 0; else noCourses">
+        <div class="courses-grid">
+
+          <div class="course-card"
+               *ngFor="let course of courses"
+               (click)="navigateToCourse(course.code)">
+
+            <div class="course-tag">{{ course.credits }} Credits</div>
+
+            <div class="course-content">
+              <h3 class="course-title">{{ course.name }}</h3>
+              <div class="course-code">{{ course.code }}</div>
+
+              <div class="course-details mt-3">
+                <div class="course-detail">
+                  <i class="pi pi-folder"></i>
+                  <span>{{ course.discipline }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="view-course-btn">
+              <span>View Course</span>
+              <i class="pi pi-arrow-right"></i>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <ng-template #noCourses>
+        <div class="text-center mt-5">
+          <h4 class="text-muted">No courses available.</h4>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

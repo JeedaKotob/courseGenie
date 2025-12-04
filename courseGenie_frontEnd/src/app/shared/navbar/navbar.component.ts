@@ -1,19 +1,25 @@
 import {Component, HostListener} from '@angular/core';
 import { SharedDataService } from '../../services/shared-data.sevice';
 import { Router } from '@angular/router';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: false,
-
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  constructor(private router: Router, private sharedDataService: SharedDataService) { }
+  constructor(private router: Router, private sharedDataService: SharedDataService, private authService: AuthService) { }
 
   get currentUser() {
     return this.sharedDataService.currentUserValue;
+  }
+
+  isMultiRole(){
+    return (
+      this.authService.hasRole('ROLE_ADMIN') && this.authService.hasRole('ROLE_PROFESSOR')
+    );
   }
 
   doLogout() {
@@ -21,6 +27,28 @@ export class NavbarComponent {
     this.router.navigate(['/login']);
   }
   // Add these methods to your component class
+
+  switchRole(): void {
+    const user = this.currentUser;
+    if (!user) return;
+
+    const userId = user.userId;
+    const key = `selectedRole_${userId}`;
+
+    const current = localStorage.getItem(key);
+
+    if (current === 'ADMIN') {
+      localStorage.setItem(key, 'PROFESSOR');
+      this.router.navigate(['/professor']);
+    } else if (current === 'PROFESSOR') {
+      localStorage.setItem(key, 'ADMIN');
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/choose-role']);
+    }
+    this.isDropdownOpen = false;
+  }
+
 
 // Generate initials from user's name
   getInitials(): string {

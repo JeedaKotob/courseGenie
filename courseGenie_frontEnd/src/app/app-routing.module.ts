@@ -5,7 +5,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ResetPasswordRequestComponent } from './reset-password-request/reset-password-request.component';
 import { GuestLayoutComponent } from './layouts/guest-layout/guest-layout.component';
 import { NavbarLayoutComponent } from './layouts/navbar-layout/navbar-layout.component';
-import { HomeComponent } from './home/home.component';
 import { FullNavLayoutComponent } from './layouts/full-nav-layout/full-nav-layout.component';
 import { OverviewComponent } from './overview/overview.component';
 import { AssessmentsComponent } from './assessments/assessments.component';
@@ -20,7 +19,12 @@ import {BookManagerComponent} from './book-manager/book-manager.component';
 import {StatisticsComponent } from './statistics/statistics.component';
 import {TeachingMethodologyComponent} from './teaching-methodology/teaching-methodology.component';
 import {LandingPageComponent} from './landing-page/landing-page.component';
-
+import {HomeRouterComponent} from './home/home-router/home-router.component';
+import {ProfHomeComponent} from './home/prof-home/prof-home.component';
+import {AdminHomeComponent} from './home/admin-home/admin-home.component';
+import {ChooseRoleComponent} from './home/choose-role/choose-role.component';
+import {RoleGuard} from './guard/role.guard';
+import {CourseOverviewComponent} from './course-overview/course-overview.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -38,7 +42,11 @@ const routes: Routes = [
     path: '',
     component: NavbarLayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'home', component: HomeRouterComponent, canActivate: [AuthGuard] },
+      { path: 'professor', component: ProfHomeComponent, canActivate: [RoleGuard], data: {roles: ['ROLE_PROFESSOR']}},
+      { path: 'admin', component: AdminHomeComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      { path: 'choose-role', component: ChooseRoleComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
     ],
   },
   {

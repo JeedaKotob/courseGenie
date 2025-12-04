@@ -1,0 +1,36 @@
+@startuml
+title User Login & Dashboard Access (Abstracted Sequence)
+
+actor User
+participant LoginComponent
+participant AuthService
+database Database
+participant HomeRouter
+participant Dashboard
+participant RoleSelection
+
+User -> LoginComponent : enterCredentials()
+LoginComponent -> AuthService : authenticate(credentials)
+AuthService -> Database : fetchUserAndRoles()
+Database --> AuthService : userData + roles
+AuthService --> LoginComponent : authResult
+
+
+LoginComponent -> HomeRouter : goToHome()
+opt invalid credentials
+    LoginComponent -> User : showError("Invalid username or password")
+end
+
+HomeRouter -> AuthService : getUserContext()
+AuthService --> HomeRouter : user + roles
+
+
+alt Single Role User
+    HomeRouter -> Dashboard : loadDashboard(role)
+else Multi Role User
+    HomeRouter -> RoleSelection : displayRoleOptions()
+    User -> RoleSelection : selectRole()
+    RoleSelection -> Dashboard : loadDashboard(selectedRole)
+end
+
+@enduml

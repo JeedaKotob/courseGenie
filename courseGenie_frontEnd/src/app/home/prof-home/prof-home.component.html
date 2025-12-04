@@ -1,6 +1,5 @@
 <div class="m-3">
   <div class="card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4">
-    <!-- Enhanced Hero Section -->
     <div class="hero-section">
       <div class="hero-section-bg d-flex align-items-center justify-content-end">
         <div class="hero-content">
@@ -13,7 +12,6 @@
       </div>
     </div>
 
-    <!-- Enhanced Course Section -->
     <div *ngIf="semestersWithSections$ | async as semesterData" class="home-content mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">Your courses</h1>
@@ -26,38 +24,49 @@
       </div>
 
       <div *ngFor="let semesterItem of semesterData" class="semester-section mb-4">
+
         <div class="d-flex align-items-center mb-3">
           <span class="semester">{{ semesterItem.semester }}</span>
           <span class="courses-count ms-2">{{ semesterItem.sections.length }} courses</span>
         </div>
 
-        <p-carousel [value]="semesterItem.sections"
-                    [numVisible]="3"
-                    [numScroll]="1"
-                    [circular]="true"
-                    styleClass="custom-carousel">
-          <ng-template let-section pTemplate="item">
-            <div class="course-card" (click)="navigateToOverview(section.sectionId)">
-              <div class="course-tag">{{ section.credits }} Credits</div>
+        <div class="courses-grid">
+
+          <div class="course-card"
+               *ngFor="let section of semesterItem.sections"
+               (click)="navigateToOverview(section.sectionId)">
+
+            <div class="course-tag">{{ section.credits }} Credits</div>
+
+            <div class="course-content">
+
               <h3 class="course-title">{{ section.courseName }}</h3>
-              <div class="course-code">{{ section.courseCode }} - {{ section.sectionCode }}</div>
+
+              <div class="course-code">
+                {{ section.courseCode }} - {{ section.sectionCode }}
+              </div>
+
               <div class="course-details mt-3">
                 <div class="course-detail">
                   <i class="pi pi-calendar"></i>
                   <span>{{ semesterItem.semester }}</span>
                 </div>
+
                 <div class="course-detail">
                   <i class="pi pi-users"></i>
                   <span>Section {{ section.sectionCode }}</span>
                 </div>
+
               </div>
-              <div class="view-course-btn">
-                <span>View Course</span>
-                <i class="pi pi-arrow-right"></i>
-              </div>
+
             </div>
-          </ng-template>
-        </p-carousel>
+            <div class="view-course-btn">
+              <span>View Course</span>
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div *ngIf="!semesterData || semesterData.length === 0" class="text-center mt-5 mb-4">

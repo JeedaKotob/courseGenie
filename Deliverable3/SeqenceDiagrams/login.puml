@@ -1,4 +1,6 @@
 @startuml
+title Syllabus Submission Tracking - Admin
+
 actor User
 participant LoginPage
 participant AuthService

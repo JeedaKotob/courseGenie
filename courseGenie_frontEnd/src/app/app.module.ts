@@ -11,7 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetPasswordRequestComponent } from './reset-password-request/reset-password-request.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
-import { HomeComponent } from './home/home.component';
+import { ProfHomeComponent } from './home/prof-home/prof-home.component';
 import { OverviewComponent } from './overview/overview.component';
 import { GuestLayoutComponent } from './layouts/guest-layout/guest-layout.component';
 import { NavbarLayoutComponent } from './layouts/navbar-layout/navbar-layout.component';
@@ -67,6 +67,10 @@ import { CourseHeaderComponent } from './course-header/course-header.component';
 import {CdkDrag, CdkDropList, CdkDropListGroup} from '@angular/cdk/drag-drop';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { AdminHomeComponent } from './home/admin-home/admin-home.component';
+import { HomeRouterComponent } from './home/home-router/home-router.component';
+import { ChooseRoleComponent } from './home/choose-role/choose-role.component';
+import { CourseOverviewComponent } from './course-overview/course-overview.component';
 
 
 
@@ -87,7 +91,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     AppComponent,
     ResetPasswordComponent,
     NavbarComponent,
-    HomeComponent,
+    ProfHomeComponent,
     OverviewComponent,
     GuestLayoutComponent,
     NavbarLayoutComponent,
@@ -111,6 +115,10 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     ResetPasswordRequestComponent,
     LandingPageComponent,
     UnauthorizedComponent,
+    AdminHomeComponent,
+    HomeRouterComponent,
+    ChooseRoleComponent,
+    CourseOverviewComponent,
 
 
 
