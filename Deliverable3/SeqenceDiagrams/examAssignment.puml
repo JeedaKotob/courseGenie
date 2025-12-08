@@ -1,0 +1,29 @@
+@startuml
+title Exam Room Assignment
+
+actor Professor
+participant CourseSectionComponent
+participant ExamRoomComponent
+participant ExamRoomService
+database Database
+
+Professor -> CourseSectionComponent: openExamRoomAssignment()
+CourseSectionComponent -> ExamRoomComponent: loadExamRoomPage()
+
+ExamRoomComponent -> ExamRoomService: getAvailableRooms(sectionId)
+ExamRoomService -> Database: fetchRoomsAndCapacities()
+Database --> ExamRoomService: roomList
+ExamRoomService --> ExamRoomComponent: availableRooms
+
+Professor -> ExamRoomComponent: selectRooms()
+ExamRoomComponent -> ExamRoomService: distributeStudents(sectionId, selectedRooms)
+ExamRoomService -> Database: fetchEnrolledStudents()
+Database --> ExamRoomService: studentList
+
+ExamRoomService -> ExamRoomService: autoDistributeByCapacity()
+ExamRoomService -> Database: saveRoomAssignments()
+
+ExamRoomService --> ExamRoomComponent: assignmentConfirmation
+ExamRoomComponent --> Professor: displayAssignmentSaved()
+
+@enduml

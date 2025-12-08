@@ -1,0 +1,42 @@
+@startuml
+title Exam Room Assignment
+
+actor Professor
+participant ExamRoomAssignmentComponent
+participant ExamRoomService
+database Database
+
+
+' --- Load Exam Room Assignment Page ---
+Professor -> ExamRoomAssignmentComponent: openExamRoomAssignment()
+
+ExamRoomAssignmentComponent -> ExamRoomService: getAvailableRooms(courseSectionId)
+ExamRoomService -> Database: fetchRoomsAndCapacities(courseSectionId)
+Database --> ExamRoomService: roomList
+ExamRoomService --> ExamRoomAssignmentComponent: availableRooms
+
+ExamRoomAssignmentComponent -> Professor: displayAvailableRooms()
+
+
+' --- Room Selection & Auto Distribution ---
+Professor -> ExamRoomAssignmentComponent: confirmRoomSelection(selectedRooms)
+
+ExamRoomAssignmentComponent -> ExamRoomService: distributeStudents(selectedRooms)
+ExamRoomService -> Database: fetchEnrolledStudents(courseSectionId)
+Database --> ExamRoomService: studentList
+
+ExamRoomService -> ExamRoomService: distributeStudents(studentList, selectedRooms)
+ExamRoomService --> ExamRoomAssignmentComponent: roomAssignmentPreview
+ExamRoomAssignmentComponent -> Professor: displayRoomAssignmentPreview()
+
+
+' --- Save Room Assignment ---
+Professor -> ExamRoomAssignmentComponent: clickSaveAssignment()
+ExamRoomAssignmentComponent -> ExamRoomService: saveRoomAssignment(roomAssignmentPreview)
+ExamRoomService -> Database: saveAssignment()
+Database --> ExamRoomService: assignmentSaved
+
+ExamRoomService --> ExamRoomAssignmentComponent: saveConfirmation
+ExamRoomAssignmentComponent -> Professor: displaySaveConfirmation()
+
+@enduml

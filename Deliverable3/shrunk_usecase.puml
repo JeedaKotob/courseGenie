@@ -1,0 +1,50 @@
+@startuml
+left to right direction
+skinparam shadowing false
+
+actor User
+actor Admin
+actor Professor
+
+
+User <|-- Admin
+User <|-- Professor
+
+
+rectangle "CourseGenie+ System" {
+
+  usecase "Access Admin Dashboard" as UC_AdminDash
+  usecase "Access Professor Dashboard" as UC_ProfDash
+
+  usecase "Configure Course Sections" as UC_CourseConfig
+  usecase "View & Track Syllabus Submissions" as UC_SyllabusMgmt
+  usecase "View & Track CAR Submissions" as UC_CARMgmt
+  usecase "Manage Peer Review Assignments" as UC_PeerMgmt
+  usecase "Allocate Course Exam Rooms" as UC_ExamPlan
+
+  usecase "Preview and Submit CAR" as UC_CARSubmit
+  usecase "Assign Exam Rooms" as UC_ExamReview
+  usecase "View Grade Analytics" as UC_Grades
+  usecase "View Course Calendar" as UC_Calendar
+  usecase "Complete Peer Review" as UC_PeerReview
+
+
+  UC_AdminDash ..> UC_CourseConfig : <<include>>
+  UC_AdminDash ..> UC_SyllabusMgmt : <<include>>
+  UC_AdminDash ..> UC_CARMgmt      : <<include>>
+  UC_AdminDash ..> UC_PeerMgmt     : <<include>>
+  UC_AdminDash ..> UC_ExamPlan     : <<include>>
+
+  UC_ProfDash ..> UC_CARSubmit   : <<include>>
+  UC_ProfDash ..> UC_ExamReview  : <<include>>
+  UC_ProfDash ..> UC_Grades      : <<include>>
+  UC_ProfDash ..> UC_Calendar    : <<include>>
+  UC_ProfDash ..> UC_PeerReview  : <<include>>
+}
+
+
+Admin --> UC_AdminDash
+Professor --> UC_ProfDash
+
+
+@enduml

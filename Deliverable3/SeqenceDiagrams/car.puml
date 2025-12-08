@@ -1,0 +1,46 @@
+@startuml
+title CAR Preview & Submission
+
+actor Professor
+participant CourseSectionComponent
+participant CarReportComponent
+participant CarReportService
+database Database
+
+
+' --- Load CAR Preview ---
+Professor -> CourseSectionComponent: openCarReportTab()
+CourseSectionComponent -> CarReportComponent: openCarReportComponent()
+
+CarReportComponent -> CarReportService: getCarPreview(courseSectionId)
+CarReportService -> Database: fetchCourseData(courseSectionId)
+Database --> CarReportService: courseData
+CarReportService --> CarReportComponent: carPreview
+
+CarReportComponent -> Professor: displayCarPreview()
+
+
+' --- Optional: Download CAR PDF ---
+opt Professor clicks Download
+    Professor -> CarReportComponent: clickDownloadCarPdf()
+    CarReportComponent -> CarReportService: generateCarPdf(carPreview)
+    CarReportService --> CarReportComponent: carPdfFile
+    CarReportComponent -> Professor: downloadCarPdf()
+end
+
+
+' --- Submit CAR ---
+Professor -> CarReportComponent: clickSubmitCar()
+CarReportComponent -> CarReportComponent: checkForMissingData()
+
+alt Required data is complete
+    CarReportComponent -> CarReportService: submitCar(courseSectionId)
+    CarReportService -> Database: saveCarSubmission()
+    Database --> CarReportService: submissionRecorded
+    CarReportService --> CarReportComponent: submissionConfirmation
+    CarReportComponent -> Professor: displaySubmissionConfirmation()
+else Required data is missing
+    CarReportComponent -> Professor: showMissingDataMessage()
+end
+
+@enduml

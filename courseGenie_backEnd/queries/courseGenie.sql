@@ -45,7 +45,8 @@ VALUES
     (18,'ISTE 500','Senior Development Project I','The first course in a two-course, senior level, system development capstone project. Students form project teams and work with sponsors to define system requirements.',3,'ISTE','Fall 2013','July 2019',1,0,0,0, 'The completion of 2 co-ops is required', 'None', 1),
     (19,'IGME 101','New Media Interactive Design and Algorithmic Problem Solving I','This course provides students with an introduction to problem solving, abstraction, and algorithmic thinking that is relevant across the field of new media.',4,'IGME','Fall 2013','July 2019',1,0,0,0, 'None', 'None', 0),
     (20,'CSEC 201','Programming for Information Security','This course builds upon basic programming skills to give students the programming knowledge necessary to study computing security. Students will be introduced to network programming, memory management, and operating system calls along with associated security concepts.',3,'CSEC','Fall 2013','July 2019',1,0,0,0, 'CSEC-101 or CSEC-140) and (CSCI-142 or GCIS-124 or GCIS-127 or CSCI-242) or equivalent courses.', 'None', 0),
-    (21,'CSEC 140','Introduction to Cybersecurity','The course will teach students to think about information systems using an adversarial mindset, evaluate risk to information systems, and introduce controls that can be implemented to reduce risk.' ,3,'CSEC','Fall 2013','July 2019',1,0,0,0, 'None', 'None', 0);
+    (21,'CSEC 140','Introduction to Cybersecurity','The course will teach students to think about information systems using an adversarial mindset, evaluate risk to information systems, and introduce controls that can be implemented to reduce risk.' ,3,'CSEC','Fall 2013','July 2019',1,0,0,0, 'None', 'None', 0),
+    (22,'CSEC 790','MS Thesis','This course is one of the capstone options in the MS in Cybersecurity program. It offers students the opportunity to investigate a selected topic and make an original contribution which extends knowledge within the Cybersecurity domain. ' ,9,'CSEC','Fall 2013','July 2019',1,0,0,0, 'None', 'None', 0);
 
 
 INSERT INTO course_genie.section (section_id, code, term, class_number, schedule, room, teaching_methodology, configured, course_id, professor_id)
@@ -90,7 +91,13 @@ VALUES
 
 
 -- Dr. Khalid Khawaja (12)
-    (18,'608','Fall 2024','17867','MWF 9:00 - 10:50','H107','In Person',1,2,12); -- GCIS 123
+    (18,'608','Fall 2024','17867','MWF 9:00 - 10:50','H107','In Person',1,2,12), -- GCIS 123
+
+    -- Dr Khalil
+    (19,'601', 'Fall 2024', '17793', 'TR 9:00 - 10:20','D207','In Person',1,11,6),
+    (20,'600', 'Fall 2024', '17794', 'MW 2:35 - 3:55','D114','In Person',1,12,6),
+    (21,'601', 'Fall 2024', '17795', 'TR 10:30 - 11:50','D316','In Person',1,12,6),
+    (22,'601', 'Fall 2024', '17796', 'N/A','N/A','In Person',1,22,6);
 
 
 INSERT INTO course_genie.clo (clo_id, name, description, course_id)
