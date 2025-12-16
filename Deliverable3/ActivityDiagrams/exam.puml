@@ -1,0 +1,46 @@
+@startuml
+title Activity Diagram – Exam Room Assignment (Professor)
+
+|Professor|
+start
+:Open Exam Room Assignment;
+
+|CourseSectionComponent|
+:Load Exam Room Assignment page;
+
+|ExamRoomComponent|
+:Request available exam rooms;
+
+|ExamRoomService|
+:Retrieve room availability and capacities;
+
+|Database|
+:Fetch rooms and capacities;
+
+|ExamRoomService|
+:Return available rooms;
+
+|ExamRoomComponent|
+:Display available rooms;
+
+|Professor|
+:Select exam rooms;
+
+|ExamRoomComponent|
+:Submit selected rooms;
+
+|ExamRoomService|
+:Retrieve enrolled students;
+
+|Database|
+:Fetch enrolled students;
+
+|ExamRoomService|
+:Automatically distribute students by capacity;
+:Save room assignments;
+
+|ExamRoomComponent|
+:Display assignment confirmation;
+
+stop
+@enduml

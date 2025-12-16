@@ -1,0 +1,55 @@
+@startuml
+title Activity Diagram – CAR Preview & Submission
+
+|Professor|
+start
+:Open CAR Report tab;
+
+|CourseSectionComponent|
+:Open CAR Report component;
+
+|CarReportComponent|
+:Request CAR preview;
+
+|CarReportService|
+:Retrieve course data;
+
+|Database|
+:Fetch course-related data;
+
+|CarReportService|
+:Return CAR preview data;
+
+|CarReportComponent|
+:Display CAR preview;
+
+|Professor|
+if (Download CAR?) then (Yes)
+    |CarReportComponent|
+    :Generate CAR PDF;
+    |Professor|
+    :Download CAR PDF;
+endif
+
+|Professor|
+:Click Submit CAR;
+
+|CarReportComponent|
+:Check for missing data;
+
+if (Required data complete?) then (Yes)
+    |CarReportService|
+    :Submit CAR report;
+    |Database|
+    :Save CAR submission;
+    |CarReportService|
+    :Return submission confirmation;
+    |CarReportComponent|
+    :Display confirmation message;
+else (No)
+    |CarReportComponent|
+    :Display missing data warning;
+endif
+
+stop
+@enduml

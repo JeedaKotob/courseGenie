@@ -1,0 +1,49 @@
+@startuml
+title Activity Diagram – User Login & Dashboard Access (UC01)
+
+|User|
+start
+:Enter username & password;
+:Click "Login";
+
+|LoginComponent|
+:Send credentials for authentication;
+
+|AuthService|
+:Authenticate credentials;
+
+|Database|
+:Fetch user data and roles;
+
+|AuthService|
+if (Credentials valid?) then (No)
+    |LoginComponent|
+    :Display error message;
+    stop
+else (Yes)
+    :Return user context and roles;
+endif
+
+|HomeRouter|
+:Route user to home;
+
+|AuthService|
+:Provide user context;
+
+|HomeRouter|
+if (Single role?) then (Yes)
+    |Dashboard|
+    :Load dashboard based on role;
+else (No)
+    |RoleSelection|
+    :Display role selection options;
+
+    |User|
+    :Select role;
+
+    |Dashboard|
+    :Load dashboard for selected role;
+endif
+
+stop
+@enduml

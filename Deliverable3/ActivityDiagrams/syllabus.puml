@@ -1,0 +1,28 @@
+@startuml
+title Activity Diagram – Syllabus Submission Tracking
+
+|Admin|
+start
+:Select Syllabus Page;
+
+|AdminHomeComponent|
+:Open Syllabus Component;
+
+|SyllabusComponent|
+:Request syllabus submission data;
+
+|SyllabusService|
+:Retrieve syllabus records;
+
+|Database|
+:Fetch syllabi data;
+
+|SyllabusService|
+:Return syllabus records;
+
+|SyllabusComponent|
+:Calculate submission progress per professor;
+:Display progress bars;
+
+stop
+@enduml
