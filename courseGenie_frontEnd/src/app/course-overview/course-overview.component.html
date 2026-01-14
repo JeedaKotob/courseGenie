@@ -29,13 +29,13 @@
               <div class="info-row">
                 <i class="pi pi-user"></i>
                 <span>
-                  {{ sec.professorId ? ('Professor #' + sec.professorId) : 'Unassigned' }}
+                  {{ sec.professorName ? ('Dr. ' + sec.professorName) : 'Unassigned' }}
                 </span>
               </div>
 
               <div class="info-row">
                 <i class="pi pi-folder"></i>
-                <span>{{ sec.assessments.length }} Assessments</span>
+                <span>{{ sec.assessmentCount}} Assessments</span>
               </div>
 
             </div>

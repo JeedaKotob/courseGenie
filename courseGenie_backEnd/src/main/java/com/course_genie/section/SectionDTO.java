@@ -15,7 +15,9 @@ public record SectionDTO(
         boolean configured,
         long courseId,
         long professorId,
+        String professorName,
         String teachingMethodology,
+        long assessmentCount,
         List<AssessmentDTO> assessments
 ) {
     public SectionDTO {

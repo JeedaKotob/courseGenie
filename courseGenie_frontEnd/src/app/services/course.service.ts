@@ -46,8 +46,10 @@ export class CourseService {
   }
 
   getCourseByCode(courseCode: string): Observable<Course> {
-    return this.http.get<Course>(`${this.apiUrl}/${courseCode}`);
+    const code = encodeURIComponent(courseCode.trim());
+    return this.http.get<Course>(`${this.apiUrl}/code/${code}`);
   }
+
 
 
 }

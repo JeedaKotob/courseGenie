@@ -30,4 +30,11 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
+
+    public String getFullName(){
+        String first = this.firstName;
+        String last = this.lastName;
+        String full = ((first == null ? "" : first) + " " + (last == null ? "" : last)).trim();
+        return full;
+    }
 }

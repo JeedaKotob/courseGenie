@@ -181,4 +181,30 @@ public class CourseService {
                 .clos(new ArrayList<>(course.clos()))
                 .build();
     }
+
+    public CourseDTO getCourseByCode(String courseCode) {
+        Course course = courseRepository.findCourseByCode(courseCode)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+
+        CourseDTO courseDTO = courseDTOMapper.apply(course);
+
+        // add all sections for this course
+        List<SectionDTO> sectionDTOS = sectionRepository.findByCourseCourseId(course.getCourseId())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(sectionDTOMapper)
+                .toList();
+        courseDTO.sections().addAll(sectionDTOS);
+
+        // add CLOs for this course
+        List<CLODTO> closDTO = cloRepository.findCLOByCourseCourseId(course.getCourseId())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(cloDTOMapper)
+                .toList();
+        courseDTO.clos().addAll(closDTO);
+
+        return courseDTO;
+    }
+
 }
