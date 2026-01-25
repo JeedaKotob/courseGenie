@@ -96,4 +96,13 @@ public class AssessmentController {
         assessmentService.deleteCategoryDescription(sectionId, categoryName);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/course/{courseCode}/section/{sectionCode}")
+    public ResponseEntity<List<AssessmentDTO>> getAssessmentsByCourseAndSection(
+            @PathVariable String courseCode,
+            @PathVariable String sectionCode
+    ) {
+        return ResponseEntity.ok(assessmentService.getAssessmentsByCourseAndSection(courseCode, sectionCode));
+    }
+
 }
