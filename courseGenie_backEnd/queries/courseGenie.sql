@@ -15,13 +15,61 @@ VALUES
     (12,'Khalid','Khawaja','kxkcad','kxkcad@rit.edu','A101','1010',''),
     (13,'Dezzil','Castelino','dmccad','dmccad@rit.edu','A102','1020','');
 
-
-INSERT INTO course_genie.student (student_id, first_name, last_name, email)
-VALUES
-    ('396001477','Jeeda','Kotob','jk8835@rit.edu'),
-    ('396001466','Ryma','Ait Tayeb','ra8245@rit.edu'),
-    ('396001488','Ibraheem','Mustafa','iam6172@rit.edu'),
-    ('396078872','Ayesha','Khan','ak8591@rit.edu');
+INSERT INTO student (student_id, first_name, last_name, email) VALUES
+                                                                   ('396001477','Jeeda','Kotob','jk8835@rit.edu'),
+                                                                   ('396001466','Ryma','Ait Tayeb','ra8245@rit.edu'),
+                                                                   ('396001488','Ibraheem','Mustafa','iam6172@rit.edu'),
+                                                                   ('396078872','Ayesha','Khan','ak8591@rit.edu'),
+                                                                   ('396001501','Ahmed','Abdelrahman','aaa7562@rit.edu'),
+                                                                   ('396001502','Walid','Abdul Wahab Akhras','wa5147@rit.edu'),
+                                                                   ('396001503','Iman','Akbar','ima4160@rit.edu'),
+                                                                   ('396001504','Hamad','Al Ali','hsa4486@rit.edu'),
+                                                                   ('396001505','Mohammed','Al Ali','msa8375@rit.edu'),
+                                                                   ('396001506','Muhammad','Alavi','mra6255@rit.edu'),
+                                                                   ('396001507','Masa','AlGhrawi','mha4248@rit.edu'),
+                                                                   ('396001508','Noor','Alisha','na8608@rit.edu'),
+                                                                   ('396001509','Abdenour','Attia','aa3314@rit.edu'),
+                                                                   ('396001510','Shahmeer','Bandey','srb1276@rit.edu'),
+                                                                   ('396001511','Sai Pratap','Batreddi','sb7984@rit.edu'),
+                                                                   ('396001512','Mohamad','Chaaban','mtc3109@rit.edu'),
+                                                                   ('396001513','Abigail','Da Costa','agd5371@rit.edu'),
+                                                                   ('396001514','Yahya','Elsawi','yme1333@rit.edu'),
+                                                                   ('396001515','Seifeldin','Faidallah','saf8366@rit.edu'),
+                                                                   ('396001516','Fahim','Faisal','ff8610@rit.edu'),
+                                                                   ('396001517','Kinan','Ghaalrebat','kig6230@rit.edu'),
+                                                                   ('396001518','Farheen','Haniyah','fh3204@rit.edu'),
+                                                                   ('396001519','Ahmed','Hassan','amh8077@rit.edu'),
+                                                                   ('396001520','Syed','Hussaini','sah6148@rit.edu'),
+                                                                   ('396001521','Dilshod','Imomov','di7773@rit.edu'),
+                                                                   ('396001522','Muhammad','Javed','mj3207@rit.edu'),
+                                                                   ('396001523','Dawood','Jukaku','dj4474@rit.edu'),
+                                                                   ('396001524','Hamdan','Kashif','hk8119@rit.edu'),
+                                                                   ('396001525','Omar','Kassab','oek9504@rit.edu'),
+                                                                   ('396001526','Bashir','Khadra','bok8285@rit.edu'),
+                                                                   ('396001527','Youssief','Khalifa','yak9700@rit.edu'),
+                                                                   ('396001528','Zara','Khalil','zk4532@rit.edu'),
+                                                                   ('396001529','Deneb','Malek','dm4765@rit.edu'),
+                                                                   ('396001530','Fahid','Milhem','fmm9246@rit.edu'),
+                                                                   ('396001531','Ismail','Habibi','ism5205@rit.edu'),
+                                                                   ('396001532','Mohammed','tayib','mnm6346@rit.edu'),
+                                                                   ('396001533','Begad','Moussa','bwm7640@rit.edu'),
+                                                                   ('396001534','Abdullah','Naseem','afn5363@rit.edu'),
+                                                                   ('396001535','Meiir','Orazalin','mo6209@rit.edu'),
+                                                                   ('396001536','Sneha','Pathak','sp9234@rit.edu'),
+                                                                   ('396001537','Aaditya','Patil','amp3507@rit.edu'),
+                                                                   ('396001538','Praislin','Peter','pp8489@rit.edu'),
+                                                                   ('396001539','Aamina','Quddusiyyah','aq2222@rit.edu'),
+                                                                   ('396001540','Farida','Ragab','fmr6917@rit.edu'),
+                                                                   ('396001541','Sarah','Saqib','ss2975@rit.edu'),
+                                                                   ('396001542','Yahavi','Shah','yrs4342@rit.edu'),
+                                                                   ('396001543','Zafar','Shaikh','zas7030@rit.edu'),
+                                                                   ('396001544','Zoya','Shaikh','zhs3705@rit.edu'),
+                                                                   ('396001545','Tanzeel','Siddika','tms1490@rit.edu'),
+                                                                   ('396001546','Muhammad','Silat','mas9468@rit.edu'),
+                                                                   ('396001547','Garima','Singh','gs3992@rit.edu'),
+                                                                   ('396001548','Abdullah','Tahir','at9657@rit.edu'),
+                                                                   ('396001549','Kawin','Yogam','ky4775@rit.edu'),
+                                                                   ('396001550','Lewam','Yohannes','ly6349@rit.edu');
 
 INSERT INTO course_genie.course (course_id, code, name, description, credits, discipline, course_approval_date, last_revision_date, undergraduate, new_course, course_deletion, graduate, prerequisites, corequisites, designated_innovation_journey_course)
 VALUES
@@ -193,3 +241,40 @@ INSERT INTO course_genie.category_description (id, category_name, description, s
 VALUES
     (1,'Exam','Exam description',1);
 
+
+-- =========================
+-- ENROLLMENTS (ALL SECTIONS)
+-- =========================
+INSERT INTO course_genie.enrollment (student_id, section_id, status)
+VALUES
+('396001477',1,'ENROLLED'),
+('396001466',1,'ENROLLED'),
+('396001488',2,'ENROLLED'),
+('396078872',2,'ENROLLED'),
+('396001501',3,'ENROLLED'),
+('396001502',4,'ENROLLED'),
+('396001503',5,'ENROLLED'),
+('396001504',6,'ENROLLED'),
+('396001505',7,'ENROLLED'),
+('396001506',8,'ENROLLED'),
+('396001507',9,'ENROLLED'),
+('396001508',10,'ENROLLED'),
+('396001509',11,'ENROLLED'),
+('396001510',12,'ENROLLED'),
+('396001477',13,'ENROLLED'),
+('396001466',14,'ENROLLED'),
+('396001488',15,'ENROLLED'),
+('396078872',16,'ENROLLED'),
+('396001501',17,'ENROLLED'),
+('396001502',18,'ENROLLED'),
+('396001503',19,'ENROLLED'),
+('396001504',20,'ENROLLED'),
+('396001505',21,'ENROLLED'),
+('396001506',22,'ENROLLED');
+
+INSERT INTO enrollment (student_id, section_id, status)
+SELECT student_id, s.section_id, 'ENROLLED'
+FROM student
+         JOIN section s
+ORDER BY RAND()
+    LIMIT 500;
