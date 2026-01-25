@@ -6,6 +6,7 @@ import { GradeService } from '../services/grade.service';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import {SectionService} from '../services/section.service';
 
 @Component({
   selector: 'app-statistics',
@@ -82,7 +83,8 @@ export class StatisticsComponent implements OnInit {
   constructor(
     private sharedDataService: SharedDataService,
     private studentService: StudentService,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private sectionService: SectionService
   ) {}
 
   ngOnInit(): void {
@@ -103,39 +105,15 @@ export class StatisticsComponent implements OnInit {
     const sectionId = this.course?.sections?.[0]?.sectionId;
     if (!sectionId) return;
 
-    this.studentService.getAllStudents(sectionId).subscribe({
-      next: (data: any) => {
-        Object.keys(data).forEach((studentKey) => {
-          const student = this.parseStudent(studentKey);
-          if (student) {
-            this.students.push(student);
-            if (!this.gradesMatrix[student.studentId]) {
-              this.gradesMatrix[student.studentId] = {};
-            }
-            const grades = data[studentKey];
-            grades.forEach((grade: any) => {
-              this.gradesMatrix[student.studentId][grade.assessmentId] = grade.score;
-              this.grades.push(grade);
-            });
-          }
-        });
+    this.sectionService.getStudentsBySection(sectionId).subscribe({
+      next: (students: Student[]) => {
+        this.students = students;
         this.generateChart();
       },
-      error: (err) => console.error(err)
+      error: err => console.error(err)
     });
   }
 
-  parseStudent(input: string): Student | null {
-    const match = input.match(/studentId=(\d+), firstName=(.*?), lastName=(.*?), email=(.*?)\]/);
-    if (!match) return null;
-
-    return {
-      studentId: match[1],
-      firstName: match[2],
-      lastName: match[3],
-      email: match[4],
-    };
-  }
 
   getTotalScore(studentId: string): number {
     return Object.values(this.gradesMatrix[studentId] || {})
