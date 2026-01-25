@@ -8,6 +8,8 @@ import { AssessmentService } from '../services/assessment.service';
 import { Assessment, Course } from '../home/course.model';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { forkJoin, Observable } from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-course-calendar',
@@ -24,13 +26,26 @@ export class CourseCalendarComponent implements OnInit {
 
   constructor(
     private assessmentService: AssessmentService,
-    private sharedService: SharedDataService
+    private sharedService: SharedDataService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.course = this.sharedService.selectedCourseValue;
     this.initializeWeeks();
-    this.loadAssessments();
+    this.route.paramMap.pipe(
+      map(pm => ({
+        courseCode: pm.get('courseCode')!,
+        sectionCode: pm.get('sectionCode')!
+      })),
+      distinctUntilChanged((a, b) => a.courseCode === b.courseCode && a.sectionCode === b.sectionCode),
+      switchMap(({ courseCode, sectionCode }) =>
+        this.assessmentService.getAssessmentsByCourseAndSection(courseCode, sectionCode)
+      )
+    ).subscribe({
+      next: (data: Assessment[]) => this.populateWeeks(data),
+      error: (err) => console.error('Error loading assessments:', err)
+    });
   }
 
   private initializeWeeks(): void {
@@ -47,25 +62,22 @@ export class CourseCalendarComponent implements OnInit {
     }
   }
 
-  private loadAssessments(): void {
-    this.assessmentService.getallassesments().subscribe({
-      next: (data: Assessment[]) => {
-        this.weeks.forEach(week => week.assessments = []);
-        let unscheduledIndex = 0;
-        data.forEach((assessment) => {
-          if (assessment.week && assessment.week !== 0) {
-            const weekContainer = this.weeks.find(w => w.week === assessment.week);
-            if (weekContainer) weekContainer.assessments.push(assessment);
-          } else {
-            const weekContainer = this.weeks[unscheduledIndex];
-            weekContainer.assessments.push(assessment);
-            unscheduledIndex = (unscheduledIndex + 1) % this.weeks.length;
-          }
-        });
-      },
-      error: (err) => console.error('Error loading assessments:', err)
+  private populateWeeks(data: Assessment[]): void {
+    this.weeks.forEach(week => week.assessments = []);
+    let unscheduledIndex = 0;
+
+    data.forEach((assessment) => {
+      if (assessment.week && assessment.week !== 0) {
+        const weekContainer = this.weeks.find(w => w.week === assessment.week);
+        if (weekContainer) weekContainer.assessments.push(assessment);
+      } else {
+        const weekContainer = this.weeks[unscheduledIndex];
+        weekContainer.assessments.push(assessment);
+        unscheduledIndex = (unscheduledIndex + 1) % this.weeks.length;
+      }
     });
   }
+
 
   public getWeekClass(week: { week: number, isActive: boolean }): string {
     return week.isActive ? 'active-week' : 'pastel-week';

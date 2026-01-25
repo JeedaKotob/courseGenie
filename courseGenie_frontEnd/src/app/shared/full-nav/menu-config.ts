@@ -73,7 +73,7 @@ export const menuItems: MenuItem[] = [
     label: 'Syllabus',
     path: '/syllabus/:courseCode/:sectionCode',
     icon: 'pi pi-folder',
-    roles: ['ROLE_PROFESSOR'],
+    roles: ['ROLE_PROFESSOR', 'ROLE_ADMIN'],
   },
   {
     label: 'Books',

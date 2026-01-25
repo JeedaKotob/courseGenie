@@ -144,4 +144,18 @@ public class AssessmentService {
             .orElseThrow(() -> new EntityNotFoundException("Category description not found."));
         categoryDescriptionRepository.delete(cd);
     }
+
+    public List<AssessmentDTO> getAssessmentsByCourseAndSection(String courseCode, String sectionCode) {
+        return assessmentRepository
+                .findAssessmentBySectionSectionId(
+                        sectionRepository.findSectionByCodeAndCourseCode(sectionCode, courseCode)
+                                .orElseThrow(() -> new EntityNotFoundException("Section not found"))
+                                .getSectionId()
+                )
+                .orElse(List.of())
+                .stream()
+                .map(assessmentDTOMapper)
+                .toList();
+    }
+
 }

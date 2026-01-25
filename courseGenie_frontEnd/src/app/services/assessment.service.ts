@@ -75,4 +75,12 @@ export class AssessmentService {
       `${this.apiUrl}/${sectionId}/category-description/${categoryName}`
     );
   }
+
+  getAssessmentsByCourseAndSection(courseCode: string, sectionCode: string) {
+    return this.http.get<Assessment[]>(
+      `${this.apiUrl}/course/${courseCode}/section/${sectionCode}`
+    );
+  }
+
+
 }
