@@ -18,9 +18,4 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // Read
-    @GetMapping("/{sectionId}")
-    public ResponseEntity<HashMap<StudentDTO,List<GradeDTO>>> getAllStudents(@PathVariable long sectionId) {
-        return ResponseEntity.ok(studentService.getAllStudents(sectionId));
-    }
 }

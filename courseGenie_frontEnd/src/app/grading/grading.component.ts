@@ -5,6 +5,7 @@ import { StudentService } from '../services/student.service';
 import { GradeService } from '../services/grade.service';
 import { NgForOf, NgIf, CommonModule } from '@angular/common';
 import { ButtonComponent } from '../shared/button/button.component';
+import {SectionService} from '../services/section.service';
 
 type GradeHighlight = {
   top: Set<string>;
@@ -31,6 +32,7 @@ export class GradingComponent implements OnInit {
   constructor(
     private sharedDataService: SharedDataService,
     private studentService: StudentService,
+    private sectionService: SectionService,
     private gradeService: GradeService
   ) {}
 
@@ -200,34 +202,28 @@ export class GradingComponent implements OnInit {
   }
 
   getAllStudents() {
-    this.studentService.getAllStudents(this.course?.sections?.[0]?.sectionId).subscribe({
-      next: (data: any) => {
-        Object.keys(data).forEach(studentKey => {
-          const student = this.parseStudent(studentKey);
-          if (student) {
-            this.students.push(student);
-            if (!this.gradesMatrix[student.studentId]) {
-              this.gradesMatrix[student.studentId] = {};
-            }
-            const grades = data[studentKey];
-            grades.forEach((element: any) => {
-              this.gradesMatrix[student.studentId][element.assessmentId] = element.score;
-              this.grades.push(element);
-            });
+    const sectionId = this.course?.sections?.[0]?.sectionId;
+    if (!sectionId) return;
+
+    this.sectionService.getStudentsBySection(sectionId).subscribe({
+      next: (students: Student[]) => {
+        this.students = students;
+
+        // initialize grade matrix
+        this.students.forEach(student => {
+          if (!this.gradesMatrix[student.studentId]) {
+            this.gradesMatrix[student.studentId] = {};
           }
         });
 
         this.computeHighlights();
-        this.sortStudentsByTotal(); // Sort after data load
+        this.sortStudentsByTotal();
       },
-      error: (error) => {
-        console.error('Error fetching students', error);
-      },
-      complete: () => {
-        console.log('Students fetching completed');
-      }
+      error: err => console.error('Error fetching students', err)
     });
   }
+
+
   headerButtons = [
     {
       label: 'Save', // Or appropriate label for the component
@@ -247,19 +243,5 @@ export class GradingComponent implements OnInit {
     }
     // Handle other actions as needed
   }
-  parseStudent(input: string): Student | null {
-    const regex = /StudentDTO\[studentId=(\d+), firstName=([\w\s]+), lastName=([\w\s]+), email=([\w\.]+@[\w\.]+)\]/;
-    const match = input.match(regex);
-    if (match) {
-      return {
-        studentId: match[1],
-        firstName: match[2],
-        lastName: match[3],
-        email: match[4]
-      };
-    }
-    return null;
 
-
-  }
 }

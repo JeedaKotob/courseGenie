@@ -4,6 +4,10 @@ import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import com.course_genie.enrollment.Enrollment;
+import com.course_genie.enrollment.EnrollmentService;
+import com.course_genie.student.Student;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +19,14 @@ public class SectionService {
     private final AssessmentRepository assessmentRepository;
     private final SectionDTOMapper sectionDTOMapper;
     private final SectionMapper sectionMapper;
+    private final EnrollmentService enrollmentService;
 
-    public SectionService(SectionRepository sectionRepository, AssessmentRepository assessmentRepository, SectionDTOMapper sectionDTOMapper, SectionMapper sectionMapper) {
+    public SectionService(SectionRepository sectionRepository, AssessmentRepository assessmentRepository, SectionDTOMapper sectionDTOMapper, SectionMapper sectionMapper, EnrollmentService enrollmentService) {
         this.sectionRepository = sectionRepository;
         this.assessmentRepository = assessmentRepository;
         this.sectionDTOMapper = sectionDTOMapper;
         this.sectionMapper = sectionMapper;
+        this.enrollmentService = enrollmentService;
     }
 
     public Boolean saveConfiguration(Long sectionId) {
@@ -54,4 +60,16 @@ public class SectionService {
         section.setTeachingMethodology(String.valueOf((methodologyText)));
         sectionRepository.save(section);
     }
+
+    public List<Student> getStudentsBySection(Long sectionId) {
+
+        sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+
+        return enrollmentService.getEnrollmentsForSection(sectionId)
+                .stream()
+                .map(Enrollment::getStudent)
+                .toList();
+    }
+
 }

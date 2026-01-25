@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { Course, CoursesBySemester } from '../home/course.model';
+
+import {Course, CoursesBySemester, Student} from '../home/course.model';
 
 @Injectable({
     providedIn: 'root'
@@ -28,4 +29,9 @@ export class SectionService {
             headers: { 'Content-Type': 'text/plain' }
         });
     }
+
+  getStudentsBySection(sectionId: number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/${sectionId}/students`);
+  }
+
 }

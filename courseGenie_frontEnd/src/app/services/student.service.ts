@@ -11,7 +11,7 @@ export class StudentService {
     apiUrl: string = `${environment.apiUrl}/students`;
     constructor(private http: HttpClient) { }
 
-    getAllStudents(sectionId: number |undefined) {
-        return this.http.get<Map<Student, Grade[]>>(`${this.apiUrl}/${sectionId}`);
-    }
+    // getAllStudents(sectionId: number |undefined) {
+    //     return this.http.get<Map<Student, Grade[]>>(`${this.apiUrl}/${sectionId}`);
+    // }
 }
