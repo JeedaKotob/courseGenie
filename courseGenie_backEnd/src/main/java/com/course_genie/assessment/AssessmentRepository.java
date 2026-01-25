@@ -33,5 +33,6 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
     @Query("DELETE FROM CategoryDescription c WHERE c.section.sectionId = :sectionId AND c.categoryName = :categoryName")
     void deleteCategoryDescription(@Param("sectionId") Long sectionId, @Param("categoryName") String categoryName);
 
+    long countBySectionSectionId(Long sectionId);
 
 }

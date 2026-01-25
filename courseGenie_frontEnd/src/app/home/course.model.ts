@@ -15,7 +15,9 @@ export interface Section {
   code: string;
   configured: boolean;
   professorId: number;
+  professorName?: string;
   assessments: Assessment[];
+  assessmentCount: number;
   term: string;
 }
 

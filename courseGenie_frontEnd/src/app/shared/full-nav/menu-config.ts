@@ -88,10 +88,10 @@ export const menuItems: MenuItem[] = [
     roles: ['ROLE_PROFESSOR'],
   },
   // Admin-only menu item example
-  {
-    label: 'Courses',
-    path: '/admin/course',
-    icon: 'pi pi-cog',
-    roles: ['ROLE_ADMIN'],
-  }
+  // {
+  //   label: 'Courses',
+  //   path: '/admin/course',
+  //   icon: 'pi pi-cog',
+  //   roles: ['ROLE_ADMIN'],
+  // }
 ];

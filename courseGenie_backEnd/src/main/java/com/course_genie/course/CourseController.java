@@ -28,6 +28,12 @@ public class CourseController {
         return ResponseEntity.ok(createCourse);
     }
 
+    @GetMapping("/code/{courseCode}")
+    public ResponseEntity<CourseDTO> getCourseByCourseCode(@PathVariable String courseCode) {
+        return ResponseEntity.ok(courseService.getCourseByCode(courseCode));
+    }
+
+
     @GetMapping
     public ResponseEntity<Map<String, Set<CourseDTO>>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
