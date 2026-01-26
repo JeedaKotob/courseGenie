@@ -16,6 +16,12 @@
       <button class="action-btn download-btn" (click)="downloadSyllabus()" [class.hidden]="!pdfUrl">
         <i class="bi bi-download me-2"></i>Download
       </button>
+
+      <button class="action-btn generate-btn"
+              (click)="submitSyllabus()"
+              [disabled]="syllabus?.submitted">
+        {{ syllabus?.submitted ? 'Submitted' : 'Submit Syllabus' }}
+      </button>
     </div>
   </div>
 
