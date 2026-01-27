@@ -21,6 +21,7 @@ public class Syllabus {
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
+    private boolean submitted;
     public Syllabus(long syllabusId) {
         this.syllabusId = syllabusId;
     }

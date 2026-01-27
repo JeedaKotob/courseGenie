@@ -164,6 +164,26 @@
   gap: 20px;
   margin-top: 20px;
 }
+.progress-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.progress {
+  height: 10px;
+  border-radius: 6px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  background: linear-gradient(135deg, #024964, #0394CA);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
 
 @media (max-width: 768px) {
   .hero-content {

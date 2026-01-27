@@ -15,6 +15,41 @@
 
     <div class="home-content mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="bold mb-0">Syllabus Submissions</h1>
+      </div>
+      <div *ngIf="syllabusProgress.length > 0; else noProgress">
+
+        <div class="progress-card"
+             *ngFor="let p of syllabusProgress">
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">{{ p.professorName }}</h5>
+            <span class="text-muted">
+        {{ p.submittedSyllabi }} / {{ p.totalSections }}
+      </span>
+          </div>
+
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              [style.width.%]="p.progressPercentage">
+              {{ p.progressPercentage | number:'1.0-0' }}%
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <ng-template #noProgress>
+        <p class="text-muted">No syllabus submissions yet.</p>
+      </ng-template>
+
+    </div>
+
+    <div class="home-content mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">All Courses</h1>
       </div>
 
@@ -57,3 +92,5 @@
     </div>
   </div>
 </div>
+
+

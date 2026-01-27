@@ -66,6 +66,15 @@ export interface Syllabus {
   sectionId: number;
 }
 
+export interface SyllabusProgress {
+  professorId: number;
+  professorName: string;
+  totalSections: number;
+  submittedSyllabi: number;
+  progressPercentage: number;
+}
+
+
 export interface User {
   userId: number;
   firstName: string;
