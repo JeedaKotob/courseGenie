@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CourseService } from '../../services/course.service';
 import {Course, SyllabusProgress} from '../course.model';
 import { Router } from '@angular/router';
-import {AdminService} from '../../services/admin.service';
 
 @Component({
   selector: 'app-admin-home',
@@ -19,21 +18,13 @@ export class AdminHomeComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private router: Router,
-    private adminService: AdminService,
   ) {}
 
   ngOnInit(): void {
     this.loadCourses();
-    this.loadSyllabusProgress();
     setTimeout(() => this.animationClass = 'animate-hero', 100);
   }
 
-  loadSyllabusProgress() {
-    this.adminService.getSyllabusProgress().subscribe({
-      next: data => this.syllabusProgress = data,
-      error: err => console.error("Error loading syllabus progress",err)
-    });
-  }
 
   loadCourses(): void {
     this.courseService.getAllCourseDTOs().subscribe({

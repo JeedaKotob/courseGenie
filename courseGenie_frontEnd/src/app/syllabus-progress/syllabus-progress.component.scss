@@ -1,0 +1,107 @@
+.home-container {
+  width: 95vw !important;
+  margin: 0 auto;
+}
+
+.hero-section {
+  margin-bottom: 2rem;
+}
+
+.hero-section-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.35)), url("/assets/hero-section.png");
+  height: 45vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.hero-content {
+  position: relative;
+  right: 10%;
+  max-width: 520px;
+}
+
+.hero-text {
+  font-weight: bold;
+  font-size: 2.5rem;
+  line-height: 1.3;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-line {
+  margin-bottom: 8px;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  background: white;
+  color: #024964;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-btn:hover {
+  background-color: #024964;
+  color: #fff;
+}
+
+.progress-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.progress {
+  height: 10px;
+  border-radius: 6px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  background: linear-gradient(135deg, #024964, #0394CA);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+
+@media (max-width: 768px) {
+  .hero-content {
+    right: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .hero-text {
+    font-size: 1.8rem;
+  }
+  .course-card {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-text {
+    font-size: 1.5rem;
+  }
+  .course-card {
+    min-height: 200px;
+  }
+}

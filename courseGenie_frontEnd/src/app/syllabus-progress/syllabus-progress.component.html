@@ -1,0 +1,55 @@
+<div class="m-3">
+  <div class="card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4">
+
+    <div class="hero-section">
+      <div class="hero-section-bg d-flex align-items-center justify-content-end">
+        <div class="hero-content">
+          <h3 class="hero-text text-white">
+            <span class="hero-line">Manage all courses</span>
+            <span class="hero-line">and their sections</span>
+            <span class="hero-line">from one dashboard</span>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-content mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="bold mb-0">Syllabus Submissions</h1>
+      </div>
+      <div *ngIf="syllabusProgress.length > 0; else noProgress">
+
+        <div class="progress-card"
+             *ngFor="let p of syllabusProgress">
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">Dr. {{p.professorName }}</h5>
+            <span class="text-muted">
+        {{ p.submittedSyllabi }} / {{ p.totalSections }}
+      </span>
+          </div>
+
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              [style.width.%]="p.progressPercentage">
+              {{ p.progressPercentage | number:'1.0-0' }}%
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <ng-template #noProgress>
+        <p class="text-muted">No syllabus submissions yet.</p>
+      </ng-template>
+
+    </div>
+
+
+  </div>
+</div>
+
+

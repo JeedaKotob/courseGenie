@@ -25,6 +25,7 @@ import {AdminHomeComponent} from './home/admin-home/admin-home.component';
 import {ChooseRoleComponent} from './home/choose-role/choose-role.component';
 import {RoleGuard} from './guard/role.guard';
 import {CourseOverviewComponent} from './course-overview/course-overview.component';
+import {SyllabusProgressComponent} from './syllabus-progress/syllabus-progress.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'home', component: HomeRouterComponent, canActivate: [AuthGuard] },
       { path: 'professor', component: ProfHomeComponent, canActivate: [RoleGuard], data: {roles: ['ROLE_PROFESSOR']}},
       { path: 'admin', component: AdminHomeComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      { path: 'admin/syllabusProgress', component: SyllabusProgressComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'choose-role', component: ChooseRoleComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
     ],
