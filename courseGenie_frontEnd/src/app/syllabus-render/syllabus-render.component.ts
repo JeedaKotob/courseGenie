@@ -98,4 +98,20 @@ export class SyllabusRenderComponent {
     }
   }
 
+  submitSyllabus(): void {
+    if (!this.syllabus) return;
+    this.syllabusService.submitSyllabus(this.syllabus.syllabusId)
+      .subscribe({
+        next: () => {
+          if (this.syllabus) {
+            this.syllabus.submitted = true;
+          }
+        },
+        error: err => {
+          console.error('Error submitting syllabus:', err);
+        }
+      });
+  }
+
+
 }

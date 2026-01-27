@@ -210,4 +210,14 @@ public class SyllabusService {
 
         return syllabusDTOMapper.apply(syllabusRepository.save(syllabus));
     }
+
+    public void submitSyllabus(long syllabusId) {
+        Syllabus syllabus = syllabusRepository.findById(syllabusId)
+                .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
+
+        syllabus.setSubmitted(true);
+
+        syllabusRepository.save(syllabus);
+    }
+
 }

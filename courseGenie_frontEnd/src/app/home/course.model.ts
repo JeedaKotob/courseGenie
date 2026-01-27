@@ -64,6 +64,7 @@ export interface Syllabus {
   syllabusId: number;
   content: string;
   sectionId: number;
+  submitted: boolean;
 }
 
 export interface SyllabusProgress {

@@ -20,6 +20,7 @@ public class SyllabusMapper implements Function<SyllabusDTO, Syllabus> {
                 .syllabusId(syllabusDTO.syllabusId())
                 .content(syllabusDTO.content())
                 .section(new Section(syllabusDTO.sectionId()))
+                .submitted(syllabusDTO.submitted())
                 .build();
     }
 }

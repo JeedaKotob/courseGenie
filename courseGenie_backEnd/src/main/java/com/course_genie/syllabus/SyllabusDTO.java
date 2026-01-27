@@ -7,6 +7,7 @@ import lombok.Builder;
 public record SyllabusDTO(
         long syllabusId,
         String content,
-        long sectionId
+        long sectionId,
+        boolean submitted
 ) {
 }

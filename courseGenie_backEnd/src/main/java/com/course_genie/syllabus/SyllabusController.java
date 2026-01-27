@@ -49,4 +49,11 @@ public class SyllabusController {
     public ResponseEntity<SyllabusDTO> generateSyllabus(@PathVariable long sectionId) {
         return ResponseEntity.ok(syllabusService.generateSyllabus(sectionId));
     }
+
+    @PostMapping("/submit/{syllabusId}")
+    public ResponseEntity<Void> submitSyllabus(@PathVariable long syllabusId) {
+        syllabusService.submitSyllabus(syllabusId);
+        return ResponseEntity.ok().build();
+    }
+
 }

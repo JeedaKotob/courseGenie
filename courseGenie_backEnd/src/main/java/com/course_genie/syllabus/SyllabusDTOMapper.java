@@ -20,6 +20,7 @@ public class SyllabusDTOMapper implements Function<Syllabus, SyllabusDTO> {
                 .syllabusId(syllabus.getSyllabusId())
                 .content(syllabus.getContent())
                 .sectionId(syllabus.getSection().getSectionId())
+                .submitted(syllabus.isSubmitted())
                 .build();
     }
 }
