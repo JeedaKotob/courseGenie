@@ -18,6 +18,7 @@ import { concatMap, from } from 'rxjs';
 })
 export class CreateAssessmentComponent {
   @Input() course: Course | null = null;
+  @Input() existingTotal=0;
   @ViewChild('addAssessmentModal') addAssessmentModal!: TemplateRef<any>;
 
   assessmentForm: FormGroup;
@@ -54,12 +55,8 @@ export class CreateAssessmentComponent {
     this.modalService.dismissAll();
   }
 
-  getPendingTotal(): number {
-    return this.pendingAssessments.reduce((sum, category) => sum + (category.isBonus ? 0 : category.totalWeight || 0), 0);
-  }
-
   getSubmitButtonLabel(): string {
-    const total = this.getPendingTotal();
+    const total = this.getOverallTotal();
     return total === 100 ? 'Save All' : `Add More (Total: ${total}%)`;
   }
 
@@ -85,15 +82,17 @@ export class CreateAssessmentComponent {
       baseShortName = customShortName;
     }
 
+    const pendingTotal = this.getPendingTotal();
+    const overallTotal = this.getOverallTotal();
+
     if (!isBonus && maxPoints > 40) {
-      alert("The total weight for a single category cannot exceed 40%.");
+      alert('A single assessment category cannot exceed 40%.');
       return;
     }
 
-    const currentTotal = this.getPendingTotal();
-    if (!isBonus && currentTotal + maxPoints > 100) {
-      alert(`Adding this category will exceed 100%. Current pending weight is ${currentTotal}%.`);
-      return;
+    if (!isBonus && overallTotal + maxPoints > 100) {
+      alert(`Total assessment weight cannot exceed 100%. Existing: ${this.existingTotal}% , Pending: ${pendingTotal}%`);
+          return;
     }
 
     const weightPerAssessment = parseFloat((maxPoints / numAssessments).toFixed(2));
@@ -134,9 +133,9 @@ export class CreateAssessmentComponent {
     if (this.isCommitting) return;
     this.isCommitting = true;
 
-    const total = this.getPendingTotal();
-    if (total !== 100) {
-      alert(`Total weight must equal 100%. Current pending weight is ${total}%.`);
+    const overallTotal = this.getOverallTotal();
+    if (overallTotal > 100) {
+      alert(`Total weight must be less than 100%. Current total weight is ${overallTotal}%.`);
       this.isCommitting = false;
       return;
     }
@@ -190,5 +189,15 @@ export class CreateAssessmentComponent {
           this.isCommitting = false;
         }
       });
+  }
+
+  getPendingTotal(): number{
+    return this.pendingAssessments.reduce(
+      (sum,c)=>sum+(c.isBonus ? 0: c.totalWeight || 0), 0
+    );
+  }
+
+  getOverallTotal(): number{
+    return this.existingTotal + this.getPendingTotal();
   }
 }

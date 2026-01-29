@@ -96,9 +96,12 @@
       </table>
 
       <div class="progress my-3">
-        <div class="progress-bar" role="progressbar" [style.width.%]="getPendingTotal()" aria-valuemin="0" aria-valuemax="100">
-          {{ getPendingTotal() }}%
+        <div class="progress-bar" role="progressbar" [style.width.%]="getOverallTotal()" aria-valuemin="0" aria-valuemax="100">
+          {{ getOverallTotal() }}%
         </div>
+      </div>
+      <div class="text-muted text-center mt-2">
+        Remaining weight: {{ 100 - getOverallTotal() }}%
       </div>
 
       <div class="text-end">
@@ -106,7 +109,7 @@
           [label]="'Save All'"
           type="button"
           (click)="commitAssessments()"
-          [disabled]="getPendingTotal() !== 100"
+          [disabled]="getOverallTotal() > 100"
         ></app-button>
       </div>
     </div>

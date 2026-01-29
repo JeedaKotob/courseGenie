@@ -219,4 +219,10 @@ export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: 
 
     this.categoryDescriptionsSource.load(this.categoryDescriptions);
   }
+
+  existingAssessmentTotal(): number {
+    return this.course?.sections?.[0]?.assessments
+      ?.reduce((total, assessment) => total + (assessment.maxPoints || 0), 0) || 0;
+  }
+
 }
