@@ -70,6 +70,7 @@ export interface Syllabus {
 export interface SyllabusProgress {
   professorId: number;
   professorName: string;
+  departmentName: string;
   totalSections: number;
   submittedSyllabi: number;
   progressPercentage: number;

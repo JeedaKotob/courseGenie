@@ -8,6 +8,8 @@ import com.course_genie.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminSyllabusService {
@@ -26,29 +28,35 @@ public class AdminSyllabusService {
         this.syllabusRepository = syllabusRepository;
     }
 
-    public List<SyllabusProgressDTO> getSyllabusProgressByProfessor(){
-        List<User> professors=userRepository.findByRoles("ROLE_PROFESSOR");
+    public Map<String, List<SyllabusProgressDTO>> getSyllabusProgressByDepartment() {
+        List<User> professors = userRepository.findByRoles("ROLE_PROFESSOR");
 
-        return professors.stream().map(user->{
-            List<Section> sections=sectionRepository.findByProfessorUserId(user.getUserId());
-            int totalSections=sections.size();
-            int submittedCount=(int) sections.stream()
+        List<SyllabusProgressDTO> flatList = professors.stream().map(user -> {
+            List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId());
+            int totalSections = sections.size();
+            int submittedCount = (int) sections.stream()
                     .map(syllabusRepository::findSyllabusBySection)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .filter(Syllabus::isSubmitted)
                     .count();
-            double progress=totalSections==0 ? 0 :
-                    (submittedCount * 100.0)/totalSections;
+
+            double progress = totalSections == 0 ? 0 : (submittedCount * 100.0) / totalSections;
+
+            String deptName = (user.getDepartment() != null) ? user.getDepartment().getDepartmentName() : "Unassigned";
 
             return SyllabusProgressDTO.builder()
                     .professorId(user.getUserId())
                     .professorName(user.getFullName())
+                    .departmentName(deptName) // <--- Set it here
                     .totalSections(totalSections)
                     .submittedSyllabi(submittedCount)
                     .progressPercentage(progress)
                     .build();
         }).toList();
+
+        return flatList.stream()
+                .collect(Collectors.groupingBy(SyllabusProgressDTO::departmentName));
     }
 
 

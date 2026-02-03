@@ -13,6 +13,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .userName(user.getUserName())
+                .departmentName(user.getDepartment() != null ? user.getDepartment().getDepartmentName(): "Unassigned")
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .officeHours(user.getOfficeHours())

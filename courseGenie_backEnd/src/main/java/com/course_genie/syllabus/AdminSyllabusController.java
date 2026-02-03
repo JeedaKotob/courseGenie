@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -17,7 +18,7 @@ public class AdminSyllabusController {
     }
 
     @GetMapping("/syllabus-progress")
-    public List<SyllabusProgressDTO> getSyllabusProgress() {
-        return adminSyllabusService.getSyllabusProgressByProfessor();
+    public Map<String, List<SyllabusProgressDTO>> getSyllabusProgress() {
+        return adminSyllabusService.getSyllabusProgressByDepartment();
     }
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 public record SyllabusProgressDTO(
         long professorId,
         String professorName,
+        String departmentName,
         int totalSections,
         int submittedSyllabi,
         double progressPercentage

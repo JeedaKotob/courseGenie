@@ -4,6 +4,7 @@ import lombok.*;
 
 @Entity
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Department {
@@ -11,10 +12,10 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long departmentId;
 
-    private String departmentName; // do we stick to this namin istead of name and will i have to change all entities?
+    private String departmentName;
 
     @Column(length=2000)
     private String description;
 
-    //ADD HEAD_ID (prof?)
+
 }

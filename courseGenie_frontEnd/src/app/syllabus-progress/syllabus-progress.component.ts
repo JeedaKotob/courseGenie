@@ -12,7 +12,7 @@ import {AdminService} from '../services/admin.service';
 })
 export class SyllabusProgressComponent implements OnInit {
   animationClass = '';
-  syllabusProgress: SyllabusProgress[]=[];
+  groupedSyllabusProgress: { [key: string]: SyllabusProgress[] } = {};
 
   constructor(
     private router: Router,
@@ -26,8 +26,9 @@ export class SyllabusProgressComponent implements OnInit {
 
   loadSyllabusProgress() {
     this.adminService.getSyllabusProgress().subscribe({
-      next: (data: SyllabusProgress[]) => this.syllabusProgress = data,
+      next: (data)  => {this.groupedSyllabusProgress = data;},
       error: (err: any) => console.error("Error loading syllabus progress",err)
     });
   }
+
 }

@@ -16,6 +16,7 @@ public class UserDTO {
     String firstName;
     String lastName;
     String userName;
+    String departmentName;
     String email;
     String jwtToken;
     String phone;
