@@ -1,5 +1,7 @@
 package com.course_genie.user;
 
+import com.course_genie.course.Course;
+import com.course_genie.department.Department;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,10 @@ public class User {
     private String office;
     private String phone;
     private String officeHours;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
