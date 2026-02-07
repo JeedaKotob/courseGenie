@@ -48,7 +48,7 @@ public class AdminSyllabusService {
             return SyllabusProgressDTO.builder()
                     .professorId(user.getUserId())
                     .professorName(user.getFullName())
-                    .departmentName(deptName) // <--- Set it here
+                    .departmentName(deptName)
                     .totalSections(totalSections)
                     .submittedSyllabi(submittedCount)
                     .progressPercentage(progress)
