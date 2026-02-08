@@ -14,7 +14,9 @@ import com.course_genie.course.CourseRepository;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
 import java.util.Collections;
@@ -215,9 +217,35 @@ public class SyllabusService {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
                 .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
 
+
+        Section section = syllabus.getSection();
+        List<Assessment> assessments = assessmentRepository.findAssessmentBySectionSectionId(section.getSectionId()).orElseThrow(() -> new IllegalStateException("No assessments created for this section"));
+
+        int total = 0;
+        for (Assessment a: assessments){
+            total+=a.getMaxPoints();
+        }
+
+        if (total != 100){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You cannot submit the syllabus yet. Please ensure all assessments are created and their total weight equals 100.");
+        }
+
         syllabus.setSubmitted(true);
 
         syllabusRepository.save(syllabus);
     }
+
+    public int getAssessmentTotal(long syllabusId) {
+        Syllabus syllabus = syllabusRepository.findById(syllabusId)
+                .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
+
+        Section section = syllabus.getSection();
+
+        return assessmentRepository
+                .findAssessmentBySectionSectionId(section.getSectionId())
+                .map(list -> list.stream().mapToInt(Assessment::getMaxPoints).sum())
+                .orElse(0);
+    }
+
 
 }

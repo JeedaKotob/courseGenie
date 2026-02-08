@@ -55,5 +55,10 @@ public class SyllabusController {
         syllabusService.submitSyllabus(syllabusId);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/{syllabusId}/assessment-total")
+    public ResponseEntity<Integer> getAssessmentTotal(@PathVariable long syllabusId) {
+        return ResponseEntity.ok(syllabusService.getAssessmentTotal(syllabusId));
+    }
+
 
 }

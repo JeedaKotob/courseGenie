@@ -20,4 +20,10 @@ export class SyllabusService {
         return this.http.post<void>(`${this.apiUrl}/submit/${id}`, null);
     }
 
+    getAssessmentTotal(id: number) {
+      return this.http.get<number>(`${this.apiUrl}/${id}/assessment-total`);
+    }
+
+
+
 }

@@ -24,6 +24,22 @@
       </button>
     </div>
   </div>
+  <div
+    *ngIf="submitStatus.type"
+    [ngClass]="{
+    'submit-success': submitStatus.type === 'success',
+    'submit-error': submitStatus.type === 'error'
+  }"
+  >
+    <i
+      class="bi"
+      [ngClass]="{
+      'bi-check-circle-fill': submitStatus.type === 'success',
+      'bi-exclamation-triangle-fill': submitStatus.type === 'error'
+    }"
+    ></i>
+    {{ submitStatus.message }}
+  </div>
 
   <!-- Content Area -->
   <div class="content-card">

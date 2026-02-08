@@ -19,6 +19,12 @@ export class SyllabusRenderComponent {
   trustedHtmlContent: SafeHtml = '';
   pdfUrl: SafeResourceUrl | null = null;
   rawPdfUrl: string = '';
+  currentTotal: number = 0;
+  submitStatus = {
+    type: null as 'success' | 'error' | null,
+    message: ''
+  };
+  private statusTimeout: any;
 
   constructor(
     private sharedDataService: SharedDataService,
@@ -39,6 +45,9 @@ export class SyllabusRenderComponent {
       next: (data: Syllabus) => {
         this.syllabus = data;
         this.trustedHtmlContent = this.sanitizer.bypassSecurityTrustHtml(data.content);
+        this.syllabusService.getAssessmentTotal(data.syllabusId).subscribe(total=>{
+          this.currentTotal=total;
+        })
       },
       error: (err) => {
         console.error('Error generating syllabus:', err);
@@ -98,17 +107,36 @@ export class SyllabusRenderComponent {
     }
   }
 
+  showSubmitStatus(type: 'success' | 'error', message: string) {
+    this.submitStatus = { type, message };
+
+    if (this.statusTimeout) {
+      clearTimeout(this.statusTimeout);
+    }
+
+    this.statusTimeout = setTimeout(() => {
+      this.submitStatus = { type: null, message: '' };
+    }, 2000);
+  }
+
   submitSyllabus(): void {
     if (!this.syllabus) return;
+    this.submitStatus = { type: null, message: '' };
+
+    if (this.currentTotal !== 100) {
+      this.showSubmitStatus('error', `Cannot submit syllabus. To submit total assessment weight must be exactly 100%. Your section assessment total is ${this.currentTotal}%.`);
+      return;
+    }
     this.syllabusService.submitSyllabus(this.syllabus.syllabusId)
       .subscribe({
         next: () => {
           if (this.syllabus) {
             this.syllabus.submitted = true;
+            this.showSubmitStatus ('success', 'Syllabus submitted successfully!');
           }
         },
         error: err => {
-          console.error('Error submitting syllabus:', err);
+          this.showSubmitStatus ('error', "Unable to submit syllabus. Please try again later");
         }
       });
   }
