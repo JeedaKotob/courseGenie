@@ -38,4 +38,10 @@ public class SectionController {
     public ResponseEntity<List<Student>> getStudentsBySection(@PathVariable Long sectionId) {
         return ResponseEntity.ok(sectionService.getStudentsBySection(sectionId));
     }
+
+    @GetMapping("/{sectionId}")
+    public SectionDTO getSectionById(@PathVariable Long sectionId) {
+        return sectionService.getSectionById(sectionId);
+    }
+
 }

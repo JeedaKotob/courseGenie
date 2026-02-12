@@ -67,6 +67,13 @@ export interface Syllabus {
   submitted: boolean;
 }
 
+export interface SyllabusDetail {
+  courseName: string;
+  courseCode: string;
+  sectionCode: string;
+  submitted: boolean;
+}
+
 export interface SyllabusProgress {
   professorId: number;
   professorName: string;
@@ -74,6 +81,7 @@ export interface SyllabusProgress {
   totalSections: number;
   submittedSyllabi: number;
   progressPercentage: number;
+  sections: SyllabusDetail[];
 }
 
 

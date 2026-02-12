@@ -3,6 +3,8 @@ package com.course_genie.syllabus;
 import com.course_genie.course.CourseDTO;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record SyllabusProgressDTO(
         long professorId,
@@ -10,6 +12,7 @@ public record SyllabusProgressDTO(
         String departmentName,
         int totalSections,
         int submittedSyllabi,
-        double progressPercentage
+        double progressPercentage,
+        List<SyllabusDetailDTO> sections
 ) {
 }

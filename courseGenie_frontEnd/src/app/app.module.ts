@@ -72,6 +72,7 @@ import { HomeRouterComponent } from './home/home-router/home-router.component';
 import { ChooseRoleComponent } from './home/choose-role/choose-role.component';
 import { CourseOverviewComponent } from './course-overview/course-overview.component';
 import { SyllabusProgressComponent } from './syllabus-progress/syllabus-progress.component';
+import { AdminSyllabusViewComponent } from './admin/admin-syllabus-view/admin-syllabus-view.component';
 
 
 
@@ -121,6 +122,7 @@ import { SyllabusProgressComponent } from './syllabus-progress/syllabus-progress
     ChooseRoleComponent,
     CourseOverviewComponent,
     SyllabusProgressComponent,
+    AdminSyllabusViewComponent,
 
 
 

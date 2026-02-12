@@ -34,4 +34,8 @@ export class SectionService {
     return this.http.get<Student[]>(`${this.apiUrl}/${sectionId}/students`);
   }
 
+  getSectionById(sectionId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${sectionId}`);
+  }
+
 }

@@ -247,5 +247,14 @@ public class SyllabusService {
                 .orElse(0);
     }
 
+    public SyllabusDTO getSyllabusBySectionId(long sectionId) {
+        Syllabus syllabus = syllabusRepository
+                .findBySectionSectionId(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
+
+        return syllabusDTOMapper.apply(syllabus);
+    }
+
+
 
 }

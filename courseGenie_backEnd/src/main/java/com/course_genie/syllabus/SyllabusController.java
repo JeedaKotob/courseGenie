@@ -60,5 +60,9 @@ public class SyllabusController {
         return ResponseEntity.ok(syllabusService.getAssessmentTotal(syllabusId));
     }
 
+    @GetMapping("/section/{sectionId}")
+    public ResponseEntity<SyllabusDTO> getSyllabusBySectionId(@PathVariable long sectionId) {
+        return ResponseEntity.ok(syllabusService.getSyllabusBySectionId(sectionId));
+    }
 
 }

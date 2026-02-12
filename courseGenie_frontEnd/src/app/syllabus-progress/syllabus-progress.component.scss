@@ -170,3 +170,21 @@ $border-color: #e9ecef;
   border-radius: 15px;
   border: 2px dashed $border-color;
 }
+
+.progress-card {
+  transition: all 0.2s ease;
+}
+
+.progress-card:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.clickable-row:hover {
+  background-color: #f5f7fa;
+}

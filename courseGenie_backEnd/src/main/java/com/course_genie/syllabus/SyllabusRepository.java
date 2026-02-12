@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface SyllabusRepository extends JpaRepository<Syllabus, Long> {
     Optional<Syllabus> findSyllabusBySection(Section section);
+
+    Optional<Syllabus> findBySectionSectionId(Long sectionId);
+
 }

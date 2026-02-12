@@ -22,6 +22,8 @@ public class SectionDTOMapper implements Function<Section, SectionDTO> {
                 .professorId(section.getProfessor().getUserId())
                 .professorName(section.getProfessor().getFullName())
                 .courseId(section.getCourse().getCourseId())
+                .courseCode(section.getCourse().getCode())
+                .courseName(section.getCourse().getName())
                 .class_number(section.getClass_number())
                 .teachingMethodology(String.valueOf(section.getTeachingMethodology()))
                 .assessmentCount(count)

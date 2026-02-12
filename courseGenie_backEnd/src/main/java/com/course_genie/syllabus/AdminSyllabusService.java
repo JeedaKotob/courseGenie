@@ -17,15 +17,18 @@ public class AdminSyllabusService {
     private final UserRepository userRepository;
     private final SyllabusRepository syllabusRepository;
     private final SectionRepository sectionRepository;
+    private final SyllabusDetailDTOMapper syllabusDetailDTOMapper;
 
     public AdminSyllabusService(
             UserRepository userRepository,
             SectionRepository sectionRepository,
-            SyllabusRepository syllabusRepository
+            SyllabusRepository syllabusRepository,
+            SyllabusDetailDTOMapper syllabusDetailDTOMapper
     ){
         this.userRepository = userRepository;
         this.sectionRepository = sectionRepository;
         this.syllabusRepository = syllabusRepository;
+        this.syllabusDetailDTOMapper = syllabusDetailDTOMapper;
     }
 
     public Map<String, List<SyllabusProgressDTO>> getSyllabusProgressByDepartment() {
@@ -34,6 +37,21 @@ public class AdminSyllabusService {
         List<SyllabusProgressDTO> flatList = professors.stream().map(user -> {
             List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId());
             int totalSections = sections.size();
+            List<SyllabusDetailDTO> sectionDetails = sections.stream()
+                    .map(section -> syllabusRepository.findSyllabusBySection(section)
+                            .map(syllabusDetailDTOMapper)
+                            .orElse(
+                                    new SyllabusDetailDTO(
+                                            section.getSectionId(),
+                                            section.getCourse().getName(),
+                                            section.getCourse().getCode(),
+                                            section.getCode(),
+                                            false
+                                    )
+
+                            )
+                    )
+                    .toList();
             int submittedCount = (int) sections.stream()
                     .map(syllabusRepository::findSyllabusBySection)
                     .filter(Optional::isPresent)
@@ -52,12 +70,11 @@ public class AdminSyllabusService {
                     .totalSections(totalSections)
                     .submittedSyllabi(submittedCount)
                     .progressPercentage(progress)
+                    .sections(sectionDetails)
                     .build();
         }).toList();
 
         return flatList.stream()
                 .collect(Collectors.groupingBy(SyllabusProgressDTO::departmentName));
     }
-
-
 }

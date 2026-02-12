@@ -14,6 +14,8 @@ public record SectionDTO(
         String class_number,
         boolean configured,
         long courseId,
+        String courseCode,
+        String courseName,
         long professorId,
         String professorName,
         String teachingMethodology,

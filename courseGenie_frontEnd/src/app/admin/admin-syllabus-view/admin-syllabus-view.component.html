@@ -1,0 +1,46 @@
+<div class="syllabus-container">
+
+  <div class="syllabus-header">
+    <div class="course-info">
+      <h2 class="course-title">
+        {{ courseCode }} - {{ sectionCode }}
+      </h2>
+      <p class="course-name">
+        {{ courseName }}
+      </p>
+    </div>
+
+    <div class="syllabus-actions">
+      <button class="action-btn generate-btn" (click)="generatePdf()">
+        <i class="bi bi-file-pdf me-2"></i>Generate PDF
+      </button>
+
+      <button class="action-btn download-btn"
+              (click)="downloadSyllabus()"
+              [class.hidden]="!pdfUrl">
+        <i class="bi bi-download me-2"></i>Download
+      </button>
+    </div>
+  </div>
+
+  <div class="content-card">
+
+    <div class="pdf-preview" *ngIf="pdfUrl">
+      <div class="preview-header">
+        <h3 class="preview-title">
+          <i class="bi bi-file-earmark-pdf"></i> PDF Preview
+        </h3>
+      </div>
+      <div class="preview-container">
+        <iframe [src]="pdfUrl" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <div id="syllabusPreview"
+         [innerHTML]="trustedHtmlContent"
+         [class.hidden]="pdfUrl"
+         class="syllabus-html-content">
+    </div>
+
+  </div>
+</div>

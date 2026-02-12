@@ -72,4 +72,10 @@ public class SectionService {
                 .toList();
     }
 
+    public SectionDTO getSectionById(Long sectionId) {
+        Section section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+        return sectionDTOMapper.apply(section);
+    }
+
 }
