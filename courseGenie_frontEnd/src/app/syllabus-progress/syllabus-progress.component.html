@@ -82,7 +82,7 @@
                 </div>
 
                 <div>
-                  <span *ngIf="s.submitted" class="text-success">✔ Submitted</span>
+                  <span *ngIf="s.submitted" class="text-success">✔ Submitted - {{ s.submissionDate }}</span>
                   <span *ngIf="!s.submitted" class="text-danger">✖ Not Submitted</span>
                 </div>
               </div>

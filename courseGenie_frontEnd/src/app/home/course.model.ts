@@ -72,6 +72,7 @@ export interface SyllabusDetail {
   courseCode: string;
   sectionCode: string;
   submitted: boolean;
+  submissionDate: string;
 }
 
 export interface SyllabusProgress {
