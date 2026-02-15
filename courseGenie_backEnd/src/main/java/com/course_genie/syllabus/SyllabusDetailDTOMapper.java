@@ -15,6 +15,7 @@ public class SyllabusDetailDTOMapper implements Function<Syllabus, SyllabusDetai
                 .courseCode(syllabus.getSection().getCourse().getCode())
                 .sectionCode(syllabus.getSection().getCode())
                 .submitted(syllabus.isSubmitted())
+                .submissionDate(syllabus.getSubmissionDate())
                 .build();
     }
 }
