@@ -1,22 +1,20 @@
 <div class="m-3">
   <div class="card shadow-sm border-0 rounded-lg p-5">
-
     <!-- LOAD COURSE -->
     <ng-container *ngIf="course$ | async as course">
-
       <h1 class="bold mb-2">{{ course.name }}</h1>
-      <p class="course-code">{{ course.code }} • {{ course.credits }} Credits</p>
+      <p class="course-code">
+        {{ course.code }} • {{ course.credits }} Credits
+      </p>
       <p class="course-description">{{ course.description }}</p>
 
-      <hr class="my-4">
+      <hr class="my-4" />
 
       <h3 class="bold mb-3">Sections</h3>
 
       <!-- LOAD SECTIONS -->
       <ng-container *ngIf="sections$ | async as sections">
-
         <div class="sections-grid" *ngIf="sections.length > 0; else noSections">
-
           <div class="section-card" *ngFor="let sec of sections">
 
             <div class="section-header">
@@ -25,39 +23,97 @@
             </div>
 
             <div class="section-info">
-
               <div class="info-row">
                 <i class="pi pi-user"></i>
                 <span>
-                  {{ sec.professorName ? ('Dr. ' + sec.professorName) : 'Unassigned' }}
+                  {{
+                    sec.professorName
+                      ? "Dr. " + sec.professorName
+                      : "Unassigned"
+                  }}
                 </span>
               </div>
 
               <div class="info-row">
                 <i class="pi pi-folder"></i>
-                <span>{{ sec.assessmentCount}} Assessments</span>
+                <span>{{ sec.assessmentCount }} Assessments</span>
               </div>
-
             </div>
 
-            <button class="view-section-btn"
-                    (click)="navigateToSection(course.code, sec.code)">
+            <button
+              class="view-section-btn"
+              (click)="navigateToSection(course.code, sec.code)"
+            >
               <span>View Section</span>
               <i class="pi pi-arrow-right"></i>
             </button>
-
           </div>
-
+          <!-- Add Section card (admin only) -->
+          <button
+          *ngIf="isAdmin"
+          type="button"
+          class="add-section-card"
+          (click)="openAddSectionModal(addSectionModal)"
+          aria-label="Add a new section"
+          >
+          <div class="add-section-content">
+            <i class="pi pi-plus-circle add-section-icon"></i>
+            <span class="add-section-title">Add Section</span>
+            <span class="add-section-subtitle">Create a new section for this course</span>
+          </div>
+          </button>
         </div>
 
         <ng-template #noSections>
           <div class="text-center mt-4">
-            <h5 class="text-muted">No sections available.</h5>
+            <h5 class="text-muted mb-3">No sections available.</h5>
+        
+            <button
+              *ngIf="isAdmin"
+              type="button"
+              class="add-section-card add-section-card-empty"
+              (click)="openAddSectionModal(addSectionModal)"
+              aria-label="Add first section"
+            >
+              <div class="add-section-content">
+                <i class="pi pi-plus-circle add-section-icon"></i>
+                <span class="add-section-title">Add First Section</span>
+                <span class="add-section-subtitle">Create a section for this course</span>
+              </div>
+            </button>
           </div>
         </ng-template>
-
       </ng-container>
     </ng-container>
-
   </div>
+
+  <ng-template #addSectionModal>
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title">Create Section</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+  
+    <div class="modal-body">
+      <!-- US6 skeleton form -->
+      <div class="mb-3">
+        <label class="form-label">Section Code</label>
+        <input type="text" class="form-control" placeholder="e.g. ISTE-230-603" />
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Term</label>
+        <input type="text" class="form-control" placeholder="e.g. Fall 2026" />
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Professor (optional)</label>
+        <input type="text" class="form-control" placeholder="Assign later or enter professor name" />
+      </div>
+    </div>
+  
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="onSectionCreateSubmit()">Create</button>
+    </div>
+  </ng-template>
 </div>

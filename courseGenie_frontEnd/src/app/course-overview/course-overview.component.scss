@@ -54,3 +54,55 @@
   color: #024964;
   font-weight: 500;
 }
+/* ADD SECTION CARD */
+.add-section-card-empty {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.add-section-card {
+  border: 2px dashed #3f7de0;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(63, 125, 224, 0.06),
+    rgba(63, 125, 224, 0.02)
+  );
+  min-height: 220px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-section-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(2, 73, 100, 0.12);
+  border-color: #024964;
+}
+
+.add-section-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.add-section-icon {
+  font-size: 2rem;
+  color: #3f7de0;
+}
+
+.add-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3f7de0;
+}
+
+.add-section-subtitle {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
