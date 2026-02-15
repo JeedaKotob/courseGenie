@@ -1,6 +1,7 @@
 package com.course_genie.section;
 
 import com.course_genie.book.Book;
+import com.course_genie.semester.Semester;
 
 import com.course_genie.booksection.*;
 import com.course_genie.course.Course;
@@ -24,7 +25,7 @@ public class Section {
     private long sectionId;
 
     private String code;
-    private String term;
+    private String term; // remove this
     private String class_number;
     private String schedule;
     private String room;
@@ -51,6 +52,10 @@ public class Section {
     // Map to the join entity: BookSection
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<BookSection> bookSections;
+
+    @ManyToOne
+    @JoinColumn(name = "semester_id")
+    private Semester semester;
 
     // Convenience method to get the Books associated with this Section from the join entity
     public Set<Book> getBooks() {

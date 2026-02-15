@@ -5,6 +5,8 @@ import com.course_genie.section.Section;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Builder
 @Data
@@ -22,6 +24,7 @@ public class Syllabus {
     private Section section;
 
     private boolean submitted;
+    private LocalDate submissionDate;
     public Syllabus(long syllabusId) {
         this.syllabusId = syllabusId;
     }
