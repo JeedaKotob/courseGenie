@@ -65,6 +65,7 @@ export interface Syllabus {
   content: string;
   sectionId: number;
   submitted: boolean;
+  submissionDate: string;
 }
 
 export interface SyllabusDetail {

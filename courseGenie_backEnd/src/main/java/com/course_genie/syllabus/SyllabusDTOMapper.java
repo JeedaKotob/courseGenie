@@ -21,7 +21,6 @@ public class SyllabusDTOMapper implements Function<Syllabus, SyllabusDTO> {
                 .content(syllabus.getContent())
                 .sectionId(syllabus.getSection().getSectionId())
                 .submitted(syllabus.isSubmitted())
-                .submissionDate(syllabus.getSubmissionDate())
                 .build();
     }
 }

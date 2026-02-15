@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.time.LocalDate;
 import java.util.Collections;
 
 import java.util.*;
@@ -230,7 +232,10 @@ public class SyllabusService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You cannot submit the syllabus yet. Please ensure all assessments are created and their total weight equals 100.");
         }
 
-        syllabus.setSubmitted(true);
+        if (!syllabus.isSubmitted()){
+            syllabus.setSubmitted(true);
+            syllabus.setSubmissionDate(LocalDate.now());
+        }
 
         syllabusRepository.save(syllabus);
     }
