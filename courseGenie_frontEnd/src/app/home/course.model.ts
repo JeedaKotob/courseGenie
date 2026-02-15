@@ -66,6 +66,8 @@ export interface Syllabus {
   sectionId: number;
   submitted: boolean;
   submissionDate: string;
+  syllabusDueDate: string;
+  overdueBy: number;
 }
 
 export interface SyllabusDetail {

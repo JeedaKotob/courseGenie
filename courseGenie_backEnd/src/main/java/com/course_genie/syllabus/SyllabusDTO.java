@@ -10,6 +10,8 @@ public record SyllabusDTO(
         long syllabusId,
         String content,
         long sectionId,
-        boolean submitted
+        boolean submitted,
+        LocalDate syllabusDueDate,
+        long overdueBy
 ) {
 }
