@@ -26,16 +26,18 @@ export class FullNavComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private sharedDataService: SharedDataService,
     private courseService: CourseService,
     private authService: AuthService // Add AuthService
   ) { }
 
   ngOnInit(): void {
-    const fullPath = this.router.url;
-    const pathSegments = fullPath.split('/');
-    this.courseCode = pathSegments[2];
-    this.sectionCode = pathSegments[3];
+    this.route.firstChild?.paramMap.subscribe(params => {
+      this.courseCode=params.get('courseCode') || '';
+      this.sectionCode=params.get('sectionCode') || '';
+      this.getCourseByCourseCodeAndSectionCode()
+    })
 
     this.sharedDataService.selectedCourse$.subscribe(value => {
       this.sharedValue = value;

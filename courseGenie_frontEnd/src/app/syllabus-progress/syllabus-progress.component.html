@@ -82,8 +82,8 @@
                 </div>
 
                 <div>
-                  <span *ngIf="s.submitted" class="text-success">✔ Submitted - {{ s.submissionDate }}</span>
-                  <span *ngIf="!s.submitted" class="text-danger">✖ Not Submitted</span>
+                  <span *ngIf="s.submitted" class="text-success">✔ Submitted: {{ s.submissionDate }} <span *ngIf="s.overdueBy>0" class="text-danger">- Overdue by: {{ s.overdueBy }} day(s) </span></span>
+                  <span *ngIf="!s.submitted" class="text-danger">✖ Not Submitted <span *ngIf="s.overdueBy>0" class="text-danger">- Overdue by: {{ s.overdueBy }} day(s) </span></span>
                 </div>
               </div>
 

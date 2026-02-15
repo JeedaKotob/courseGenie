@@ -47,7 +47,9 @@ public class AdminSyllabusService {
                                             section.getCourse().getCode(),
                                             section.getCode(),
                                             false,
-                                            null
+                                            null,
+                                            section.getSemester().getSyllabusDueDate(),
+                                            0
                                     )
 
                             )
