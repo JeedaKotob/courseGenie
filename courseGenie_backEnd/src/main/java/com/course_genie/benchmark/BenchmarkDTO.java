@@ -8,6 +8,6 @@ public record BenchmarkDTO(
          String benchmarkType,
          String description,
          int threshold,
-         int percentage
+         Integer percentage
 ) {
 }

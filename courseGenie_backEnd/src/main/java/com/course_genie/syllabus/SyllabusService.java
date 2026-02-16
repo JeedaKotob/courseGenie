@@ -219,24 +219,23 @@ public class SyllabusService {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
                 .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
 
-
         Section section = syllabus.getSection();
-        List<Assessment> assessments = assessmentRepository.findAssessmentBySectionSectionId(section.getSectionId()).orElseThrow(() -> new IllegalStateException("No assessments created for this section"));
+        List<Assessment> assessments = assessmentRepository.findAssessmentBySectionSectionId(section.getSectionId())
+                .orElseThrow(() -> new IllegalStateException("No assessments created for this section"));
 
         int total = 0;
         for (Assessment a: assessments){
             total+=a.getMaxPoints();
         }
-
         if (total != 100){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You cannot submit the syllabus yet. Please ensure all assessments are created and their total weight equals 100.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You cannot submit the syllabus yet. Please ensure all assessments are created and their total weight equals 100.");
         }
 
         if (!syllabus.isSubmitted()){
             syllabus.setSubmitted(true);
             syllabus.setSubmissionDate(LocalDate.now());
         }
-
         syllabusRepository.save(syllabus);
     }
 
