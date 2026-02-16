@@ -12,4 +12,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             Long sectionId,
             Enrollment.EnrollmentStatus status
     );
+    List<Enrollment> findEnrollmentBySectionSectionId(long sectionId);
 }

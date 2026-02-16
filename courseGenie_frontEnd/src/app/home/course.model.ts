@@ -57,7 +57,7 @@ export interface Grade {
   gradeId: number | null;
   score: number;
   assessmentId: number;
-  studentId: string;
+  enrollmentId: number;
 }
 
 export interface Syllabus {
@@ -108,4 +108,14 @@ export interface Benchmark {
   threshold: number;
   percentage: number;
 }
+
+export interface Enrollment {
+  enrollmentId: number;
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  sectionId: number;
+}
+
 

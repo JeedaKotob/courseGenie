@@ -23,8 +23,8 @@ public class GradeService {
     // Create
     public Boolean createGrade(List<GradeDTO> gradesDTO) {
         for (GradeDTO gradeDTO : gradesDTO) {
-            if(gradeRepository.countGradesByAssessmentAssessmentIdAndStudentStudentId(gradeDTO.assessmentId(), gradeDTO.studentId()) > 0) {
-                Grade grade = gradeRepository.findGradeByAssessmentAssessmentIdAndStudentStudentId(gradeDTO.assessmentId(), gradeDTO.studentId())
+            if(gradeRepository.countGradesByAssessmentAssessmentIdAndEnrollmentEnrollmentId(gradeDTO.assessmentId(), gradeDTO.enrollmentId()) > 0) {
+                Grade grade = gradeRepository.findGradeByAssessmentAssessmentIdAndEnrollmentEnrollmentId(gradeDTO.assessmentId(), gradeDTO.enrollmentId())
                         .orElseThrow(()-> new EntityNotFoundException("Grade not found"));
                 grade.setScore(gradeDTO.score());
                 if (gradeDTO.score() == -1) {
@@ -64,4 +64,15 @@ public class GradeService {
         Grade grade = gradeRepository.findById(gradeId).orElseThrow(() -> new EntityNotFoundException("Grade not found"));
         gradeRepository.delete(grade);
     }
+
+    public List<GradeDTO> getGradesBySection(Long sectionId) {
+        return gradeRepository
+                .findGradeByEnrollmentSectionSectionId(sectionId)
+                .orElse(List.of())   // unwrap Optional
+                .stream()           // NOW it's Stream<Grade>
+                .map(gradeDTOMapper)
+                .toList();
+    }
+
+
 }

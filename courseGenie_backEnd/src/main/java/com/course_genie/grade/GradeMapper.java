@@ -2,6 +2,7 @@ package com.course_genie.grade;
 
 import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentMapper;
+import com.course_genie.enrollment.Enrollment;
 import com.course_genie.student.Student;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class GradeMapper implements Function<GradeDTO, Grade> {
                 .gradeId(gradeDTO.gradeId())
                 .score(gradeDTO.score())
                 .assessment(new Assessment(gradeDTO.assessmentId()))
-                .student(new Student(gradeDTO.studentId()))
+                .enrollment(new Enrollment(gradeDTO.enrollmentId()))
                 .build();
     }
 }

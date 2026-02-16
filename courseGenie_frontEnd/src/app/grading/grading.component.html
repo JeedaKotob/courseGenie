@@ -51,26 +51,26 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let student of students">
-            <td>{{ student.studentId }}</td>
-            <td>{{ student.firstName }}</td>
-            <td>{{ student.lastName }}</td>
+          <tr *ngFor="let enrollment of enrollments">
+            <td>{{ enrollment.enrollmentId }}</td>
+            <td>{{ enrollment.firstName }}</td>
+            <td>{{ enrollment.lastName }}</td>
             <td *ngFor="let assessment of course?.sections?.[0]?.assessments">
               <div class="grade-input-container">
                 <input
                   type="number"
-                  [ngClass]="getHighlightClass(assessment.assessmentId, student.studentId)"
-                  [value]="gradesMatrix[student.studentId][assessment.assessmentId] == null ? null : gradesMatrix[student.studentId][assessment.assessmentId]"
+                  [ngClass]="getHighlightClass(assessment.assessmentId, enrollment.enrollmentId)"
+                  [value]="gradesMatrix[enrollment.enrollmentId][assessment.assessmentId] == null ? null : gradesMatrix[enrollment.enrollmentId][assessment.assessmentId]"
                   class="grade-input"
                   placeholder="Score"
-                  (change)="setGrade(assessment.assessmentId, student.studentId, $event.target)"
+                  (change)="setGrade(assessment.assessmentId, enrollment.enrollmentId, $event.target)"
                 />
-                <div class="error-message" *ngIf="validationErrors[student.studentId]?.[assessment.assessmentId]">
-                  {{ validationErrors[student.studentId][assessment.assessmentId] }}
+                <div class="error-message" *ngIf="validationErrors[enrollment.enrollmentId]?.[assessment.assessmentId]">
+                  {{ validationErrors[enrollment.enrollmentId][assessment.assessmentId] }}
                 </div>
               </div>
             </td>
-            <td class="total-score">{{ getTotal(student.studentId) }}</td>
+            <td class="total-score">{{ getTotal(enrollment.enrollmentId) }}</td>
           </tr>
           </tbody>
         </table>

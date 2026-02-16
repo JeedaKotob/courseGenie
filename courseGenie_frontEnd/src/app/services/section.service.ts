@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
-import {Course, CoursesBySemester, Student} from '../home/course.model';
+import {Course, CoursesBySemester, Enrollment, Student} from '../home/course.model';
 
 @Injectable({
     providedIn: 'root'
@@ -30,8 +30,8 @@ export class SectionService {
         });
     }
 
-  getStudentsBySection(sectionId: number): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.apiUrl}/${sectionId}/students`);
+  getEnrollmentsBySection(sectionId: number): Observable<Enrollment[]> {
+    return this.http.get<Enrollment[]>(`${this.apiUrl}/${sectionId}/enrollments`);
   }
 
   getSectionById(sectionId: number): Observable<any> {

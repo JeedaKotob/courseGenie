@@ -45,4 +45,10 @@ public class GradeController {
         gradeService.deleteGrade(gradeId);
         return ResponseEntity.ok(Boolean.TRUE);
     }
+
+    @GetMapping("/section/{sectionId}")
+    public ResponseEntity<List<GradeDTO>> getGradesBySection(@PathVariable Long sectionId) {
+        return ResponseEntity.ok(gradeService.getGradesBySection(sectionId));
+    }
+
 }

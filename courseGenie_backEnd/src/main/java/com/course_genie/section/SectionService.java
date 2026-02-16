@@ -2,6 +2,7 @@ package com.course_genie.section;
 
 import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentRepository;
+import com.course_genie.student.StudentDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import com.course_genie.enrollment.Enrollment;
@@ -61,16 +62,17 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public List<Student> getStudentsBySection(Long sectionId) {
+//    public List<Student> getStudentsBySection(Long sectionId) {
+//
+//        sectionRepository.findById(sectionId)
+//                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+//
+//        return enrollmentService.getEnrollmentsBySection(sectionId)
+//                .stream()
+//                .map(Enrollment::getStudent)
+//                .toList();
+//    }
 
-        sectionRepository.findById(sectionId)
-                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
-
-        return enrollmentService.getEnrollmentsForSection(sectionId)
-                .stream()
-                .map(Enrollment::getStudent)
-                .toList();
-    }
 
     public SectionDTO getSectionById(Long sectionId) {
         Section section = sectionRepository.findById(sectionId)

@@ -34,14 +34,14 @@ public class SectionController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{sectionId}/students")
-    public ResponseEntity<List<Student>> getStudentsBySection(@PathVariable Long sectionId) {
-        return ResponseEntity.ok(sectionService.getStudentsBySection(sectionId));
-    }
+//    @GetMapping("/{sectionId}/students")
+//    public ResponseEntity<List<Student>> getStudentsBySection(@PathVariable Long sectionId) {
+//        return ResponseEntity.ok(sectionService.getStudentsBySection(sectionId));
+//    }
 
     @GetMapping("/{sectionId}")
-    public SectionDTO getSectionById(@PathVariable Long sectionId) {
-        return sectionService.getSectionById(sectionId);
+    public ResponseEntity<SectionDTO> getSectionById(@PathVariable Long sectionId) {
+        return ResponseEntity.ok(sectionService.getSectionById(sectionId));
     }
 
 }

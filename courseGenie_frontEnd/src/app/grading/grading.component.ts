@@ -1,31 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { Course, Grade, Student } from '../home/course.model';
+import { Course, Grade, Student, Enrollment } from '../home/course.model';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { StudentService } from '../services/student.service';
 import { GradeService } from '../services/grade.service';
-import { NgForOf, NgIf, CommonModule } from '@angular/common';
-import { ButtonComponent } from '../shared/button/button.component';
-import {SectionService} from '../services/section.service';
+import { SectionService } from '../services/section.service';
 
 type GradeHighlight = {
-  top: Set<string>;
-  average: Set<string>;
-  low: Set<string>;
+  top: Set<number>;
+  average: Set<number>;
+  low: Set<number>;
 };
 
 @Component({
   selector: 'app-grading',
   templateUrl: './grading.component.html',
   styleUrls: ['./grading.component.scss'],
-
   standalone: false
 })
 export class GradingComponent implements OnInit {
   course: Course | null = null;
-  students: Student[] = [];
+  enrollments: Enrollment[] = [];
   grades: Grade[] = [];
   gradesMatrix: any = {};
-  validationErrors: { [studentId: string]: { [assessmentId: number]: string | null } } = {};
+  validationErrors: { [enrollmentId: number]: { [assessmentId: number]: string | null } } = {};
   showSuccessMessage: boolean = false;
   gradeHighlights: { [assessmentId: number]: GradeHighlight } = {};
 
@@ -38,65 +35,57 @@ export class GradingComponent implements OnInit {
 
   ngOnInit() {
     this.course = this.sharedDataService.selectedCourseValue;
-    this.getAllStudents();
+    this.getEnrollments();
+
   }
 
-  setGrade(assessmentId: number, studentId: string, event: any) {
-    const inputValue = event.value;
-    const maxPoints = parseFloat((this.course?.sections?.[0]?.assessments?.find(a => a.assessmentId === assessmentId)?.maxPoints ?? 0).toFixed(2));
-    const errorMessage = this.validateScore(inputValue, maxPoints, studentId);
 
-    if (!this.validationErrors[studentId]) {
-      this.validationErrors[studentId] = {};
-    }
+  setGrade(assessmentId: number, enrollmentId: number, event: any) {
+    const parsedScore = Number(event.value);
 
-    this.validationErrors[studentId][assessmentId] = errorMessage;
-
-    const index = this.grades.findIndex(e => e.assessmentId === assessmentId && e.studentId === studentId);
-    const parsedScore = Number(inputValue);
+    const index = this.grades.findIndex(
+      g => g.assessmentId === assessmentId && g.enrollmentId === enrollmentId
+    );
 
     if (index !== -1) {
-      this.grades[index].score = isNaN(parsedScore) ? -1 : parsedScore;
+      this.grades[index].score = parsedScore;
     } else {
       this.grades.push({
         gradeId: null,
-        score: isNaN(parsedScore) ? -1 : parsedScore,
+        score: parsedScore,
         assessmentId,
-        studentId
+        enrollmentId
       });
     }
 
-    if (!this.gradesMatrix[studentId]) {
-      this.gradesMatrix[studentId] = {};
+    if (!this.gradesMatrix[enrollmentId]) {
+      this.gradesMatrix[enrollmentId] = {};
     }
-    this.gradesMatrix[studentId][assessmentId] = parsedScore;
 
-    this.computeHighlights();
-    this.sortStudentsByTotal(); // Re-sort after grade update
+    this.gradesMatrix[enrollmentId][assessmentId] = parsedScore;
   }
 
-  validateScore(value: any, maxPoints: number, studentId: string): string | null {
+
+  validateScore(value: any, maxPoints: number): string | null {
     const score = Number(value);
     if (isNaN(score)) return 'Score must be a number';
     if (score < 0) return 'Score cannot be negative';
     if (score > maxPoints) return `Score cannot exceed ${maxPoints}`;
-    // const totalScore = this.getTotal(studentId) + score;
-    // if (totalScore > 100) return 'Total score cannot exceed 100%';
     return null;
   }
 
   randomizeScores(): void {
-    if (!this.course || !this.course.sections || !this.course.sections[0].assessments) {
-      console.error('No assessments available to randomize.');
-      return;
-    }
 
-    for (const student of this.students) {
+    if (!this.course?.sections?.[0]?.assessments) return;
+
+    for (const enrollment of this.enrollments) {
       for (const assessment of this.course.sections[0].assessments) {
         const max = assessment.maxPoints || 100;
         const randomScore = Math.floor(Math.random() * (max + 1));
         const index = this.grades.findIndex(
-          grade => grade.assessmentId === assessment.assessmentId && grade.studentId === student.studentId
+          grade =>
+            grade.assessmentId === assessment.assessmentId &&
+            grade.enrollmentId === enrollment.enrollmentId
         );
 
         if (index !== -1) {
@@ -106,62 +95,78 @@ export class GradingComponent implements OnInit {
             gradeId: null,
             score: randomScore,
             assessmentId: assessment.assessmentId,
-            studentId: student.studentId
+            enrollmentId: enrollment.enrollmentId
           });
         }
 
-        if (!this.gradesMatrix[student.studentId]) {
-          this.gradesMatrix[student.studentId] = {};
+        if (!this.gradesMatrix[enrollment.enrollmentId]) {
+          this.gradesMatrix[enrollment.enrollmentId] = {};
         }
 
-        this.gradesMatrix[student.studentId][assessment.assessmentId] = randomScore;
+        this.gradesMatrix[enrollment.enrollmentId][assessment.assessmentId] = randomScore;
 
-        if (!this.validationErrors[student.studentId]) {
-          this.validationErrors[student.studentId] = {};
+        if (!this.validationErrors[enrollment.enrollmentId]) {
+          this.validationErrors[enrollment.enrollmentId] = {};
         }
-        this.validationErrors[student.studentId][assessment.assessmentId] = null;
+
+        this.validationErrors[enrollment.enrollmentId][assessment.assessmentId] = null;
       }
     }
 
     this.computeHighlights();
-    this.sortStudentsByTotal(); // Sort after randomizing
-    console.log('Randomized Grades:', this.grades);
+    this.sortStudentsByTotal();
   }
 
   computeHighlights() {
     this.gradeHighlights = {};
+    if (!this.course?.sections?.[0]?.assessments) return;
+    for (const assessment of this.course.sections[0].assessments) {
 
-    if (!this.course || !this.students.length) return;
-
-    for (const assessment of this.course.sections?.[0]?.assessments || []) {
-      const scores = this.students.map(student => ({
-        studentId: student.studentId,
-        score: this.gradesMatrix[student.studentId]?.[assessment.assessmentId] ?? -1
+      const scores = this.enrollments.map(enrollment => ({
+        enrollmentId: enrollment.enrollmentId,
+        score: this.gradesMatrix[enrollment.enrollmentId]?.[assessment.assessmentId] ?? -1
       })).filter(s => s.score >= 0);
 
       const sorted = [...scores].sort((a, b) => b.score - a.score);
-      const avg = scores.length ? scores.reduce((a, b) => a + b.score, 0) / scores.length : 0;
+
+      const avg = scores.length
+        ? scores.reduce((a, b) => a + b.score, 0) / scores.length
+        : 0;
 
       const closestToAvg = [...scores].sort((a, b) =>
         Math.abs(a.score - avg) - Math.abs(b.score - avg)
       );
 
       this.gradeHighlights[assessment.assessmentId] = {
-        top: new Set(sorted.slice(0, 2).map(s => s.studentId)),
-        average: new Set(closestToAvg.slice(0, 2).map(s => s.studentId)),
-        low: new Set(sorted.slice(-2).map(s => s.studentId)),
+        top: new Set(sorted.slice(0, 2).map(s => s.enrollmentId)),
+        average: new Set(closestToAvg.slice(0, 2).map(s => s.enrollmentId)),
+        low: new Set(sorted.slice(-2).map(s => s.enrollmentId)),
       };
     }
   }
 
-  getHighlightClass(assessmentId: number, studentId: string): string {
+  getHighlightClass(assessmentId: number, enrollmentId: number): string {
     const highlight = this.gradeHighlights[assessmentId];
     if (!highlight) return '';
-    if (highlight.top.has(studentId)) return 'highlight-top';
-    if (highlight.average.has(studentId)) return 'highlight-average';
-    if (highlight.low.has(studentId)) return 'highlight-low';
+    if (highlight.top.has(enrollmentId)) return 'highlight-top';
+    if (highlight.average.has(enrollmentId)) return 'highlight-average';
+    if (highlight.low.has(enrollmentId)) return 'highlight-low';
     return '';
   }
+
+  getTotal(enrollmentId: number) {
+    const grades = this.grades.filter(e => e.enrollmentId === enrollmentId);
+    return grades
+      .filter(g => g.score !== -1)
+      .reduce((sum, g) => sum + (g.score ?? 0), 0);
+  }
+
+  sortStudentsByTotal() {
+    this.enrollments.sort(
+      (a, b) => this.getTotal(b.enrollmentId) - this.getTotal(a.enrollmentId)
+    );
+  }
+
 
   saveGrades() {
     const hasErrors = Object.values(this.validationErrors).some(studentErrors =>
@@ -174,15 +179,8 @@ export class GradingComponent implements OnInit {
     }
 
     this.gradeService.saveGrades(this.grades).subscribe({
-      next: (data: any) => {
-        this.showSuccessMessage = true;
-      },
-      error: (error) => {
-        console.error('Error saving grades', error);
-      },
-      complete: () => {
-        console.log('Grades saved successfully');
-      }
+      next: () => this.showSuccessMessage = true,
+      error: (error) => console.error('Error saving grades', error)
     });
   }
 
@@ -190,38 +188,28 @@ export class GradingComponent implements OnInit {
     this.showSuccessMessage = false;
   }
 
-  getTotal(studentId: string) {
-    const grades = this.grades.filter(e => e.studentId === studentId);
-    return grades
-      .filter(g => g.score !== -1)
-      .reduce((sum, g) => sum + (g.score ?? 0), 0);
-  }
 
-  sortStudentsByTotal() {
-    this.students.sort((a, b) => this.getTotal(b.studentId) - this.getTotal(a.studentId));
-  }
-
-  getAllStudents() {
+  getEnrollments() {
     const sectionId = this.course?.sections?.[0]?.sectionId;
     if (!sectionId) return;
 
-    this.sectionService.getStudentsBySection(sectionId).subscribe({
-      next: (students: Student[]) => {
-        this.students = students;
+    this.sectionService.getEnrollmentsBySection(sectionId).subscribe({
+      next: (data: Enrollment[]) => {
+        this.enrollments = data;
 
-        // initialize grade matrix
-        this.students.forEach(student => {
-          if (!this.gradesMatrix[student.studentId]) {
-            this.gradesMatrix[student.studentId] = {};
+        this.enrollments.forEach(e => {
+          if (!this.gradesMatrix[e.enrollmentId]) {
+            this.gradesMatrix[e.enrollmentId] = {};
           }
         });
 
-        this.computeHighlights();
-        this.sortStudentsByTotal();
+        // 🔥 LOAD GRADES AFTER ENROLLMENTS
+        this.loadGrades(sectionId);
       },
-      error: err => console.error('Error fetching students', err)
+      error: err => console.error(err)
     });
   }
+
 
 
   headerButtons = [
@@ -242,6 +230,26 @@ export class GradingComponent implements OnInit {
       // e.g., this.saveGrades() or this.saveConfiguration(), etc.
     }
     // Handle other actions as needed
+  }
+
+  loadGrades(sectionId: number) {
+    this.gradeService.getGradesBySection(sectionId).subscribe({
+      next: (grades: Grade[]) => {
+        this.grades = grades;
+
+        grades.forEach(g => {
+          if (!this.gradesMatrix[g.enrollmentId]) {
+            this.gradesMatrix[g.enrollmentId] = {};
+          }
+
+          this.gradesMatrix[g.enrollmentId][g.assessmentId] = g.score;
+        });
+
+        this.computeHighlights();
+        this.sortStudentsByTotal();
+      },
+      error: err => console.error(err)
+    });
   }
 
 }

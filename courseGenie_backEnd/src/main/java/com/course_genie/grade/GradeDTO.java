@@ -8,6 +8,6 @@ public record GradeDTO(
         long gradeId,
         double score,
         long assessmentId,
-        String studentId
+        long enrollmentId
 ) {
 }

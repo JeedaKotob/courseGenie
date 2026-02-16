@@ -14,7 +14,7 @@ public class GradeDTOMapper implements Function<Grade, GradeDTO> {
                 .gradeId(grade.getGradeId())
                 .score(grade.getScore())
                 .assessmentId(grade.getAssessment().getAssessmentId())
-                .studentId(grade.getStudent().getStudentId())
+                .enrollmentId(grade.getEnrollment().getEnrollmentId())
                 .build();
     }
 }
