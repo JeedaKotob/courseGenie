@@ -16,7 +16,7 @@ public class Benchmark {
     private String benchmarkType;
     private String description;
     private int threshold;
-    private int percentage;
+    private Integer percentage;
 
 //    @ManyToOne
 //    @JoinColumn(name="program_id",nullable=false)
