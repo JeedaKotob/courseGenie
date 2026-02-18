@@ -188,3 +188,77 @@ $border-color: #e9ecef;
 .clickable-row:hover {
   background-color: #f5f7fa;
 }
+
+.reminder-btn {
+  background: linear-gradient(90deg, $primary-dark, $accent-teal);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.6rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+/* Spinning icon animation */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+
+.reminder-alert {
+  margin-bottom: 25px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.25s ease-in-out;
+  font-size: 0.95rem;
+
+  &.success {
+    background: #e7f5ff;
+    border: 1px solid $accent-teal;
+    color: $primary-dark;
+  }
+
+  &.error {
+    background: #ffe7e7;
+    border: 1px solid #ffb3b3;
+    color: #a60000;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

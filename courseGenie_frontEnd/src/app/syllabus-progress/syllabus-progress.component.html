@@ -14,8 +14,43 @@
     </div>
 
     <div class="home-content mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-5">
-        <h1 class="bold mb-0 display-title">Syllabus Submissions</h1>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="bold mb-0 display-title">
+          Syllabus Submissions
+        </h1>
+
+        <button
+          class="reminder-btn"
+          (click)="sendReminders()"
+          [disabled]="loading">
+
+    <span *ngIf="!loading">
+      <i class="bi bi-envelope me-2"></i>
+      Send Reminders
+    </span>
+
+          <span *ngIf="loading">
+      <i class="bi bi-arrow-repeat spin me-2"></i>
+      Sending...
+    </span>
+
+        </button>
+
+      </div>
+
+      <div *ngIf="message"
+           class="reminder-alert"
+           [class.success]="message.includes('successfully')"
+           [class.error]="message.includes('Error')">
+
+        <i class="bi"
+           [ngClass]="message.includes('successfully')
+       ? 'bi-check-circle-fill'
+       : 'bi-exclamation-circle-fill'"></i>
+
+        {{ message }}
+
       </div>
 
       <div *ngIf="(groupedSyllabusProgress | keyvalue).length > 0; else noProgress">
