@@ -1,0 +1,301 @@
+@use "sass:color";
+
+$primary-color: #00a7e1;
+$secondary-color: #ffa62b;
+$dark-color: #024964;
+$light-bg: #f8f9fa;
+$border-color: #e0e0e0;
+$text-muted: #6c757d;
+
+
+.calendar-page {
+  padding: 1.5rem;
+}
+
+.calendar-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 0.75rem;
+}
+
+.calendar-title h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $dark-color;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  color: $text-muted;
+  font-size: 0.9rem;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.month-label {
+  min-width: 160px;
+  text-align: center;
+  font-weight: 600;
+  color: $dark-color;
+}
+
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $primary-color, #017aa6);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 167, 225, 0.35);
+}
+
+.btn-secondary {
+  background: white;
+  border: 1px solid $border-color;
+  color: $dark-color;
+}
+
+
+.calendar-legend {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $dark-color;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.legend-dot.lecture {
+  background: linear-gradient(135deg, $primary-color, #017aa6);
+}
+
+.legend-dot.event {
+  background: linear-gradient(135deg, $secondary-color, #cc7f12);
+}
+
+.legend-dot.today {
+  background: #ffeb3b;
+  border: 1px solid #d4b200;
+}
+
+
+.calendar-grid {
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 750px;
+  height: auto;
+}
+
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: white;
+  border-bottom: 1px solid $border-color;
+}
+
+.weekday {
+  padding: 0.75rem 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+
+.weeks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+ overflow-y: auto;
+}
+
+
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  flex: 1;
+  min-height: 100px;
+}
+
+
+.day-cell {
+  border-right: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  position: relative;
+  min-height: 100px;
+}
+
+
+.day-cell.outside-month {
+  background: #f5f6f8;
+  color: #b0b3b8;
+}
+
+
+.day-cell.today {
+  background: #fffdf7;
+  box-shadow: inset 0 0 0 2px #ffeb3b;
+}
+
+
+.day-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.2rem;
+}
+
+.day-number {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.day-cell.today .day-number {
+  background: #ffeb3b;
+  color: #8e5a00;
+}
+
+
+.day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  /* KEY CHANGES FOR SCROLLING: */
+  flex: 1;              /* Take up remaining space in the cell */
+  overflow-y: auto;     /* Enable vertical scrolling */
+  min-height: 0;        /* specific fix for Flexbox scrolling issues */
+  padding-right: 2px;   /* slight padding so text doesn't hit scrollbar */
+
+  /* Optional: Hide scrollbar visually but keep scroll functionality
+     (Looks cleaner on calendar cards) */
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
+
+
+.event-pill {
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  color: white;
+  overflow: hidden;
+  transition: 0.2s ease;
+}
+
+
+.event-pill.lecture {
+  background: linear-gradient(135deg, $primary-color, #017aa6);
+  box-shadow: 0 3px 8px rgba(0, 167, 225, 0.35);
+}
+
+
+.event-pill.other {
+  background: linear-gradient(135deg, $secondary-color, #cc7f12);
+  box-shadow: 0 3px 8px rgba(255, 166, 43, 0.35);
+}
+
+.event-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+
+.event-time {
+  font-weight: 600;
+  font-size: 0.68rem;
+}
+
+.event-title {
+  font-weight: 500;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-meta {
+  font-size: 0.65rem;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0.95;
+}
+
+.more-events {
+  font-size: 0.7rem;
+  color: $text-muted;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+  .calendar-grid {
+    height: 650px;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-grid {
+    height: 550px;
+  }
+}

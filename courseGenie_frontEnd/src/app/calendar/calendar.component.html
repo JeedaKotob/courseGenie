@@ -1,0 +1,111 @@
+<div class="calendar-page">
+  <div class="calendar-card">
+    <!-- Header / Toolbar -->
+    <header class="calendar-header">
+      <div class="calendar-title">
+        <h2>Calendar</h2>
+        <p class="subtitle">Your teaching and event schedule, day by day.</p>
+      </div>
+
+      <div class="calendar-controls">
+        <button class="btn-secondary" (click)="changeMonth(-1)">
+          ‹ Prev
+        </button>
+        <div class="month-label">
+          {{ monthLabel }}
+        </div>
+        <button class="btn-secondary" (click)="changeMonth(1)">
+          Next ›
+        </button>
+        <button class="btn-primary today-btn" (click)="goToToday()">
+          Today
+        </button>
+      </div>
+    </header>
+
+    <!-- Status row -->
+    <div class="calendar-status" *ngIf="isLoading || errorMessage">
+      <div *ngIf="isLoading" class="status loading">
+        <span class="spinner"></span>
+        <span>Loading calendar…</span>
+      </div>
+      <div *ngIf="!isLoading && errorMessage" class="status error">
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="calendar-legend">
+      <div class="legend-item">
+        <span class="legend-dot lecture"></span>
+        <span>Lecture</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot event"></span>
+        <span>Event</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot today"></span>
+        <span>Today</span>
+      </div>
+    </div>
+
+    <!-- Calendar grid -->
+    <section class="calendar-grid">
+      <!-- Weekday header -->
+      <div class="weekday-row">
+        <div class="weekday" *ngFor="let label of weekdayLabels">
+          {{ label }}
+        </div>
+      </div>
+
+      <!-- Weeks -->
+      <div class="weeks">
+        <!-- Loop through weeks -->
+        <div class="week-row" *ngFor="let week of weeks">
+          <!-- Loop through days -->
+          <div
+            class="day-cell"
+            *ngFor="let day of week"
+            [ngClass]="{
+              'outside-month': !day.inCurrentMonth,
+              today: day.isToday,
+              'has-events': day.events.length > 0
+            }"
+          >
+            <!-- Day Number -->
+            <div class="day-header">
+              <span class="day-number">
+                {{ day.date.getDate() }}
+              </span>
+            </div>
+
+            <!-- Scrollable Events Container -->
+            <div class="day-events">
+              <div
+                class="event-pill"
+                *ngFor="let event of day.events"
+                [ngClass]="{
+                  lecture: event.type === 'LECTURE',
+                  other: event.type !== 'LECTURE'
+                }"
+              >
+                <div class="event-time">
+                  {{ event.startTime | slice:0:5 }}–{{ event.endTime | slice:0:5 }}
+                </div>
+                <div class="event-title" [title]="event.title">
+                  {{ event.title }}
+                </div>
+                <div class="event-meta">
+                  <span class="event-room" *ngIf="event.room">{{ event.room }}</span>
+                  <span class="event-type">{{ event.type | titlecase }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

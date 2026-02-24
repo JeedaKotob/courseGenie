@@ -3,8 +3,8 @@ package com.course_genie.event;
 
 import com.course_genie.user.User;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,9 +19,9 @@ public class Event {
     private long eventId;
 
     private String eventName;
-    private Date eventDate;
-    private Time startTime;
-    private Time endTime;
+    private LocalDate eventDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private String room; // make a room entity?
 
     @ManyToOne

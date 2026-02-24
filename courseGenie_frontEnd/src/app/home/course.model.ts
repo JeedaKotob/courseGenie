@@ -130,3 +130,19 @@ export interface ExamRoom {
   roomType: RoomType;
 }
 
+export interface CalendarEvent {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  room: string;
+  type: string;
+}
+
+export interface CalendarDay {
+  date: Date;
+  isoDate: string;
+  inCurrentMonth: boolean;
+  isToday: boolean;
+  events: CalendarEvent[];
+}

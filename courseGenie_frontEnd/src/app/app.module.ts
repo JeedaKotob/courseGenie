@@ -74,6 +74,7 @@ import { CourseOverviewComponent } from './course-overview/course-overview.compo
 import { SyllabusProgressComponent } from './syllabus-progress/syllabus-progress.component';
 import { AdminSyllabusViewComponent } from './admin/admin-syllabus-view/admin-syllabus-view.component';
 import { ExamRoomComponent } from './exam-room/exam-room.component';
+import {CalendarComponent} from './calendar/calendar.component';
 
 
 
@@ -125,6 +126,7 @@ import { ExamRoomComponent } from './exam-room/exam-room.component';
     SyllabusProgressComponent,
     AdminSyllabusViewComponent,
     ExamRoomComponent,
+    CalendarComponent,
 
 
 
