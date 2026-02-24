@@ -73,6 +73,7 @@ import { ChooseRoleComponent } from './home/choose-role/choose-role.component';
 import { CourseOverviewComponent } from './course-overview/course-overview.component';
 import { SyllabusProgressComponent } from './syllabus-progress/syllabus-progress.component';
 import { AdminSyllabusViewComponent } from './admin/admin-syllabus-view/admin-syllabus-view.component';
+import { ExamRoomComponent } from './exam-room/exam-room.component';
 
 
 
@@ -123,6 +124,7 @@ import { AdminSyllabusViewComponent } from './admin/admin-syllabus-view/admin-sy
     CourseOverviewComponent,
     SyllabusProgressComponent,
     AdminSyllabusViewComponent,
+    ExamRoomComponent,
 
 
 

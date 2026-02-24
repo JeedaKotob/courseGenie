@@ -1,0 +1,57 @@
+<div class="m-3">
+  <div class="rooms-card">
+
+    <!-- Header -->
+    <div class="rooms-header">
+      <div>
+        <h2>Exam Rooms</h2>
+        <p class="subtitle">Manage available rooms for exam sessions</p>
+      </div>
+
+      <button class="primary-btn">
+        <i class="pi pi-plus"></i>
+        Add Room
+      </button>
+    </div>
+
+    <!-- Rooms List -->
+    <div *ngIf="rooms.length > 0; else noRooms"
+         class="rooms-list">
+
+      <div class="room-row"
+           *ngFor="let room of rooms">
+
+        <div class="room-main">
+          <div class="room-number">
+            Room {{ room.roomNumber }}
+          </div>
+          <div class="room-type">
+            {{ room.roomType }}
+          </div>
+        </div>
+
+        <div class="room-capacity">
+          {{ room.capacity }} Seats
+        </div>
+
+        <div class="room-actions">
+          <button class="icon-btn">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button class="icon-btn danger">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <ng-template #noRooms>
+      <div class="empty-state">
+        <h5>No rooms created yet.</h5>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

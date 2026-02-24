@@ -118,4 +118,15 @@ export interface Enrollment {
   sectionId: number;
 }
 
+export enum RoomType {
+  CLASSROOM = 'CLASSROOM',
+  LAB = 'LAB'
+}
+
+export interface ExamRoom {
+  roomId: number;
+  capacity: number;
+  roomNumber: string;
+  roomType: RoomType;
+}
 
