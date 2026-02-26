@@ -12,6 +12,41 @@
       </div>
     </div>
 
+    <!-- Today's Schedule Card -->
+    <div class="dashboard-card mt-4 p-4 shadow-sm rounded">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Today's Schedule</h3>
+        <button class="btn btn-link p-0" (click)="goToCalendar()">
+          View Full Calendar →
+        </button>
+      </div>
+
+      <div *ngIf="isTodayLoading" class="text-muted">
+        Loading today’s events...
+      </div>
+
+      <div *ngIf="!isTodayLoading && todayEvents.length === 0" class="text-muted">
+        No events scheduled for today.
+      </div>
+
+      <div *ngFor="let event of todayEvents" class="event-row py-2 border-bottom">
+
+        <div class="event-time">
+          {{ event.startTime | slice:0:5 }} - {{ event.endTime | slice:0:5 }}
+        </div>
+
+        <div class="event-title">
+          {{ event.title }}
+        </div>
+
+        <div class="event-location" *ngIf="event.room">
+          <i class="pi pi-map-marker"></i>
+          {{ event.room }}
+        </div>
+
+      </div>
+      </div>
+
     <div *ngIf="semestersWithSections$ | async as semesterData" class="home-content mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">Your courses</h1>

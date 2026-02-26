@@ -54,7 +54,7 @@ const routes: Routes = [
       { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'admin/syllabus/:sectionId', component: AdminSyllabusViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'examRooms', component: ExamRoomComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
-      {path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]}
+      {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }}
     ],
   },
   {

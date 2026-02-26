@@ -165,6 +165,83 @@
   margin-top: 20px;
 }
 
+/* ============================= */
+/* Dashboard - Today's Schedule */
+/* ============================= */
+
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: 0.25s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Left accent stripe (like course card) */
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  border-radius: 16px 0 0 16px;
+  background: linear-gradient(to bottom, #024964, #0394CA);
+}
+
+/* Header */
+.dashboard-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Calendar link button */
+.dashboard-card .btn-link {
+  font-weight: 500;
+  color: #0394CA;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.dashboard-card .btn-link:hover {
+  color: #024964;
+  text-decoration: underline;
+}
+
+/* Event rows */
+.event-row {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+}
+
+.event-row:last-child {
+  border-bottom: none !important;
+}
+
+.event-row .fw-bold {
+  font-size: 0.95rem;
+  color: #024964;
+}
+
+.event-row div:last-child {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Empty state */
+.dashboard-card .text-muted {
+  padding-left: 10px;
+  font-size: 0.9rem;
+  color: #6c757d !important;
+}
+
 @media (max-width: 768px) {
   .hero-content {
     right: 0;
