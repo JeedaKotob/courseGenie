@@ -21,4 +21,9 @@ public class CalendarController {
     ) {
         return calendarService.getCalendarForRange(userId, start, end);
     }
+
+    @PostMapping("/event")
+    public void createEvent(@RequestBody EventDTO eventDTO) {
+        calendarService.createEvent(eventDTO);
+    }
 }

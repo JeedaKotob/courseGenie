@@ -1,6 +1,5 @@
 <div class="calendar-page">
   <div class="calendar-card">
-    <!-- Header / Toolbar -->
     <header class="calendar-header">
       <div class="calendar-title">
         <h2>Calendar</h2>
@@ -20,10 +19,10 @@
         <button class="btn-primary today-btn" (click)="goToToday()">
           Today
         </button>
+        <button class="btn-primary" (click)="openAddEventModal()">+ Add Event</button>
       </div>
     </header>
 
-    <!-- Status row -->
     <div class="calendar-status" *ngIf="isLoading || errorMessage">
       <div *ngIf="isLoading" class="status loading">
         <span class="spinner"></span>
@@ -34,7 +33,6 @@
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="calendar-legend">
       <div class="legend-item">
         <span class="legend-dot lecture"></span>
@@ -50,20 +48,15 @@
       </div>
     </div>
 
-    <!-- Calendar grid -->
     <section class="calendar-grid">
-      <!-- Weekday header -->
       <div class="weekday-row">
         <div class="weekday" *ngFor="let label of weekdayLabels">
           {{ label }}
         </div>
       </div>
 
-      <!-- Weeks -->
       <div class="weeks">
-        <!-- Loop through weeks -->
         <div class="week-row" *ngFor="let week of weeks">
-          <!-- Loop through days -->
           <div
             class="day-cell"
             *ngFor="let day of week"
@@ -73,14 +66,12 @@
               'has-events': day.events.length > 0
             }"
           >
-            <!-- Day Number -->
             <div class="day-header">
               <span class="day-number">
                 {{ day.date.getDate() }}
               </span>
             </div>
 
-            <!-- Scrollable Events Container -->
             <div class="day-events">
               <div
                 class="event-pill"
@@ -107,5 +98,79 @@
         </div>
       </div>
     </section>
+    <div class="modal-backdrop" *ngIf="showAddEventModal">
+      <div class="modal-card">
+
+        <h3 class="mb-4">Add New Event</h3>
+
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newEvent.title"
+            placeholder="Enter event title"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="newEvent.date"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label class="form-label">Start Time</label>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvent.startTime"
+              (change)="onStartTimeChange()"
+            >
+              <option value="">Select time</option>
+              <option *ngFor="let time of timeOptions" [value]="time">
+                {{ time }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label class="form-label">End Time</label>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvent.endTime"
+            >
+              <option value="">Select time</option>
+              <option *ngFor="let time of timeOptions" [value]="time">
+                {{ time }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Room</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newEvent.room"
+            placeholder="Enter Room"
+          />
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <button class="btn btn-outline-secondary" (click)="closeAddEventModal()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" (click)="saveEvent()">
+            Add Event
+          </button>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>

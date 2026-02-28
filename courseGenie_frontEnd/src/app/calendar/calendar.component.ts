@@ -23,6 +23,17 @@ export class CalendarComponent implements OnInit {
 
   readonly weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+  showAddEventModal = false;
+
+  newEvent = {
+    title: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    room: ''
+  };
+  timeOptions: string[] = [];
+
   constructor(
     private calendarService: CalendarService,
     private sharedDataService: SharedDataService
@@ -30,9 +41,9 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     const today = new Date();
-    console.log('SYSTEM DATE:', today);
     this.currentYear = today.getFullYear();
     this.currentMonth = today.getMonth();
+    this.generateTimeOptions();
     this.loadCalendar();
   }
 
@@ -104,8 +115,8 @@ export class CalendarComponent implements OnInit {
     gridEnd.setDate(lastOfMonth.getDate() + (6 - lastDayOffset));
 
     return {
-      startIso: gridStart.toISOString().split('T')[0],
-      endIso: gridEnd.toISOString().split('T')[0],
+      startIso: this.formatDate(gridStart),
+      endIso: this.formatDate(gridEnd),
     };
   }
   private buildCalendarGrid(events: CalendarEvent[]): void {
@@ -131,7 +142,9 @@ export class CalendarComponent implements OnInit {
 
       for (let i = 0; i < 7; i++) {
         const date = new Date(currentDate);
-        const isoDate = date.toISOString().split('T')[0];
+        const isoDate = date.getFullYear() + '-' +
+          String(date.getMonth() + 1).padStart(2, '0') + '-' +
+          String(date.getDate()).padStart(2, '0');
 
         const inCurrentMonth =
           date.getMonth() === this.currentMonth &&
@@ -159,5 +172,83 @@ export class CalendarComponent implements OnInit {
     }
 
     this.weeks = newWeeks;
+  }
+
+  saveEvent(): void {
+
+    if (!this.newEvent.date ||
+      !this.newEvent.startTime ||
+      !this.newEvent.endTime ||
+      !this.newEvent.title) {
+
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    this.sharedDataService.currentUser$
+      .pipe(
+        filter(user => !!user),
+        take(1),
+        switchMap(user =>
+          this.calendarService.addEvent({
+            userId: user!.userId,
+            eventName: this.newEvent.title,
+            eventDate: this.newEvent.date,
+            startTime: this.newEvent.startTime,
+            endTime: this.newEvent.endTime,
+            room: this.newEvent.room
+          })
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.closeAddEventModal();
+          this.loadCalendar();
+        },
+        error: () => {
+          alert('Failed to add event.');
+        }
+      });
+  }
+
+  openAddEventModal(): void {
+    this.showAddEventModal = true;
+    this.newEvent.date = this.formatDate(new Date());
+  }
+
+  closeAddEventModal(): void {
+    this.showAddEventModal = false;
+
+    this.newEvent = {
+        title: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        room: ''
+      };
+  }
+  private formatDate(date: Date): string {
+    return date.getFullYear() + '-' +
+      String(date.getMonth() + 1).padStart(2, '0') + '-' +
+      String(date.getDate()).padStart(2, '0');
+  }
+
+  private generateTimeOptions(): void {
+    for (let hour = 0; hour < 24; hour++) {
+      this.timeOptions.push(`${String(hour).padStart(2, '0')}:00`);
+      this.timeOptions.push(`${String(hour).padStart(2, '0')}:30`);
+    }
+  }
+
+  onStartTimeChange(): void {
+    if (!this.newEvent.startTime) return;
+
+    const [hour, minute] = this.newEvent.startTime.split(':').map(Number);
+
+    let endHour = hour + 1;
+    if (endHour >= 24) endHour = 23;
+
+    this.newEvent.endTime =
+      `${String(endHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
   }
 }

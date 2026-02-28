@@ -3,6 +3,8 @@ package com.course_genie.event;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
 import com.course_genie.semester.Semester;
+import com.course_genie.user.User;
+import com.course_genie.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class CalendarService {
 
     private final EventRepository eventRepository;
     private final SectionRepository sectionRepository;
+    private final UserRepository userRepository;
 
     public List<CalendarDTO> getCalendarForRange(
             Long professorId,
@@ -92,5 +95,21 @@ public class CalendarService {
                         .comparing(CalendarDTO::date)
                         .thenComparing(CalendarDTO::startTime))
                 .toList();
+    }
+
+    public void createEvent(EventDTO eventDTO) {
+        User user = userRepository.findById(eventDTO.userId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Event event = Event.builder()
+                .eventName(eventDTO.eventName())
+                .eventDate(eventDTO.eventDate())
+                .startTime(eventDTO.startTime())
+                .endTime(eventDTO.endTime())
+                .room(eventDTO.room())
+                .user(user)
+                .build();
+
+        eventRepository.save(event);
     }
 }

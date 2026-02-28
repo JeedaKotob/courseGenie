@@ -26,4 +26,8 @@ export class CalendarService {
 
     return this.http.get<CalendarEvent[]>(this.apiUrl, { params });
   }
+
+  addEvent(event: any) {
+    return this.http.post(`${this.apiUrl}/event`, event);
+  }
 }

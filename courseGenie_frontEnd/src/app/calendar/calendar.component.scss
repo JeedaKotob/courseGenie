@@ -286,6 +286,73 @@ $text-muted: #6c757d;
   color: $text-muted;
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 500px;
+  max-width: 95%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .half {
+  flex: 1;
+}
+
+::ng-deep .p-calendar {
+  width: 100%;
+}
+
+::ng-deep .p-inputtext {
+  width: 100%;
+  border-radius: 8px;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 992px) {
