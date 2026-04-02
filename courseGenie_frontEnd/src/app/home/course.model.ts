@@ -146,3 +146,33 @@ export interface CalendarDay {
   isToday: boolean;
   events: CalendarEvent[];
 }
+
+export interface CloResultDTO {
+  cloId: number;
+  name: string;
+  description: string;
+  assessmentMethods: string;
+  benchmarkThreshold: number;
+  actualResult: number;
+  met: boolean;
+}
+
+export interface Car {
+  carId: number;
+  sectionId: number;
+  courseCode: string;
+  courseTitle: string;
+  enrollment: number;
+  withdrawals: number;
+  classGpa: number;
+  designatedInnovationJourneyCourse: boolean;
+  gradeDistribution: { [key: string]: number };
+  cloResults: CloResultDTO[];
+  studentFeedbackSynopsis: string;
+  impedimentsAnalysis: string;
+  suggestedModifications: string;
+  aiReflection: string;
+  submitted: boolean;
+  submissionDate: string;
+  isComplete: boolean;
+}

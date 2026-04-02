@@ -76,6 +76,8 @@ import { AdminSyllabusViewComponent } from './admin/admin-syllabus-view/admin-sy
 import { ExamRoomComponent } from './exam-room/exam-room.component';
 import {CalendarComponent} from './calendar/calendar.component';
 import {Calendar} from "primeng/calendar";
+import {CarComponent} from './car/car.component';
+import {CarRenderComponent} from './car-render/car-render.component';
 
 
 
@@ -128,65 +130,66 @@ import {Calendar} from "primeng/calendar";
     AdminSyllabusViewComponent,
     ExamRoomComponent,
     CalendarComponent,
-
+    CarComponent,
+    CarRenderComponent
 
 
 
   ],
-    imports: [
-        DndModule,
-        BrowserModule,
-        ReactiveFormsModule,
-        FormsModule,
-        AppRoutingModule,
-        CarouselModule,
-        NgbModalModule,
-        CommonModule,
-        Angular2SmartTableModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot({
-            timeOut: 3000,
-            positionClass: 'toast-bottom-right',
-            preventDuplicates: true,
-        }),
+  imports: [
+    DndModule,
+    BrowserModule,
+    ReactiveFormsModule,
+    FormsModule,
+    AppRoutingModule,
+    CarouselModule,
+    NgbModalModule,
+    CommonModule,
+    Angular2SmartTableModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
 
 
-        MatCard,
-        MatCardHeader,
-        MatCardTitle,
-        MatFormField,
-        MatSelect,
-        MatOption,
-        MatCardContent,
-        MatTable,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatCell,
-        MatHeaderRow,
-        MatRow,
-        MatRowDef,
-        MatHeaderRowDef,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatCardContent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    MatRowDef,
+    MatHeaderRowDef,
 
-        ButtonComponent,
-        AvatarModule,
-        SpinnerModule,
-        SidebarModule,
-        StatisticsComponent,
-        MatInput,
-        MatButton,
-        MatButton,
-        NgOptimizedImage,
-        CdkDropList,
-        NgForOf,
-        CdkDrag,
-        CdkDropListGroup,
+    ButtonComponent,
+    AvatarModule,
+    SpinnerModule,
+    SidebarModule,
+    StatisticsComponent,
+    MatInput,
+    MatButton,
+    MatButton,
+    NgOptimizedImage,
+    CdkDropList,
+    NgForOf,
+    CdkDrag,
+    CdkDropListGroup,
 
-        NgClass,
-        NgIf,
-        Calendar,
-    ],
+    NgClass,
+    NgIf,
+    Calendar,
+  ],
   providers: [
     AuthGuard,
     {

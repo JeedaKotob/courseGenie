@@ -9,6 +9,9 @@ import com.course_genie.grade.GradeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.context.Context;
+
 
 import java.util.*;
 
@@ -21,6 +24,7 @@ public class CarService {
     private final EnrollmentRepository enrollmentRepository;
     private final GradeRepository gradeRepository;
     private final CarDTOMapper carDTOMapper;
+    private final SpringTemplateEngine templateEngine;
 
     public CarDTO getCarBySection(Long sectionId) {
         Section section = sectionRepository.findById(sectionId)
@@ -96,5 +100,26 @@ public class CarService {
                 .submitted(false)
                 .build();
         return carRepository.save(newCar);
+    }
+
+    public String generateCarHtml(Long sectionId) {
+        CarDTO car = getCarBySection(sectionId);
+
+        Context context = new Context();
+
+        context.setVariable("courseCode", car.courseCode());
+        context.setVariable("courseTitle", car.courseTitle());
+        context.setVariable("classGpa", car.classGpa());
+        context.setVariable("gradeDistribution", car.gradeDistribution());
+        context.setVariable("cloResults", car.cloResults());
+        context.setVariable("impedimentsAnalysis", car.impedimentsAnalysis());
+        context.setVariable("suggestedModifications", car.suggestedModifications());
+        context.setVariable("studentFeedback", car.studentFeedbackSynopsis());
+        context.setVariable("logoUrl", "/static/images/logo.jpg");
+        context.setVariable("enrollment", car.enrollment());
+        context.setVariable("withdrawals", car.withdrawals());
+        context.setVariable("innovationCourse", car.designatedInnovationJourneyCourse());
+
+        return templateEngine.process("car", context);
     }
 }
