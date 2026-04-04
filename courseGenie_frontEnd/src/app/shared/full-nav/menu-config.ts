@@ -76,6 +76,12 @@ export const menuItems: MenuItem[] = [
     roles: ['ROLE_PROFESSOR', 'ROLE_ADMIN'],
   },
   {
+    label: 'Course Assessment Report',
+    path: '/car/:courseCode/:sectionCode',
+    icon: 'pi pi-file-edit',
+    roles: ['ROLE_PROFESSOR', 'ROLE_ADMIN'],
+  },
+  {
     label: 'Books',
     path: '/book-manager/:courseCode/:sectionCode',
     icon: 'pi pi-book',
