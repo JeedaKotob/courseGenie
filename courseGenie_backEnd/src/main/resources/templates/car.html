@@ -24,19 +24,19 @@
     </tr>
     <tr class="c53">
         <td class="c79" colspan="1" rowspan="1">
-            <p class="c28"><span class="c3">Name of faculty</span></p>
+            <p class="c28"><span class="c3" th:text="${instructorName}">Name</span></p>
         </td>
         <td class="c59" colspan="1" rowspan="1">
-            <p class="c28"><span class="c3">Office Location</span></p>
+            <p class="c28"><span class="c3" th:text="${office}">Office</span></p>
         </td>
         <td class="c72" colspan="1" rowspan="1">
-            <p class="c1"><span class="c24 c8">Phone</span></p>
+            <p class="c1"><span class="c24 c8" th:text="${phone}">Phone</span></p>
         </td>
         <td class="c80" colspan="1" rowspan="1">
-            <p class="c28 c49"><span class="c3">email id</span></p>
+            <p class="c28 c49"><span class="c3" th:text="${email}">Email</span></p>
         </td>
         <td class="c48" colspan="1" rowspan="1">
-            <p class="c28 c50"><span class="c3">Fall-2019</span></p>
+            <p class="c28 c50"><span class="c3" th:text="${semesterYear}">Semester</span></p>
         </td>
     </tr>
 </table>
@@ -49,13 +49,13 @@
             <p class="c1"><span class="c0">Course Code:</span></p>
         </td>
         <td class="c55" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${courseCode}"></span></p>
         </td>
         <td class="c33" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Course title:</span></p>
         </td>
         <td class="c69" colspan="5" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${courseTitle}"></span></p>
         </td>
     </tr>
     <tr class="c84">
@@ -63,25 +63,25 @@
             <p class="c1"><span class="c0">Undergraduate:</span></p>
         </td>
         <td class="c55" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${undergraduate}"></span></p>
         </td>
         <td class="c33" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Enrollment:</span></p>
         </td>
         <td class="c14" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${enrollment}"></span></p>
         </td>
         <td class="c36" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Semester Code:</span></p>
         </td>
         <td class="c76" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${semesterCode}"></span></p>
         </td>
         <td class="c15" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Credits:</span></p>
         </td>
         <td class="c22" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${credits}"></span></p>
         </td>
     </tr>
     <tr class="c21">
@@ -89,19 +89,19 @@
             <p class="c1"><span class="c0">Graduate:</span></p>
         </td>
         <td class="c55" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${graduate}"></span></p>
         </td>
         <td class="c33" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Withdrawals:</span></p>
         </td>
         <td class="c14" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${withdrawals}"></span></p>
         </td>
         <td class="c36" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Class GPA: </span></p>
         </td>
         <td class="c41" colspan="3" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${classGpa}"></span></p>
         </td>
     </tr>
     <tr class="c21">
@@ -109,19 +109,19 @@
             <p class="c1"><span class="c0">Prerequisites:</span></p>
         </td>
         <td class="c55" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${prerequisites}"></span></p>
         </td>
         <td class="c33" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Co-requisites:</span></p>
         </td>
         <td class="c14" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1 c2"><span class="c3" th:text="${corequisites}"></span></p>
         </td>
         <td class="c36" colspan="1" rowspan="1">
             <p class="c1"><span class="c0">Innovation Journey Course</span></p>
         </td>
         <td class="c41" colspan="3" rowspan="1">
-            <p class="c1"><span class="c0">Yes/ No</span></p>
+            <p class="c1 c2"><span class="c3" th:text="${innovationJourneyCourse}"></span></p>
         </td>
     </tr>
 </table>

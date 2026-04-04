@@ -103,13 +103,42 @@ public class CarService {
     }
 
     public String generateCarHtml(Long sectionId) {
+        Section section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
         CarDTO car = getCarBySection(sectionId);
 
         Context context = new Context();
 
+        // Instructor and term (same sources as SyllabusService.generateSyllabus)
+        var professor = section.getProfessor();
+        context.setVariable("instructorName", professor != null ? professor.getFullName() : "");
+        context.setVariable("office", professor != null && professor.getOffice() != null ? professor.getOffice() : "");
+        context.setVariable("officeHours", professor != null && professor.getOfficeHours() != null ? professor.getOfficeHours() : "");
+        context.setVariable("phone", professor != null && professor.getPhone() != null ? professor.getPhone() : "");
+        context.setVariable("email", professor != null && professor.getEmail() != null ? professor.getEmail() : "");
+
+        String semesterYear = section.getTerm();
+        if (semesterYear == null || semesterYear.isBlank()) {
+            if (section.getSemester() != null && section.getSemester().getSemesterName() != null) {
+                semesterYear = section.getSemester().getSemesterName();
+            } else {
+                semesterYear = "";
+            }
+        }
+        context.setVariable("semesterYear", semesterYear);
+
+        var course = section.getCourse();
+        context.setVariable("undergraduate", course.isUndergraduate() ? "Yes" : "No");
+        context.setVariable("graduate", course.isGraduate() ? "Yes" : "No");
+        context.setVariable("credits", course.getCredits() != null ? course.getCredits() : "");
+        context.setVariable("prerequisites", course.getPrerequisites() != null ? course.getPrerequisites() : "");
+        context.setVariable("corequisites", course.getCorequisites() != null ? course.getCorequisites() : "");
+        context.setVariable("semesterCode", section.getCode() != null ? section.getCode() : "");
+        context.setVariable("innovationJourneyCourse", car.designatedInnovationJourneyCourse() ? "Yes" : "No");
+
         context.setVariable("courseCode", car.courseCode());
         context.setVariable("courseTitle", car.courseTitle());
-        context.setVariable("classGpa", car.classGpa());
+        context.setVariable("classGpa", String.format(Locale.US, "%.2f", car.classGpa()));
         context.setVariable("gradeDistribution", car.gradeDistribution());
         context.setVariable("cloResults", car.cloResults());
         context.setVariable("impedimentsAnalysis", car.impedimentsAnalysis());
@@ -118,7 +147,6 @@ public class CarService {
         context.setVariable("logoUrl", "/static/images/logo.jpg");
         context.setVariable("enrollment", car.enrollment());
         context.setVariable("withdrawals", car.withdrawals());
-        context.setVariable("innovationCourse", car.designatedInnovationJourneyCourse());
 
         return templateEngine.process("car", context);
     }
