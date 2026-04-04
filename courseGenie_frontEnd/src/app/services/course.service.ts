@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { Course, CoursesBySemester } from '../home/course.model';
+import { Course, CoursesBySemester, Section } from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +50,37 @@ export class CourseService {
     return this.http.get<Course>(`${this.apiUrl}/code/${code}`);
   }
 
+  getTerms(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/sections/terms`);
+  }
+  
+  getProfessorsByDepartment(departmentName: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/users/professors`, {
+      params: { departmentName }
+    });
+  }
 
-
+  createSection(
+    courseCode: string,
+    payload: { code: string; term: string; professorId: number }
+  ): Observable<Section> {
+    return this.http.post<Section>(`${this.apiUrl}/${encodeURIComponent(courseCode)}/sections`, payload);
+  }
+  
+  updateSection(
+    courseCode: string,
+    sectionId: number,
+    payload: { code: string; term: string; professorId: number }
+  ): Observable<Section> {
+    return this.http.put<Section>(
+      `${this.apiUrl}/${encodeURIComponent(courseCode)}/sections/${sectionId}`,
+      payload
+    );
+  }
+  
+  deleteSection(courseCode: string, sectionId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${encodeURIComponent(courseCode)}/sections/${sectionId}`
+    );
+  }
 }

@@ -21,4 +21,11 @@ public class UserService {
                 .map(userDTOMapper)
                 .collect(Collectors.groupingBy(UserDTO::getDepartmentName));
     }
+
+    public List<UserDTO> getProfessorsByDepartment(String departmentName) {
+        return userRepository.findProfessorsByDepartmentName(departmentName)
+                .stream()
+                .map(userDTOMapper)
+                .toList();
+    }
 }

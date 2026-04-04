@@ -16,7 +16,6 @@
       <ng-container *ngIf="sections$ | async as sections">
         <div class="sections-grid" *ngIf="sections.length > 0; else noSections">
           <div class="section-card" *ngFor="let sec of sections">
-
             <div class="section-header">
               <span class="section-badge">Section {{ sec.code }}</span>
               <span class="section-term">{{ sec.term }}</span>
@@ -41,33 +40,54 @@
             </div>
 
             <button
+              type="button"
               class="view-section-btn"
               (click)="navigateToSection(course.code, sec.code)"
             >
               <span>View Section</span>
               <i class="pi pi-arrow-right"></i>
             </button>
+
+            <!-- SECTION ACTIONS (admin only) -->
+            <div class="section-actions" *ngIf="isAdmin">
+              <button
+                type="button"
+                class="section-action-btn edit-btn"
+                (click)="openEditSectionModal(sec, editSectionModal)"
+              >
+                Edit
+              </button>
+
+              <button
+              type="button"
+              class="section-action-btn delete-btn"
+              (click)="openDeleteConfirmModal(sec, deleteSectionConfirmModal)"
+            >
+              Delete
+            </button>
+            </div>
           </div>
+
           <!-- Add Section card (admin only) -->
           <button
-          *ngIf="isAdmin"
-          type="button"
-          class="add-section-card"
-          (click)="openAddSectionModal(addSectionModal)"
-          aria-label="Add a new section"
+            *ngIf="isAdmin"
+            type="button"
+            class="add-section-card"
+            (click)="openAddSectionModal(addSectionModal)"
+            aria-label="Add a new section"
           >
-          <div class="add-section-content">
-            <i class="pi pi-plus-circle add-section-icon"></i>
-            <span class="add-section-title">Add Section</span>
-            <span class="add-section-subtitle">Create a new section for this course</span>
-          </div>
+            <div class="add-section-content">
+              <i class="pi pi-plus-circle add-section-icon"></i>
+              <span class="add-section-title">Add Section</span>
+              <span class="add-section-subtitle">Create a new section for this course</span>
+            </div>
           </button>
         </div>
 
         <ng-template #noSections>
           <div class="text-center mt-4">
             <h5 class="text-muted mb-3">No sections available.</h5>
-        
+
             <button
               *ngIf="isAdmin"
               type="button"
@@ -87,33 +107,235 @@
     </ng-container>
   </div>
 
+  <!-- CREATE SECTION MODAL -->
   <ng-template #addSectionModal>
     <div class="modal-header d-flex justify-content-between align-items-center">
       <h4 class="modal-title">Create Section</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="closeModal()"
+      ></button>
     </div>
-  
-    <div class="modal-body">
-      <!-- US6 skeleton form -->
-      <div class="mb-3">
-        <label class="form-label">Section Code</label>
-        <input type="text" class="form-control" placeholder="e.g. ISTE-230-603" />
+
+    <form [formGroup]="createSectionForm" (ngSubmit)="onSectionCreateSubmit()">
+      <div class="modal-body">
+        <!-- Section Number -->
+        <div class="mb-3">
+          <label class="form-label">Section</label>
+          <div class="input-group">
+            <span class="input-group-text">Section</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="sectionNumber"
+              placeholder="e.g. 600"
+            />
+          </div>
+          <small
+            class="text-danger"
+            *ngIf="createSectionForm.get('sectionNumber')?.touched && createSectionForm.get('sectionNumber')?.hasError('required')"
+          >
+            Section number is required.
+          </small>
+        </div>
+
+        <!-- Term -->
+        <div class="mb-3">
+          <label class="form-label">Term</label>
+          <select class="form-select" formControlName="term">
+            <option value="">Select Term</option>
+            <option *ngFor="let t of terms" [value]="t">{{ t }}</option>
+          </select>
+          <small
+            class="text-danger"
+            *ngIf="createSectionForm.get('term')?.touched && createSectionForm.get('term')?.hasError('required')"
+          >
+            Term is required.
+          </small>
+        </div>
+
+        <!-- Professor -->
+        <div class="mb-3">
+          <label class="form-label">Professor</label>
+          <select class="form-select" formControlName="professorId">
+            <option [ngValue]="null" disabled>Select Professor</option>
+            <option *ngFor="let p of professors" [ngValue]="p.userId">
+              {{ p.firstName }} {{ p.lastName }} ({{ p.userName }})
+            </option>
+          </select>
+          <small
+            class="text-danger"
+            *ngIf="createSectionForm.get('professorId')?.touched && createSectionForm.get('professorId')?.hasError('required')"
+          >
+            Professor is required.
+          </small>
+        </div>
       </div>
-  
-      <div class="mb-3">
-        <label class="form-label">Term</label>
-        <input type="text" class="form-control" placeholder="e.g. Fall 2026" />
+
+      <div class="px-3 pb-2" *ngIf="modalError">
+        <div class="alert alert-danger mb-0" role="alert">
+          {{ modalError }}
+        </div>
       </div>
-  
-      <div class="mb-3">
-        <label class="form-label">Professor (optional)</label>
-        <input type="text" class="form-control" placeholder="Assign later or enter professor name" />
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting"
+        >
+          Create
+        </button>
       </div>
-    </div>
-  
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
-      <button type="button" class="btn btn-primary" (click)="onSectionCreateSubmit()">Create</button>
-    </div>
+    </form>
   </ng-template>
+
+  <!-- EDIT SECTION MODAL -->
+  <ng-template #editSectionModal>
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title">Edit Section</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="closeModal()"
+      ></button>
+    </div>
+
+    <form [formGroup]="editSectionForm" (ngSubmit)="onSectionEditSubmit()">
+      <div class="modal-body">
+        <!-- Section Number -->
+        <div class="mb-3">
+          <label class="form-label">Section</label>
+          <div class="input-group">
+            <span class="input-group-text">Section</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="sectionNumber"
+              placeholder="e.g. 600"
+            />
+          </div>
+          <small
+            class="text-danger"
+            *ngIf="editSectionForm.get('sectionNumber')?.touched && editSectionForm.get('sectionNumber')?.hasError('required')"
+          >
+            Section number is required.
+          </small>
+        </div>
+
+        <!-- Term -->
+        <div class="mb-3">
+          <label class="form-label">Term</label>
+          <select class="form-select" formControlName="term">
+            <option value="">Select Term</option>
+            <option *ngFor="let t of terms" [value]="t">{{ t }}</option>
+          </select>
+          <small
+            class="text-danger"
+            *ngIf="editSectionForm.get('term')?.touched && editSectionForm.get('term')?.hasError('required')"
+          >
+            Term is required.
+          </small>
+        </div>
+
+        <!-- Professor -->
+        <div class="mb-3">
+          <label class="form-label">Professor</label>
+          <select class="form-select" formControlName="professorId">
+            <option [ngValue]="null" disabled>Select Professor</option>
+            <option *ngFor="let p of professors" [ngValue]="p.userId">
+              {{ p.firstName }} {{ p.lastName }} ({{ p.userName }})
+            </option>
+          </select>
+          <small
+            class="text-danger"
+            *ngIf="editSectionForm.get('professorId')?.touched && editSectionForm.get('professorId')?.hasError('required')"
+          >
+            Professor is required.
+          </small>
+        </div>
+      </div>
+
+      <div class="px-3 pb-2" *ngIf="modalError">
+        <div class="alert alert-danger mb-0" role="alert">
+          {{ modalError }}
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </ng-template>
+
+    <!-- DELETE SECTION CONFIRMATION MODAL -->
+    <ng-template #deleteSectionConfirmModal>
+      <div class="modal-header d-flex justify-content-between align-items-center">
+        <h4 class="modal-title text-danger">Delete Section</h4>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+  
+      <div class="modal-body">
+        <p class="mb-3">
+          Are you sure you want to delete section
+          <strong>{{ sectionToDelete?.code }}</strong>?
+        </p>
+  
+        <div class="alert alert-warning mb-0" role="alert">
+          This action can't be undone.
+        </div>
+
+        <div class="alert alert-danger mt-3 mb-0" role="alert" *ngIf="modalError">
+          {{ modalError }}
+        </div>
+      </div>
+  
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          [disabled]="isSubmitting"
+          (click)="confirmDeleteSection()"
+        >
+          Delete
+        </button>
+      </div>
+    </ng-template>
 </div>

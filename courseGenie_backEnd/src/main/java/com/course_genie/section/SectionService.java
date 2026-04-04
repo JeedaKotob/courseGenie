@@ -77,5 +77,7 @@ public class SectionService {
                 .orElseThrow(() -> new EntityNotFoundException("Section not found"));
         return sectionDTOMapper.apply(section);
     }
-
+    public List<String> getDistinctTerms() {
+        return sectionRepository.findDistinctTerms();
+    }
 }

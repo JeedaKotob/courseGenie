@@ -1,5 +1,9 @@
 package com.course_genie.course;
 
+import com.course_genie.section.CreateSectionRequest;
+import com.course_genie.section.UpdateSectionRequest;
+import com.course_genie.user.User;
+import com.course_genie.user.UserRepository;
 import com.course_genie.assessment.AssessmentDTO;
 import com.course_genie.assessment.AssessmentDTOMapper;
 import com.course_genie.assessment.AssessmentRepository;
@@ -28,8 +32,9 @@ public class CourseService {
     private final AssessmentDTOMapper assessmentDTOMapper;
     private final CLORepository cloRepository;
     private final CLODTOMapper cloDTOMapper;
+    private final UserRepository userRepository;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseDTOMapper = courseDTOMapper;
@@ -39,6 +44,7 @@ public class CourseService {
         this.assessmentDTOMapper = assessmentDTOMapper;
         this.cloRepository = cloRepository;
         this.cloDTOMapper = cloDTOMapper;
+        this.userRepository = userRepository;
     }
 
     public CourseDTO createCourse(CourseDTO courseDTO) {
@@ -177,6 +183,7 @@ public class CourseService {
                 .name(course.name())
                 .description(course.description())
                 .credits(course.credits())
+                .discipline(course.discipline())
                 .sections(new ArrayList<>(filteredSections))
                 .clos(new ArrayList<>(course.clos()))
                 .build();
@@ -207,4 +214,95 @@ public class CourseService {
         return courseDTO;
     }
 
+    public SectionDTO createSection(String courseCode, CreateSectionRequest request) {
+        Course course = courseRepository.findCourseByCode(courseCode)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+    
+        if (request.code() == null || request.code().isBlank()) {
+            throw new IllegalArgumentException("Section code is required");
+        }
+        if (request.term() == null || request.term().isBlank()) {
+            throw new IllegalArgumentException("Term is required");
+        }
+        if (request.professorId() == null) {
+            throw new IllegalArgumentException("Professor is required");
+        }
+    
+        sectionRepository.findSectionByCodeAndCourseCode(request.code(), courseCode)
+                .ifPresent(s -> {
+                    throw new IllegalArgumentException("Section already exists for this course");
+                });
+    
+        User professor = userRepository.findById(request.professorId())
+                .orElseThrow(() -> new EntityNotFoundException("Professor not found"));
+    
+        Section section = Section.builder()
+                .code(request.code().trim())
+                .term(request.term().trim())
+                .class_number(request.code().trim())
+                .configured(false)
+                .course(course)
+                .professor(professor)
+                .build();
+    
+        Section saved = sectionRepository.save(section);
+        return sectionDTOMapper.apply(saved);
+    }
+
+    public SectionDTO updateSection(String courseCode, Long sectionId, UpdateSectionRequest request) {
+        Course course = courseRepository.findCourseByCode(courseCode)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+    
+        Section section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+    
+        if (section.getCourse() == null || !courseCode.equals(section.getCourse().getCode())) {
+            throw new IllegalArgumentException("Section does not belong to the specified course");
+        }
+    
+        if (request.code() == null || request.code().isBlank()) {
+            throw new IllegalArgumentException("Section code is required");
+        }
+        if (request.term() == null || request.term().isBlank()) {
+            throw new IllegalArgumentException("Term is required");
+        }
+        if (request.professorId() == null) {
+            throw new IllegalArgumentException("Professor is required");
+        }
+    
+        String normalizedCode = request.code().trim();
+        String normalizedTerm = request.term().trim();
+    
+        sectionRepository.findSectionByCodeAndCourseCode(normalizedCode, courseCode)
+                .ifPresent(existing -> {
+                    if (existing.getSectionId() != sectionId) {
+                        throw new IllegalArgumentException("Section already exists for this course");
+                    }
+                });
+    
+        User professor = userRepository.findById(request.professorId())
+                .orElseThrow(() -> new EntityNotFoundException("Professor not found"));
+    
+        section.setCode(normalizedCode);
+        section.setClass_number(normalizedCode);
+        section.setTerm(normalizedTerm);
+        section.setProfessor(professor);
+    
+        Section saved = sectionRepository.save(section);
+        return sectionDTOMapper.apply(saved);
+    }
+    
+    public void deleteSection(String courseCode, Long sectionId) {
+        courseRepository.findCourseByCode(courseCode)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+    
+        Section section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+    
+        if (section.getCourse() == null || !courseCode.equals(section.getCourse().getCode())) {
+            throw new IllegalArgumentException("Section does not belong to the specified course");
+        }
+    
+        sectionRepository.delete(section);
+    }
 }

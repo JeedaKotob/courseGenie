@@ -106,3 +106,46 @@
   font-size: 0.9rem;
   color: #6c757d;
 }
+
+.view-section-btn {
+  margin-top: auto;
+  margin-bottom: 0.75rem;
+}
+
+.section-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.section-action-btn {
+  flex: 1;
+  border: 1px solid #dfe3e8;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.section-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.edit-btn {
+  color: #024964;
+}
+
+.edit-btn:hover {
+  border-color: #024964;
+  background: rgba(2, 73, 100, 0.08);
+}
+
+.delete-btn {
+  color: #c0392b;
+}
+
+.delete-btn:hover {
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.08);
+}

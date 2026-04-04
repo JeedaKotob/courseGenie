@@ -18,6 +18,7 @@ public record CourseDTO(
         String name,
         String description,
         String credits,
+        String discipline,
 
         List<SectionDTO> sections,
         List<CLODTO> clos

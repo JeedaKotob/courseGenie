@@ -44,4 +44,8 @@ public class SectionController {
         return sectionService.getSectionById(sectionId);
     }
 
+    @GetMapping("/terms")
+    public ResponseEntity<List<String>> getTerms() {
+        return ResponseEntity.ok(sectionService.getDistinctTerms());
+    }
 }

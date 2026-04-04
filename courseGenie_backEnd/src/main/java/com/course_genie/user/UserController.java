@@ -16,4 +16,9 @@ public class UserController {
     public Map<String, List<UserDTO>> getGroupedProfessors() {
         return userService.getProfessorsGroupedByDepartment();
     }
+
+    @GetMapping("/professors")
+    public List<UserDTO> getProfessorsByDepartment(@RequestParam String departmentName) {
+        return userService.getProfessorsByDepartment(departmentName);
+    }
 }

@@ -3,32 +3,47 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../services/course.service';
 import { Observable } from 'rxjs';
 import { Course, Section } from '../home/course.model';
-import { map, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { map, switchMap, distinctUntilChanged, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-@Component({ 
+@Component({
   selector: 'app-course-overview',
   standalone: false,
   templateUrl: './course-overview.component.html',
   styleUrls: ['./course-overview.component.scss']
 })
 export class CourseOverviewComponent implements OnInit {
-
   course$!: Observable<Course>;
   sections$!: Observable<Section[]>;
   isAdmin = false;
+
+  createSectionForm!: FormGroup;
+  editSectionForm!: FormGroup;
+
+  isSubmitting = false;
+  modalError: string | null = null;
+  terms: string[] = [];
+  professors: { userId: number; firstName: string; lastName: string; userName: string }[] = [];
+
+  selectedSectionId: number | null = null;
+  sectionToDelete: Section | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private courseService: CourseService,
     private authService: AuthService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRole('ROLE_ADMIN');
+
+    this.createSectionForm = this.buildSectionForm();
+    this.editSectionForm = this.buildSectionForm();
 
     this.course$ = this.route.paramMap.pipe(
       map(pm => pm.get('courseCode')!),
@@ -41,11 +56,167 @@ export class CourseOverviewComponent implements OnInit {
     );
   }
 
+  private buildSectionForm(): FormGroup {
+    return this.fb.group({
+      sectionNumber: ['', Validators.required],
+      term: ['', Validators.required],
+      professorId: [null, Validators.required]
+    });
+  }
+
   navigateToSection(courseCode: string, sectionCode: string) {
     this.router.navigate([`/overview/${courseCode}/${sectionCode}`]);
   }
+
   openAddSectionModal(content: TemplateRef<any>) {
     if (!this.isAdmin || this.modalService.hasOpenModals()) return;
+
+    this.selectedSectionId = null;
+    this.modalError = null;
+    this.createSectionForm.reset({
+      sectionNumber: '',
+      term: '',
+      professorId: null
+    });
+
+    this.loadTerms();
+    this.course$.pipe(take(1)).subscribe({
+      next: (course) => this.loadProfessorsForCourse(course)
+    });
+
+    this.modalService.open(content, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: true
+    });
+  }
+
+  openEditSectionModal(section: Section, content: TemplateRef<any>) {
+    if (!this.isAdmin || this.modalService.hasOpenModals()) return;
+
+    this.selectedSectionId = section.sectionId;
+    this.modalError = null;
+
+    this.editSectionForm.reset({
+      sectionNumber: section.code,
+      term: section.term,
+      professorId: section.professorId
+    });
+
+    this.loadTerms();
+    this.course$.pipe(take(1)).subscribe({
+      next: (course) => this.loadProfessorsForCourse(course)
+    });
+
+    this.modalService.open(content, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: true
+    });
+  }
+
+  private loadTerms() {
+    this.courseService.getTerms().subscribe({
+      next: (data) => this.terms = data ?? [],
+      error: () => this.terms = []
+    });
+  }
+
+  private loadProfessorsForCourse(course: Course) {
+    // Current backend exposure uses departmentName; for now we map from course.discipline.
+    const departmentName = (course as any)?.discipline?.toString()?.trim();
+
+    if (!departmentName) {
+      this.professors = [];
+      return;
+    }
+
+    this.courseService.getProfessorsByDepartment(departmentName).subscribe({
+      next: (data) => this.professors = data ?? [],
+      error: () => this.professors = []
+    });
+  }
+
+  closeModal() {
+    this.selectedSectionId = null;
+    this.sectionToDelete = null;
+    this.modalError = null;
+    this.modalService.dismissAll();
+  }
+
+  private refreshCourse(courseCode: string) {
+    this.course$ = this.courseService.getCourseByCode(courseCode);
+    this.sections$ = this.course$.pipe(map(course => course.sections ?? []));
+  }
+
+  onSectionCreateSubmit() {
+    if (this.createSectionForm.invalid) {
+      this.createSectionForm.markAllAsTouched();
+      return;
+    }
+
+    const courseCode = this.route.snapshot.paramMap.get('courseCode');
+    if (!courseCode) return;
+
+    this.isSubmitting = true;
+
+    const payload = {
+      code: this.createSectionForm.value.sectionNumber.trim(),
+      term: this.createSectionForm.value.term,
+      professorId: Number(this.createSectionForm.value.professorId)
+    };
+
+    this.courseService.createSection(courseCode, payload).subscribe({
+      next: () => {
+        // refresh sections by re-fetching the course
+        this.refreshCourse(courseCode);
+        this.isSubmitting = false;
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error('Failed to create section:', err);
+        this.isSubmitting = false;
+        this.modalError = err?.error?.message || 'Failed to create section';
+      }
+    });
+  }
+
+  onSectionEditSubmit() {
+    if (this.editSectionForm.invalid) {
+      this.editSectionForm.markAllAsTouched();
+      return;
+    }
+
+    const courseCode = this.route.snapshot.paramMap.get('courseCode');
+    if (!courseCode || this.selectedSectionId == null) return;
+
+    this.isSubmitting = true;
+
+    const payload = {
+      code: this.editSectionForm.value.sectionNumber.trim(),
+      term: this.editSectionForm.value.term,
+      professorId: Number(this.editSectionForm.value.professorId)
+    };
+
+    this.courseService.updateSection(courseCode, this.selectedSectionId, payload).subscribe({
+      next: () => {
+        this.refreshCourse(courseCode);
+        this.isSubmitting = false;
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error('Failed to update section:', err);
+        this.isSubmitting = false;
+        this.modalError = err?.error?.message || 'Failed to update section';
+      }
+    });
+  }
+
+  openDeleteConfirmModal(section: Section, content: TemplateRef<any>) {
+    if (!this.isAdmin || this.modalService.hasOpenModals()) return;
+  
+    this.sectionToDelete = section;
+    this.modalError = null;
   
     this.modalService.open(content, {
       centered: true,
@@ -54,13 +225,23 @@ export class CourseOverviewComponent implements OnInit {
     });
   }
   
-  closeModal() {
-    this.modalService.dismissAll();
-  }
+  confirmDeleteSection() {
+    const courseCode = this.route.snapshot.paramMap.get('courseCode');
+    if (!courseCode || !this.sectionToDelete) return;
   
-  onSectionCreateSubmit() {
-    // US6 scope: open/close popup only
-    this.closeModal();
-  }
+    this.isSubmitting = true;
   
+    this.courseService.deleteSection(courseCode, this.sectionToDelete.sectionId).subscribe({
+      next: () => {
+        this.refreshCourse(courseCode);
+        this.isSubmitting = false;
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error('Failed to delete section:', err);
+        this.isSubmitting = false;
+        this.modalError = err?.error?.message || 'Failed to delete section';
+      }
+    });
+  }
 }
