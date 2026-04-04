@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { CarService } from '../services/car.service';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
@@ -22,11 +22,15 @@ export class CarRenderComponent implements OnInit {
   car: any;
   course: any;
 
+  /** While true, CAR HTML stays visible so html2pdf can capture it (even when pdfUrl is set). */
+  pdfCaptureInProgress = false;
+
   constructor(
     private sharedDataService: SharedDataService,
     private carService: CarService,
     private sanitizer: DomSanitizer,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,27 +59,36 @@ export class CarRenderComponent implements OnInit {
     const element = document.getElementById('syllabusPreview');
     if (!element) return;
 
-    // 🔥 STEP 1: clone HTML
-    const clone = element.cloneNode(true) as HTMLElement;
+    this.pdfCaptureInProgress = true;
+    this.cdr.detectChanges();
 
-    // 🔥 STEP 2: FIX IMAGE PATHS (PUT IT RIGHT HERE)
-    clone.innerHTML = clone.innerHTML.replace(
-      /\/static\/images\//g,
-      '/assets/images/'
-    );
-
-    // 🔥 STEP 3: generate PDF
-    html2pdf()
-      .from(clone)
-      .outputPdf('blob')
-      .then((pdfBlob: Blob) => {
-        const rawUrl = URL.createObjectURL(pdfBlob);
-
-        this.ngZone.run(() => {
-          this.rawPdfUrl = rawUrl;
-          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
+    // One frame so layout runs with .hidden removed (pdfUrl hides the preview otherwise).
+    requestAnimationFrame(() => {
+      html2pdf()
+        .set({
+          margin: 0.5,
+          filename: 'car.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        })
+        .from(element)
+        .outputPdf('blob')
+        .then((pdfBlob: Blob) => {
+          const rawUrl = URL.createObjectURL(pdfBlob);
+          this.ngZone.run(() => {
+            this.pdfCaptureInProgress = false;
+            this.rawPdfUrl = rawUrl;
+            this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
+          });
+        })
+        .catch((err: unknown) => {
+          this.ngZone.run(() => {
+            this.pdfCaptureInProgress = false;
+          });
+          console.error('CAR PDF generation failed:', err);
         });
-      });
+    });
   }
 
   download(): void {

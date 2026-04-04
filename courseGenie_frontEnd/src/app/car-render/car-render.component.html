@@ -41,7 +41,7 @@
     <div id="syllabusPreview"
          class="syllabus-html-content"
          [innerHTML]="trustedHtmlContent"
-         [class.hidden]="pdfUrl">
+         [class.hidden]="pdfUrl && !pdfCaptureInProgress">
     </div>
 
   </div>
