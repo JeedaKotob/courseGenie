@@ -179,6 +179,8 @@ public class CourseService {
                 .name(course.name())
                 .description(course.description())
                 .credits(course.credits())
+                .departmentId(course.departmentId())
+                .departmentName(course.departmentName())
                 .discipline(course.discipline())
                 .sections(new ArrayList<>(filteredSections))
                 .clos(new ArrayList<>(course.clos()))

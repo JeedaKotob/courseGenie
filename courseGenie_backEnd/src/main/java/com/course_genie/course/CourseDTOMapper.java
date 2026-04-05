@@ -15,6 +15,8 @@ public class CourseDTOMapper implements Function<Course, CourseDTO> {
                 .name(course.getName())
                 .description(course.getDescription())
                 .credits(course.getCredits())
+                .departmentId(course.getDepartment() != null ? course.getDepartment().getDepartmentId() : null)
+                .departmentName(course.getDepartment() != null ? course.getDepartment().getDepartmentName() : null)
                 .discipline(course.getDiscipline())
 
                 .build();

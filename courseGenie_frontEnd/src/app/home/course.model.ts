@@ -1,4 +1,6 @@
 export interface Course {
+  departmentId?: number | null;
+  departmentName?: string | null;
   discipline: String;
   courseId: number;
   code: string;

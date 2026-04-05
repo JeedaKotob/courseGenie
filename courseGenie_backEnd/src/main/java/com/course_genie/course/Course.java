@@ -1,5 +1,6 @@
 package com.course_genie.course;
 
+import com.course_genie.department.Department;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,10 @@ public class Course {
     @Column(length = 2000)
     private String description;
     private String credits;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     private String discipline;
     private String courseApprovalDate; // Could also be a Date if desired

@@ -123,8 +123,7 @@ export class CourseOverviewComponent implements OnInit {
   }
 
   private loadProfessorsForCourse(course: Course) {
-    // Current backend exposure uses departmentName; for now we map from course.discipline.
-    const departmentName = (course as any)?.discipline?.toString()?.trim();
+    const departmentName = course.departmentName?.toString()?.trim();
 
     if (!departmentName) {
       this.professors = [];

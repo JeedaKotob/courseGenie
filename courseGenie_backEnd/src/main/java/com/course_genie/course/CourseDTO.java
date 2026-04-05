@@ -18,6 +18,8 @@ public record CourseDTO(
         String name,
         String description,
         String credits,
+        Long departmentId,
+        String departmentName,
         String discipline,
 
         List<SectionDTO> sections,
