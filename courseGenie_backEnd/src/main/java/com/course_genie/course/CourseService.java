@@ -225,8 +225,10 @@ public class CourseService {
         if (request.professorId() == null) {
             throw new IllegalArgumentException("Professor is required");
         }
+
+        String normalizedCode = request.code().trim();
     
-        sectionRepository.findSectionByCodeAndCourseCode(request.code(), courseCode)
+        sectionRepository.findSectionByCodeAndCourseCode(normalizedCode, courseCode)
                 .ifPresent(s -> {
                     throw new IllegalArgumentException("Section already exists for this course");
                 });
@@ -238,9 +240,9 @@ public class CourseService {
                 .orElseThrow(() -> new EntityNotFoundException("Semester not found"));
     
         Section section = Section.builder()
-                .code(request.code().trim())
+                .code(normalizedCode)
                 .semester(semester)
-                .class_number(request.code().trim())
+                .class_number(normalizedCode)
                 .configured(false)
                 .course(course)
                 .professor(professor)
