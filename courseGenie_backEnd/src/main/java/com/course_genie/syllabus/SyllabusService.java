@@ -108,7 +108,7 @@ public class SyllabusService {
         context.setVariable("officeHours", section.getProfessor().getOfficeHours());
         context.setVariable("phone", section.getProfessor().getPhone());
         context.setVariable("email", section.getProfessor().getEmail());
-        context.setVariable("semesterYear", section.getTerm());
+        context.setVariable("semesterYear", section.getSemester().getSemesterName());
         context.setVariable("discipline", section.getCourse().getDiscipline());
         context.setVariable("courseApprovalDate", section.getCourse().getCourseApprovalDate());
         context.setVariable("lastRevisionDate", section.getCourse().getLastRevisionDate());

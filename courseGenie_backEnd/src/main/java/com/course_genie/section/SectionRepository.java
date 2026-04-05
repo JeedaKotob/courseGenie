@@ -1,10 +1,8 @@
 package com.course_genie.section;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Repository
@@ -20,6 +18,4 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     Optional<List<Section>> findSectionByCourseCourseIdAndProfessorUserIdAndConfigured(long courseId, long userId, boolean isConfigure);
 
     List<Section> findByProfessorUserId(Long userId);
-    @Query("SELECT DISTINCT s.term FROM Section s WHERE s.term IS NOT NULL AND s.term <> '' ORDER BY s.term DESC")
-    List<String> findDistinctTerms();
 }

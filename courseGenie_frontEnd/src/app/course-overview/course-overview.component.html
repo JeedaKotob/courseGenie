@@ -18,7 +18,7 @@
           <div class="section-card" *ngFor="let sec of sections">
             <div class="section-header">
               <span class="section-badge">Section {{ sec.code }}</span>
-              <span class="section-term">{{ sec.term }}</span>
+              <span class="section-term">{{ sec.semesterName }}</span>
             </div>
 
             <div class="section-info">
@@ -144,13 +144,13 @@
         <!-- Term -->
         <div class="mb-3">
           <label class="form-label">Term</label>
-          <select class="form-select" formControlName="term">
+          <select class="form-select" formControlName="semesterName">
             <option value="">Select Term</option>
-            <option *ngFor="let t of terms" [value]="t">{{ t }}</option>
+            <option *ngFor="let semesterName of semesterNames" [value]="semesterName">{{ semesterName }}</option>
           </select>
           <small
             class="text-danger"
-            *ngIf="createSectionForm.get('term')?.touched && createSectionForm.get('term')?.hasError('required')"
+            *ngIf="createSectionForm.get('semesterName')?.touched && createSectionForm.get('semesterName')?.hasError('required')"
           >
             Term is required.
           </small>
@@ -237,13 +237,13 @@
         <!-- Term -->
         <div class="mb-3">
           <label class="form-label">Term</label>
-          <select class="form-select" formControlName="term">
+          <select class="form-select" formControlName="semesterName">
             <option value="">Select Term</option>
-            <option *ngFor="let t of terms" [value]="t">{{ t }}</option>
+            <option *ngFor="let semesterName of semesterNames" [value]="semesterName">{{ semesterName }}</option>
           </select>
           <small
             class="text-danger"
-            *ngIf="editSectionForm.get('term')?.touched && editSectionForm.get('term')?.hasError('required')"
+            *ngIf="editSectionForm.get('semesterName')?.touched && editSectionForm.get('semesterName')?.hasError('required')"
           >
             Term is required.
           </small>

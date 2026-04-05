@@ -24,7 +24,7 @@ export class CourseOverviewComponent implements OnInit {
 
   isSubmitting = false;
   modalError: string | null = null;
-  terms: string[] = [];
+  semesterNames: string[] = [];
   professors: { userId: number; firstName: string; lastName: string; userName: string }[] = [];
 
   selectedSectionId: number | null = null;
@@ -59,7 +59,7 @@ export class CourseOverviewComponent implements OnInit {
   private buildSectionForm(): FormGroup {
     return this.fb.group({
       sectionNumber: ['', Validators.required],
-      term: ['', Validators.required],
+      semesterName: ['', Validators.required],
       professorId: [null, Validators.required]
     });
   }
@@ -75,11 +75,11 @@ export class CourseOverviewComponent implements OnInit {
     this.modalError = null;
     this.createSectionForm.reset({
       sectionNumber: '',
-      term: '',
+      semesterName: '',
       professorId: null
     });
 
-    this.loadTerms();
+    this.loadSemesterNames();
     this.course$.pipe(take(1)).subscribe({
       next: (course) => this.loadProfessorsForCourse(course)
     });
@@ -99,11 +99,11 @@ export class CourseOverviewComponent implements OnInit {
 
     this.editSectionForm.reset({
       sectionNumber: section.code,
-      term: section.term,
+      semesterName: section.semesterName,
       professorId: section.professorId
     });
 
-    this.loadTerms();
+    this.loadSemesterNames();
     this.course$.pipe(take(1)).subscribe({
       next: (course) => this.loadProfessorsForCourse(course)
     });
@@ -115,10 +115,10 @@ export class CourseOverviewComponent implements OnInit {
     });
   }
 
-  private loadTerms() {
-    this.courseService.getTerms().subscribe({
-      next: (data) => this.terms = data ?? [],
-      error: () => this.terms = []
+  private loadSemesterNames() {
+    this.courseService.getSemesterNames().subscribe({
+      next: (data) => this.semesterNames = data ?? [],
+      error: () => this.semesterNames = []
     });
   }
 
@@ -162,7 +162,7 @@ export class CourseOverviewComponent implements OnInit {
 
     const payload = {
       code: this.createSectionForm.value.sectionNumber.trim(),
-      term: this.createSectionForm.value.term,
+      semesterName: this.createSectionForm.value.semesterName,
       professorId: Number(this.createSectionForm.value.professorId)
     };
 
@@ -194,7 +194,7 @@ export class CourseOverviewComponent implements OnInit {
 
     const payload = {
       code: this.editSectionForm.value.sectionNumber.trim(),
-      term: this.editSectionForm.value.term,
+      semesterName: this.editSectionForm.value.semesterName,
       professorId: Number(this.editSectionForm.value.professorId)
     };
 

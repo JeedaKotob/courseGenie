@@ -18,7 +18,7 @@ export interface Section {
   professorName?: string;
   assessments: Assessment[];
   assessmentCount: number;
-  term: string;
+  semesterName: string;
 }
 
 export interface Assessment {

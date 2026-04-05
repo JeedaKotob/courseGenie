@@ -10,7 +10,7 @@ import java.util.List;
 public record SectionDTO(
         long sectionId,
         String code,
-        String term,
+        String semesterName,
         String class_number,
         boolean configured,
         long courseId,

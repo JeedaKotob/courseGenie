@@ -45,7 +45,7 @@ public class SectionController {
     }
 
     @GetMapping("/terms")
-    public ResponseEntity<List<String>> getTerms() {
-        return ResponseEntity.ok(sectionService.getDistinctTerms());
+    public ResponseEntity<List<String>> getSemesterNames() {
+        return ResponseEntity.ok(sectionService.getSemesterNames());
     }
 }

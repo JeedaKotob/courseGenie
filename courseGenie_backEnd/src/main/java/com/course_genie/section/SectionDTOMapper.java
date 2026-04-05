@@ -17,7 +17,7 @@ public class SectionDTOMapper implements Function<Section, SectionDTO> {
         return SectionDTO.builder()
                 .sectionId(section.getSectionId())
                 .code(section.getCode())
-                .term(section.getTerm())
+                .semesterName(section.getSemester().getSemesterName())
                 .configured(section.isConfigured())
                 .professorId(section.getProfessor().getUserId())
                 .professorName(section.getProfessor().getFullName())

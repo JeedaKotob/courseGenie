@@ -13,7 +13,6 @@ public class SectionMapper implements Function<SectionDTO, Section> {
         return Section.builder()
                 .sectionId(sectionDTO.sectionId())
                 .code(sectionDTO.code())
-                .term(sectionDTO.term())
                 .configured(sectionDTO.configured())
                 .professor(new User(sectionDTO.professorId()))
                 .course(new Course(sectionDTO.courseId()))

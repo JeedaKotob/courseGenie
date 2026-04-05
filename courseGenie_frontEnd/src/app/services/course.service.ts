@@ -50,7 +50,7 @@ export class CourseService {
     return this.http.get<Course>(`${this.apiUrl}/code/${code}`);
   }
 
-  getTerms(): Observable<string[]> {
+  getSemesterNames(): Observable<string[]> {
     return this.http.get<string[]>(`${environment.apiUrl}/sections/terms`);
   }
   
@@ -62,7 +62,7 @@ export class CourseService {
 
   createSection(
     courseCode: string,
-    payload: { code: string; term: string; professorId: number }
+    payload: { code: string; semesterName: string; professorId: number }
   ): Observable<Section> {
     return this.http.post<Section>(`${this.apiUrl}/${encodeURIComponent(courseCode)}/sections`, payload);
   }
@@ -70,7 +70,7 @@ export class CourseService {
   updateSection(
     courseCode: string,
     sectionId: number,
-    payload: { code: string; term: string; professorId: number }
+    payload: { code: string; semesterName: string; professorId: number }
   ): Observable<Section> {
     return this.http.put<Section>(
       `${this.apiUrl}/${encodeURIComponent(courseCode)}/sections/${sectionId}`,

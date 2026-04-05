@@ -2,6 +2,8 @@ package com.course_genie.section;
 
 import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentRepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import com.course_genie.enrollment.Enrollment;
@@ -20,13 +22,15 @@ public class SectionService {
     private final SectionDTOMapper sectionDTOMapper;
     private final SectionMapper sectionMapper;
     private final EnrollmentService enrollmentService;
+    private final SemesterRepository semesterRepository;
 
-    public SectionService(SectionRepository sectionRepository, AssessmentRepository assessmentRepository, SectionDTOMapper sectionDTOMapper, SectionMapper sectionMapper, EnrollmentService enrollmentService) {
+    public SectionService(SectionRepository sectionRepository, AssessmentRepository assessmentRepository, SectionDTOMapper sectionDTOMapper, SectionMapper sectionMapper, EnrollmentService enrollmentService, SemesterRepository semesterRepository) {
         this.sectionRepository = sectionRepository;
         this.assessmentRepository = assessmentRepository;
         this.sectionDTOMapper = sectionDTOMapper;
         this.sectionMapper = sectionMapper;
         this.enrollmentService = enrollmentService;
+        this.semesterRepository = semesterRepository;
     }
 
     public Boolean saveConfiguration(Long sectionId) {
@@ -77,7 +81,10 @@ public class SectionService {
                 .orElseThrow(() -> new EntityNotFoundException("Section not found"));
         return sectionDTOMapper.apply(section);
     }
-    public List<String> getDistinctTerms() {
-        return sectionRepository.findDistinctTerms();
+    public List<String> getSemesterNames() {
+        return semesterRepository.findAllByOrderBySemesterNameDesc()
+                .stream()
+                .map(Semester::getSemesterName)
+                .toList();
     }
 }

@@ -7,10 +7,11 @@ import com.course_genie.user.UserRepository;
 import com.course_genie.assessment.AssessmentDTO;
 import com.course_genie.assessment.AssessmentDTOMapper;
 import com.course_genie.assessment.AssessmentRepository;
-import com.course_genie.clo.CLO;
 import com.course_genie.clo.CLODTO;
 import com.course_genie.clo.CLODTOMapper;
 import com.course_genie.clo.CLORepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterRepository;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionDTO;
 import com.course_genie.section.SectionDTOMapper;
@@ -33,8 +34,9 @@ public class CourseService {
     private final CLORepository cloRepository;
     private final CLODTOMapper cloDTOMapper;
     private final UserRepository userRepository;
+    private final SemesterRepository semesterRepository;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseDTOMapper = courseDTOMapper;
@@ -45,6 +47,7 @@ public class CourseService {
         this.cloRepository = cloRepository;
         this.cloDTOMapper = cloDTOMapper;
         this.userRepository = userRepository;
+        this.semesterRepository = semesterRepository;
     }
 
     public CourseDTO createCourse(CourseDTO courseDTO) {
@@ -68,24 +71,22 @@ public class CourseService {
             courseDTO.sections().addAll(sectionDTOS);
         }
 
-        // Group courses by term(s) from their sections.
-        Map<String, Set<CourseDTO>> groupedByTerm = new HashMap<>();
+        // Group courses by semester from their sections.
+        Map<String, Set<CourseDTO>> groupedBySemester = new HashMap<>();
         for (CourseDTO courseDTO : courseDTOList) {
-            // Collect all distinct term values for this course from its sections.
-            Set<String> terms = courseDTO.sections().stream()
-                    .map(SectionDTO::term)
-                    .filter(term -> term != null && !term.isEmpty())
+            Set<String> semesterNames = courseDTO.sections().stream()
+                    .map(SectionDTO::semesterName)
+                    .filter(semesterName -> semesterName != null && !semesterName.isEmpty())
                     .collect(Collectors.toSet());
-            if (terms.isEmpty()) {
-                terms.add("Unknown Term");
+            if (semesterNames.isEmpty()) {
+                semesterNames.add("Unknown Semester");
             }
-            // Add the course to each term group it belongs to.
-            for (String term : terms) {
-                groupedByTerm.computeIfAbsent(term, k -> new HashSet<>()).add(courseDTO);
+            for (String semesterName : semesterNames) {
+                groupedBySemester.computeIfAbsent(semesterName, k -> new HashSet<>()).add(courseDTO);
             }
         }
 
-        return groupedByTerm;
+        return groupedBySemester;
     }
 
     /**
@@ -135,31 +136,28 @@ public class CourseService {
             System.out.println("Course ID: " + courseDTO.courseId() + " has " + sectionDTOS.size() + " sections.");
         }
 
-        // Group courses by term from their sections.
-        // If a course has sections in multiple terms, we clone the course for each term,
+        // Group courses by semester from their sections.
+        // If a course has sections in multiple semesters, we clone the course for each semester,
         // keeping only the sections that belong to that term.
-        Map<String, Set<CourseDTO>> groupedByTerm = new HashMap<>();
+        Map<String, Set<CourseDTO>> groupedBySemester = new HashMap<>();
         for (CourseDTO courseDTO : courseDTOList) {
-            // Extract all distinct terms from the course's sections.
-            Set<String> terms = courseDTO.sections().stream()
-                    .map(SectionDTO::term)
-                    .filter(term -> term != null && !term.isEmpty())
+            Set<String> semesterNames = courseDTO.sections().stream()
+                    .map(SectionDTO::semesterName)
+                    .filter(semesterName -> semesterName != null && !semesterName.isEmpty())
                     .collect(Collectors.toSet());
-            if (terms.isEmpty()) {
-                terms.add("Unknown Term");
+            if (semesterNames.isEmpty()) {
+                semesterNames.add("Unknown Semester");
             }
-            System.out.println("Course ID: " + courseDTO.courseId() + " distinct terms: " + terms);
-            // For each term, clone the CourseDTO to include only sections with that term.
-            for (String term : terms) {
-                CourseDTO filteredCourse = cloneCourseForTerm(courseDTO, term);
-                groupedByTerm.computeIfAbsent(term, k -> new HashSet<>()).add(filteredCourse);
+            System.out.println("Course ID: " + courseDTO.courseId() + " distinct semesters: " + semesterNames);
+            for (String semesterName : semesterNames) {
+                CourseDTO filteredCourse = cloneCourseForSemester(courseDTO, semesterName);
+                groupedBySemester.computeIfAbsent(semesterName, k -> new HashSet<>()).add(filteredCourse);
             }
         }
 
-        // Debug: Print out the grouped map.
-        System.out.println("Grouped courses by term:");
-        groupedByTerm.forEach((term, courses) -> {
-            System.out.println("Term: " + term);
+        System.out.println("Grouped courses by semester:");
+        groupedBySemester.forEach((semesterName, courses) -> {
+            System.out.println("Semester: " + semesterName);
             courses.forEach(course -> {
                 System.out.println("  Course ID: " + course.courseId() +
                         ", Code: " + course.code() +
@@ -168,15 +166,13 @@ public class CourseService {
             });
         });
 
-        return groupedByTerm;
+        return groupedBySemester;
     }
 
-    private CourseDTO cloneCourseForTerm(CourseDTO course, String term) {
-        // Filter sections to include only those with the matching term.
+    private CourseDTO cloneCourseForSemester(CourseDTO course, String semesterName) {
         List<SectionDTO> filteredSections = course.sections().stream()
-                .filter(section -> term.equals(section.term()))
+                .filter(section -> semesterName.equals(section.semesterName()))
                 .collect(Collectors.toList());
-        // Build a new CourseDTO using the builder provided by your record.
         return CourseDTO.builder()
                 .courseId(course.courseId())
                 .code(course.code())
@@ -221,8 +217,8 @@ public class CourseService {
         if (request.code() == null || request.code().isBlank()) {
             throw new IllegalArgumentException("Section code is required");
         }
-        if (request.term() == null || request.term().isBlank()) {
-            throw new IllegalArgumentException("Term is required");
+        if (request.semesterName() == null || request.semesterName().isBlank()) {
+            throw new IllegalArgumentException("Semester is required");
         }
         if (request.professorId() == null) {
             throw new IllegalArgumentException("Professor is required");
@@ -235,10 +231,13 @@ public class CourseService {
     
         User professor = userRepository.findById(request.professorId())
                 .orElseThrow(() -> new EntityNotFoundException("Professor not found"));
+
+        Semester semester = semesterRepository.findBySemesterNameIgnoreCase(request.semesterName().trim())
+                .orElseThrow(() -> new EntityNotFoundException("Semester not found"));
     
         Section section = Section.builder()
                 .code(request.code().trim())
-                .term(request.term().trim())
+                .semester(semester)
                 .class_number(request.code().trim())
                 .configured(false)
                 .course(course)
@@ -250,7 +249,7 @@ public class CourseService {
     }
 
     public SectionDTO updateSection(String courseCode, Long sectionId, UpdateSectionRequest request) {
-        Course course = courseRepository.findCourseByCode(courseCode)
+        courseRepository.findCourseByCode(courseCode)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
     
         Section section = sectionRepository.findById(sectionId)
@@ -263,15 +262,15 @@ public class CourseService {
         if (request.code() == null || request.code().isBlank()) {
             throw new IllegalArgumentException("Section code is required");
         }
-        if (request.term() == null || request.term().isBlank()) {
-            throw new IllegalArgumentException("Term is required");
+        if (request.semesterName() == null || request.semesterName().isBlank()) {
+            throw new IllegalArgumentException("Semester is required");
         }
         if (request.professorId() == null) {
             throw new IllegalArgumentException("Professor is required");
         }
     
         String normalizedCode = request.code().trim();
-        String normalizedTerm = request.term().trim();
+        String normalizedSemesterName = request.semesterName().trim();
     
         sectionRepository.findSectionByCodeAndCourseCode(normalizedCode, courseCode)
                 .ifPresent(existing -> {
@@ -282,10 +281,13 @@ public class CourseService {
     
         User professor = userRepository.findById(request.professorId())
                 .orElseThrow(() -> new EntityNotFoundException("Professor not found"));
+
+        Semester semester = semesterRepository.findBySemesterNameIgnoreCase(normalizedSemesterName)
+                .orElseThrow(() -> new EntityNotFoundException("Semester not found"));
     
         section.setCode(normalizedCode);
         section.setClass_number(normalizedCode);
-        section.setTerm(normalizedTerm);
+        section.setSemester(semester);
         section.setProfessor(professor);
     
         Section saved = sectionRepository.save(section);

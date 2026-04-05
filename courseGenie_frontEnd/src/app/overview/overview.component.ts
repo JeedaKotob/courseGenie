@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 })
 export class OverviewComponent implements OnInit {
   course$!: Observable<Course>;
-  termLabel$!: Observable<string>;
+  semesterLabel$!: Observable<string>;
   cloNumber$!: Observable<number>;
 
   constructor(
@@ -33,8 +33,8 @@ export class OverviewComponent implements OnInit {
       )
     )
 
-    this.termLabel$=this.course$.pipe(
-      map(c=>c?.sections?.[0]?.term ?? 'No term available')
+    this.semesterLabel$=this.course$.pipe(
+      map(c=>c?.sections?.[0]?.semesterName ?? 'No semester available')
     )
 
     this.cloNumber$=this.course$.pipe(
