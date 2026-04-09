@@ -1,5 +1,8 @@
 package com.course_genie.car;
 
+import com.course_genie.benchmark.Benchmark;
+import com.course_genie.benchmark.BenchmarkRepository;
+import com.course_genie.benchmark.BenchmarkService;
 import com.course_genie.clo.CLO;
 import com.course_genie.clo.CLORepository;
 import com.course_genie.section.Section;
@@ -27,6 +30,8 @@ public class CarService {
     private final EnrollmentRepository enrollmentRepository;
     private final GradeRepository gradeRepository;
     private final CLORepository cloRepository;
+    private final BenchmarkRepository benchmarkRepository;
+    private final BenchmarkService benchmarkService;
     private final CarDTOMapper carDTOMapper;
     private final SpringTemplateEngine templateEngine;
 
@@ -165,6 +170,8 @@ public class CarService {
         context.setVariable("enrollment", car.enrollment());
         context.setVariable("withdrawals", car.withdrawals());
         context.setVariable("courseClos", courseClos);
+        context.setVariable("benchmarkDescriptions", getBenchmarkDescriptions());
+        context.setVariable("carCloBenchmarkRows", getCarCloBenchmarkRows(sectionId));
 
         return templateEngine.process("car", context);
     }
@@ -185,5 +192,31 @@ public class CarService {
                 : clo.getDescription().trim();
         String cloText = clo.getName() == null ? "" : clo.getName().trim();
         return cloText.isBlank() ? cloCode : cloCode + ": " + cloText;
+    }
+
+    private List<String> getBenchmarkDescriptions() {
+        return benchmarkRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingLong(Benchmark::getBenchmarkId))
+                .map(Benchmark::getDescription)
+                .filter(desc -> desc != null && !desc.isBlank())
+                .toList();
+    }
+
+    private List<Map<String, Object>> getCarCloBenchmarkRows(Long sectionId) {
+        List<Benchmark> benchmarks = benchmarkRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingLong(Benchmark::getBenchmarkId))
+                .toList();
+
+        if (benchmarks.size() < 2) {
+            return List.of();
+        }
+
+        return benchmarkService.getBenchmarkResults(
+                sectionId,
+                benchmarks.get(0).getBenchmarkId(),
+                benchmarks.get(1).getBenchmarkId()
+        );
     }
 }

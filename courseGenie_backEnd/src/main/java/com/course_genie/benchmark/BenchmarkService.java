@@ -74,8 +74,8 @@ public class BenchmarkService {
             }
 
             result.put("Assessment_Instruments", String.join(", ", assessmentNames));
-            result.put("Benchmark_Score", "<p>BM1 scores:<br>" + String.join("<br>", bm1Results) +
-                    "<br>BM2 scores:<br>" + String.join("<br>", bm2Results) + "</p>");
+            result.put("Benchmark_Score", "<p><strong>BM1 scores:</strong><br>" + String.join("<br>", bm1Results) +
+                    "<br><strong>BM2 scores:</strong><br>" + String.join("<br>", bm2Results) + "</p>");
             result.put("Result", (bm1Met && bm2Met) ? "MET" : (bm1Met || bm2Met) ? "Partially MET" : "NOT MET");
 
             results.add(result);

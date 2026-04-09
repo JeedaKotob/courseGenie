@@ -185,7 +185,13 @@
 <table class="c18">
     <tr class="c27">
         <td class="c29" colspan="4" rowspan="1">
-            <p class="c6"><span class="c0 c8">Benchmark for Direct Assessment of CLOs: </span><span class="c0 c26">Example: </span><span class="c4">Average on Assignment &ge;75% and 90% of Students Receive a Grade of 60% or more on the Assignment</span></p>
+            <p class="c6"><span class="c0 c8">Benchmark for Direct Assessment of CLOs:</span></p>
+            <ul class="c20 lst-kix_list_5-0 start" th:if="${benchmarkDescriptions != null and !#lists.isEmpty(benchmarkDescriptions)}">
+                <li class="c32 li-bullet-0" th:each="benchmarkDescription, benchmarkStat : ${benchmarkDescriptions}">
+                    <span class="c24 c8"
+                          th:text="'BM' + ${benchmarkStat.count} + ': ' + ${benchmarkDescription}"></span>
+                </li>
+            </ul>
         </td>
     </tr>
     <tr class="c27">
@@ -202,176 +208,35 @@
             <p class="c6"><span class="c0 c8">Result (Met, Partially met, Marginally Met, Not Met)</span></p>
         </td>
     </tr>
-    <tr class="c27">
+    <tr class="c27" th:if="${carCloBenchmarkRows == null or #lists.isEmpty(carCloBenchmarkRows)}">
         <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLO1</span></p>
+            <p class="c6"><span class="c3">-</span></p>
         </td>
         <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
+            <p class="c6"><span class="c3">-</span></p>
         </td>
         <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
+            <p class="c6"><span class="c3">-</span></p>
         </td>
         <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
+            <p class="c6"><span class="c3">-</span></p>
         </td>
     </tr>
-    <tr class="c27">
+    <tr class="c27" th:each="benchmarkRow : ${carCloBenchmarkRows}">
         <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLO2</span></p>
+            <p class="c6"><span class="c24 c8" th:text="${benchmarkRow['Description']}"></span></p>
         </td>
         <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
+            <p class="c6"><span class="c24 c8" th:text="${benchmarkRow['Assessment_Instruments']}"></span></p>
         </td>
         <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
+            <p class="c6"><span class="c24 c8" th:utext="${benchmarkRow['Benchmark_Score']}"></span></p>
         </td>
         <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLO3</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLO4</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;CLO5</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLO6</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c3">CLOx</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c3"></span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c0 c26">Examples</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c4 c25"></span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c4 c25"></span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c4 c25"></span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6 c2"><span class="c4 c25"></span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">CLO2</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Question 4 in the midterm </span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Average 78%</span></p>
-            <p class="c6"><span class="c4">Above 60%: 89%</span></p>
-            <p class="c6 c2"><span class="c4"></span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Partially met</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&hellip;</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">&nbsp;</span></p>
-        </td>
-    </tr>
-    <tr class="c27">
-        <td class="c10" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">CLOx</span></p>
-        </td>
-        <td class="c5" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Quiz 3 </span></p>
-        </td>
-        <td class="c46" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Average 76%</span></p>
-            <p class="c6"><span class="c4">Above 60%: 95%</span></p>
-            <p class="c6 c2"><span class="c4"></span></p>
-        </td>
-        <td class="c16" colspan="1" rowspan="1">
-            <p class="c6"><span class="c4">Met</span></p>
+            <p class="c6">
+                <span class="c24 c8"
+                      th:text="${benchmarkRow['Result'] == 'MET' ? 'Met' : (benchmarkRow['Result'] == 'PARTIALLY MET' ? 'Partially met' : (benchmarkRow['Result'] == 'NOT MET' ? 'Not met' : benchmarkRow['Result']))}"></span>
+            </p>
         </td>
     </tr>
 </table>
