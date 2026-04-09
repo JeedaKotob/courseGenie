@@ -1,5 +1,7 @@
 package com.course_genie.car;
 
+import com.course_genie.clo.CLO;
+import com.course_genie.clo.CLORepository;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
 import com.course_genie.enrollment.Enrollment;
@@ -18,11 +20,13 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class CarService {
+    private static final List<String> GRADE_ORDER = List.of("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F", "I", "W");
 
     private final CarRepository carRepository;
     private final SectionRepository sectionRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final GradeRepository gradeRepository;
+    private final CLORepository cloRepository;
     private final CarDTOMapper carDTOMapper;
     private final SpringTemplateEngine templateEngine;
 
@@ -61,7 +65,7 @@ public class CarService {
 
     private Map<String, Integer> calculateGradeDistribution(List<Enrollment> enrollments, List<Grade> grades) {
         Map<String, Integer> distribution = new HashMap<>();
-        List.of("A", "B", "C", "D", "F", "W").forEach(g -> distribution.put(g, 0));
+        GRADE_ORDER.forEach(g -> distribution.put(g, 0));
 
         Map<Long, Double> studentTotals = new HashMap<>();
         for (Grade g : grades) {
@@ -81,9 +85,15 @@ public class CarService {
     }
 
     private String convertToLetter(double score) {
-        if (score >= 90) return "A";
-        if (score >= 80) return "B";
-        if (score >= 70) return "C";
+        // Keep CAR buckets aligned with Statistics page distribution.
+        if (score >= 94) return "A";
+        if (score >= 90) return "A-";
+        if (score >= 87) return "B+";
+        if (score >= 83) return "B";
+        if (score >= 80) return "B-";
+        if (score >= 77) return "C+";
+        if (score >= 73) return "C";
+        if (score >= 70) return "C-";
         if (score >= 60) return "D";
         return "F";
     }
@@ -128,6 +138,12 @@ public class CarService {
         context.setVariable("semesterYear", semesterYear);
 
         var course = section.getCourse();
+        List<String> courseClos = cloRepository.findCLOByCourseCourseId(course.getCourseId())
+                .orElse(List.of())
+                .stream()
+                .sorted(Comparator.comparingLong(CLO::getCloId))
+                .map(this::formatCloLine)
+                .toList();
         context.setVariable("undergraduate", course.isUndergraduate() ? "Yes" : "No");
         context.setVariable("graduate", course.isGraduate() ? "Yes" : "No");
         context.setVariable("credits", course.getCredits() != null ? course.getCredits() : "");
@@ -140,6 +156,7 @@ public class CarService {
         context.setVariable("courseTitle", car.courseTitle());
         context.setVariable("classGpa", String.format(Locale.US, "%.2f", car.classGpa()));
         context.setVariable("gradeDistribution", car.gradeDistribution());
+        context.setVariable("gradeDistributionPercentages", calculateGradePercentages(car.gradeDistribution(), car.enrollment()));
         context.setVariable("cloResults", car.cloResults());
         context.setVariable("impedimentsAnalysis", car.impedimentsAnalysis());
         context.setVariable("suggestedModifications", car.suggestedModifications());
@@ -147,7 +164,26 @@ public class CarService {
         context.setVariable("logoUrl", "/static/images/logo.jpg");
         context.setVariable("enrollment", car.enrollment());
         context.setVariable("withdrawals", car.withdrawals());
+        context.setVariable("courseClos", courseClos);
 
         return templateEngine.process("car", context);
+    }
+
+    private Map<String, String> calculateGradePercentages(Map<String, Integer> distribution, int enrollment) {
+        Map<String, String> percentages = new HashMap<>();
+        for (String grade : GRADE_ORDER) {
+            int count = distribution.getOrDefault(grade, 0);
+            double percent = enrollment == 0 ? 0.0 : (count * 100.0) / enrollment;
+            percentages.put(grade, String.format(Locale.US, "%.1f%%", percent));
+        }
+        return percentages;
+    }
+
+    private String formatCloLine(CLO clo) {
+        String cloCode = (clo.getDescription() == null || clo.getDescription().isBlank())
+                ? "CLO" + clo.getCloId()
+                : clo.getDescription().trim();
+        String cloText = clo.getName() == null ? "" : clo.getName().trim();
+        return cloText.isBlank() ? cloCode : cloCode + ": " + cloText;
     }
 }

@@ -155,6 +155,12 @@
     <span
             class="c44">self-</span><span class="c44 c8">&nbsp;assessment, </span><span class="c44">CLO </span><span class="c3">assessment and PLO assessment (if applicable).</span></p>
 <p class="c1 c2"><span class="c34 c8"></span></p>
+<ul class="c20 lst-kix_list_11-0 start" th:if="${courseClos != null and !courseClos.isEmpty()}">
+    <li class="c31 li-bullet-0" th:each="clo : ${courseClos}">
+        <span class="c24 c8" th:text="${clo}">CLO1: Example CLO</span>
+    </li>
+</ul>
+<p class="c1 c2"><span class="c34 c8"></span></p>
 <ol class="c20 lst-kix_list_10-0 start" start="9">
     <li class="c31 li-bullet-0"><span class="c0 c8">Self-Assessment</span></li>
 </ol>
@@ -167,7 +173,7 @@
         class="c52 c2"><span class="c3"></span></p>
 <p class="c1"><span class="c8 c9">ii. CLOs Assessment</span></p>
 <p class="c1 c2"><span class="c24 c8"></span></p>
-<p class="c1"><span class="c24 c8">All course learning outcomes (CLOs) are required to be assessed and evaluated in each assessment cycle for all programs. Direct assessment is expected of all CLOs. </span></p>
+<p class="c1"><span class="c24 c8">  </span></p>
 <p class="c1 c2"><span class="c24 c8"></span></p>
 <p class="c1"><span class="c60 c8">Assessments at the course and program levels are related as improvements at the course level will lead to improvements at the program level. Therefore, benchmarks are used for any CLO </span><span class="c8 c57">direct</span>
     <span
@@ -437,40 +443,40 @@
             <p class="c1"><span class="c9 c63 c8">No. of Students</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['A']}">0</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['A-']}">0</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['B+']}">0</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['B']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['B-']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['C+']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['C']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['C-']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['D']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['F']}">0</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['I']}">0</span></p>
         </td>
         <td class="c68" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistribution['W']}">0</span></p>
         </td>
     </tr>
     <tr class="c30">
@@ -478,40 +484,40 @@
             <p class="c1"><span class="c9 c63 c8">Percentage of Students</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['A']}">0.0%</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['A-']}">0.0%</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['B+']}">0.0%</span></p>
         </td>
         <td class="c19" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['B']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['B-']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['C+']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['C']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['C-']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['D']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['F']}">0.0%</span></p>
         </td>
         <td class="c23" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['I']}">0.0%</span></p>
         </td>
         <td class="c68" colspan="1" rowspan="1">
-            <p class="c1 c2"><span class="c3"></span></p>
+            <p class="c1"><span class="c3" th:text="${gradeDistributionPercentages['W']}">0.0%</span></p>
         </td>
     </tr>
 </table>
