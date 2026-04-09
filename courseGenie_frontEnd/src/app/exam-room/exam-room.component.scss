@@ -38,6 +38,27 @@
   transition: .2s ease;
 }
 
+.back-btn {
+  background: linear-gradient(135deg, #024964, #0394ca);
+  border: none;
+  color: white;
+  padding: .45rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: .2s ease;
+  box-shadow: 0 4px 12px rgba(3, 148, 202, 0.28);
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(3, 148, 202, 0.35);
+}
+
 .primary-btn:hover {
   transform: translateY(-2px);
   opacity: .9;

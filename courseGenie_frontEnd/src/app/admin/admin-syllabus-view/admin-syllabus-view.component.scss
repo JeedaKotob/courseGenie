@@ -124,6 +124,27 @@
   gap: 1rem;
 }
 
+.back-btn {
+  background: linear-gradient(135deg, #024964, #0394ca);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(3, 148, 202, 0.28);
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(3, 148, 202, 0.35);
+}
+
 .action-btn {
   display: flex;
   align-items: center;

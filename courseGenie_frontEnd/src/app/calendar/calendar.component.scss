@@ -38,6 +38,28 @@ $text-muted: #6c757d;
   color: $dark-color;
 }
 
+.back-btn {
+  background: linear-gradient(135deg, #024964, #0394ca);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(3, 148, 202, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(3, 148, 202, 0.34);
+  opacity: 0.95;
+}
+
 .subtitle {
   margin: 0.25rem 0 0;
   color: $text-muted;

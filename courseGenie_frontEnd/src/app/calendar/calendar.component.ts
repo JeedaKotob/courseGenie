@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { CalendarService } from '../services/calendar.service';
 import { SharedDataService } from '../services/shared-data.sevice';
@@ -36,7 +38,9 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private calendarService: CalendarService,
-    private sharedDataService: SharedDataService
+    private sharedDataService: SharedDataService,
+    private location: Location,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -250,5 +254,13 @@ export class CalendarComponent implements OnInit {
 
     this.newEvent.endTime =
       `${String(endHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/professor']);
   }
 }

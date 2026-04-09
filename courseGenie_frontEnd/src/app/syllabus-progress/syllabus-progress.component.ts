@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {SyllabusProgress} from '../home/course.model';
 import {Router} from '@angular/router';
 import {AdminService} from '../services/admin.service';
@@ -20,7 +21,8 @@ export class SyllabusProgressComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +71,14 @@ export class SyllabusProgressComponent implements OnInit {
         }, 3000);
       }
     });
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 
 

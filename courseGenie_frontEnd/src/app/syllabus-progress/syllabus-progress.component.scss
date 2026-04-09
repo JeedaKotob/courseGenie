@@ -14,6 +14,27 @@ $border-color: #e9ecef;
   letter-spacing: -0.5px;
 }
 
+.back-btn {
+  background: linear-gradient(90deg, $primary-dark, $accent-teal);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
 
 .dept-section {
   padding-top: 10px;

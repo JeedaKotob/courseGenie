@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import {ExamRoom} from '../home/course.model';
 import {Router} from '@angular/router';
 import {ExamRoomService} from '../services/examRoom.service';
@@ -15,7 +16,8 @@ export class ExamRoomComponent {
 
   constructor(
     private router: Router,
-    private examRoomService: ExamRoomService
+    private examRoomService: ExamRoomService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -32,5 +34,13 @@ export class ExamRoomComponent {
         console.error('Error loading rooms', err);
       }
     });
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 }

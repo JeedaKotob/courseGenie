@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../services/course.service';
 import { Observable } from 'rxjs';
@@ -19,7 +20,8 @@ export class CourseOverviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -36,5 +38,13 @@ export class CourseOverviewComponent implements OnInit {
 
   navigateToSection(courseCode: string, sectionCode: string) {
     this.router.navigate([`/overview/${courseCode}/${sectionCode}`]);
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 }
