@@ -14,10 +14,13 @@ public class SectionDTOMapper implements Function<Section, SectionDTO> {
     @Override
     public SectionDTO apply(Section section) {
         long count = assessmentRepository.countBySectionSectionId(section.getSectionId());
+        String term = section.getSemester() != null && section.getSemester().getSemesterName() != null
+                ? section.getSemester().getSemesterName()
+                : section.getTerm();
         return SectionDTO.builder()
                 .sectionId(section.getSectionId())
                 .code(section.getCode())
-                .term(section.getTerm())
+                .term(term)
                 .configured(section.isConfigured())
                 .professorId(section.getProfessor().getUserId())
                 .professorName(section.getProfessor().getFullName())

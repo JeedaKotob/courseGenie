@@ -4,6 +4,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { map, switchMap, filter, withLatestFrom, tap, take } from 'rxjs/operators';
 
 import { CourseService } from '../../services/course.service';
+import { SemesterService } from '../../services/semester.service';
 import { SharedDataService } from '../../services/shared-data.sevice';
 import { Course, CoursesBySemester, Section } from '../course.model';
 
@@ -35,9 +36,12 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
   private navigationSubscription!: Subscription;
   todayEvents: CalendarEvent[] = [];
   isTodayLoading = false;
+  allSemesters: string[] = [];
+  selectedSemester: string = 'all';
 
   constructor(
     private courseService: CourseService,
+    private semesterService: SemesterService,
     private router: Router,
     private sharedDataService: SharedDataService,
     private calendarService: CalendarService,
@@ -81,6 +85,7 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
 
     setTimeout(() => { this.animationClass = 'animate-hero'; }, 100);
     this.loadTodayEvents();
+    this.loadSemesterOptions();
   }
 
   navigateToOverview(sectionId: number): void {
@@ -131,5 +136,23 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
           this.isTodayLoading = false;
         }
       });
+  }
+
+  private loadSemesterOptions(): void {
+    this.semesterService.getAllSemesters().subscribe({
+      next: (semesters) => {
+        this.allSemesters = semesters;
+      },
+      error: () => {
+        this.allSemesters = [];
+      }
+    });
+  }
+
+  getFilteredSemesters(data: SemesterViewModel[]): SemesterViewModel[] {
+    if (this.selectedSemester === 'all') {
+      return data;
+    }
+    return data.filter(item => item.semester === this.selectedSemester);
   }
 }
