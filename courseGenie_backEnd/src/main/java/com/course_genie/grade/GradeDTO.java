@@ -1,11 +1,10 @@
 package com.course_genie.grade;
 
-import com.course_genie.assessment.AssessmentDTO;
 import lombok.Builder;
 
 @Builder
 public record GradeDTO(
-        long gradeId,
+        Long gradeId,
         double score,
         long assessmentId,
         long enrollmentId

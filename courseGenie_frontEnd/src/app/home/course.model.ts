@@ -54,7 +54,7 @@ export interface Student {
 }
 
 export interface Grade {
-  gradeId: number | null;
+  gradeId: number;
   score: number;
   assessmentId: number;
   enrollmentId: number;

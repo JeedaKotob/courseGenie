@@ -21,6 +21,8 @@ public class Grade {
     @ManyToOne
     @JoinColumn(name = "enrollment_id", nullable = false)
     private Enrollment enrollment;
+    @Column(name = "student_id", nullable = false)
+    private String studentId;
 
     public Grade(long gradeId) {
         this.gradeId = gradeId;

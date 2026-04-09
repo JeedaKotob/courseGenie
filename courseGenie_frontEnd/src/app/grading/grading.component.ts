@@ -51,7 +51,7 @@ export class GradingComponent implements OnInit {
       this.grades[index].score = parsedScore;
     } else {
       this.grades.push({
-        gradeId: null,
+        gradeId: 0,
         score: parsedScore,
         assessmentId,
         enrollmentId
@@ -92,7 +92,8 @@ export class GradingComponent implements OnInit {
           this.grades[index].score = randomScore;
         } else {
           this.grades.push({
-            gradeId: null,
+            // Backend GradeDTO uses primitive long; send 0 for new grades.
+            gradeId: 0,
             score: randomScore,
             assessmentId: assessment.assessmentId,
             enrollmentId: enrollment.enrollmentId

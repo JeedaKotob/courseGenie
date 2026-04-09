@@ -1,9 +1,10 @@
 package com.course_genie.grade;
 
+import com.course_genie.enrollment.Enrollment;
+import com.course_genie.enrollment.EnrollmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,11 +14,18 @@ public class GradeService {
     private final GradeRepository gradeRepository;
     private final GradeMapper gradeMapper;
     private final GradeDTOMapper gradeDTOMapper;
+    private final EnrollmentRepository enrollmentRepository;
 
-    public GradeService(GradeRepository gradeRepository, GradeMapper gradeMapper, GradeDTOMapper gradeDTOMapper) {
+    public GradeService(
+            GradeRepository gradeRepository,
+            GradeMapper gradeMapper,
+            GradeDTOMapper gradeDTOMapper,
+            EnrollmentRepository enrollmentRepository
+    ) {
         this.gradeRepository = gradeRepository;
         this.gradeMapper = gradeMapper;
         this.gradeDTOMapper = gradeDTOMapper;
+        this.enrollmentRepository = enrollmentRepository;
     }
 
     // Create
@@ -35,7 +43,11 @@ public class GradeService {
 
             } else {
                 if (gradeDTO.score() != -1) {
-                    gradeRepository.save(gradeMapper.apply(gradeDTO));
+                    Grade newGrade = gradeMapper.apply(gradeDTO);
+                    Enrollment enrollment = enrollmentRepository.findById(gradeDTO.enrollmentId())
+                            .orElseThrow(() -> new EntityNotFoundException("Enrollment not found"));
+                    newGrade.setStudentId(enrollment.getStudent().getStudentId());
+                    gradeRepository.save(newGrade);
                 }
 
             }
@@ -54,6 +66,9 @@ public class GradeService {
 
     // Update
     public GradeDTO updateGrade(GradeDTO gradeDetails) {
+        if (gradeDetails.gradeId() == null) {
+            throw new EntityNotFoundException("Grade id is required for update");
+        }
         Grade grade = gradeRepository.findById(gradeDetails.gradeId()).orElseThrow(() -> new EntityNotFoundException("Grade not found"));
         grade.setScore(gradeDetails.score());
         return gradeDTOMapper.apply(gradeRepository.save(grade));
