@@ -1,6 +1,8 @@
 package com.course_genie.car;
 import com.course_genie.section.Section;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 import jakarta.persistence.*;
 
@@ -14,18 +16,22 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carId;
 
-    @Lob
-    @Column(columnDefinition="LONGTEXT")
-    private String content;
-
     @OneToOne
-    @JoinColumn(name="section_id",nullable=false)
+    @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
-    private Date dueDate;
+    @Column(columnDefinition="TEXT")
+    private String studentFeedbackSynopsis;
 
-    private Date submissionDate;
+    @Column(columnDefinition="TEXT")
+    private String impedimentsAnalysis;
+
+    @Column(columnDefinition="TEXT")
+    private String suggestedModifications;
+
+    @Column(columnDefinition="TEXT")
+    private String aiReflection;
 
     private boolean submitted;
-
+    private LocalDate submissionDate;
 }

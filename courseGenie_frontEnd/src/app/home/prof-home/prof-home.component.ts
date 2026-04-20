@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { map, switchMap, filter, withLatestFrom, tap } from 'rxjs/operators';
+import { map, switchMap, filter, withLatestFrom, tap, take } from 'rxjs/operators';
 
 import { CourseService } from '../../services/course.service';
+import { SemesterService } from '../../services/semester.service';
 import { SharedDataService } from '../../services/shared-data.sevice';
 import { Course, CoursesBySemester, Section } from '../course.model';
+
+import { CalendarService } from '../../services/calendar.service';
+import { CalendarEvent } from '../course.model';
 
 type SemesterViewModel = {
   semester: string;
@@ -30,11 +34,17 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
   semestersWithSections$!: Observable<SemesterViewModel[]>;
   private readonly sectionIdToNavigate$ = new Subject<number>();
   private navigationSubscription!: Subscription;
+  todayEvents: CalendarEvent[] = [];
+  isTodayLoading = false;
+  allSemesters: string[] = [];
+  selectedSemester: string = 'all';
 
   constructor(
     private courseService: CourseService,
+    private semesterService: SemesterService,
     private router: Router,
-    private sharedDataService: SharedDataService
+    private sharedDataService: SharedDataService,
+    private calendarService: CalendarService,
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +84,8 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     ).subscribe();
 
     setTimeout(() => { this.animationClass = 'animate-hero'; }, 100);
+    this.loadTodayEvents();
+    this.loadSemesterOptions();
   }
 
   navigateToOverview(sectionId: number): void {
@@ -96,5 +108,51 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
+  }
+
+  goToCalendar(): void {
+    this.router.navigate(['/professor/calendar']);
+  }
+  private loadTodayEvents(): void {
+    this.isTodayLoading = true;
+
+    const todayIso = new Date().toISOString().split('T')[0];
+
+    this.sharedDataService.currentUser$
+      .pipe(
+        filter(user => !!user),
+        take(1),
+        switchMap(user =>
+          this.calendarService.getCalendar(user!.userId, todayIso, todayIso)
+        )
+      )
+      .subscribe({
+        next: (events) => {
+          this.todayEvents = events;
+          this.isTodayLoading = false;
+        },
+        error: () => {
+          this.todayEvents = [];
+          this.isTodayLoading = false;
+        }
+      });
+  }
+
+  private loadSemesterOptions(): void {
+    this.semesterService.getAllSemesters().subscribe({
+      next: (semesters) => {
+        this.allSemesters = semesters;
+      },
+      error: () => {
+        this.allSemesters = [];
+      }
+    });
+  }
+
+  getFilteredSemesters(data: SemesterViewModel[]): SemesterViewModel[] {
+    if (this.selectedSemester === 'all') {
+      return data;
+    }
+    return data.filter(item => item.semester === this.selectedSemester);
   }
 }

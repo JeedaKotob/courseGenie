@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import {
   ExamCard,
   ExamRoom,
-  ExamSchedule,
   ExamScheduleSaveRequest
 } from '../home/course.model';
+import { Router } from '@angular/router';
 import { ExamRoomService } from '../services/examRoom.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -25,7 +26,9 @@ export class ExamRoomComponent implements OnInit {
   private originalSnapshot = '';
 
   constructor(
+    private router: Router,
     private examRoomService: ExamRoomService,
+    private location: Location,
     private toastr: ToastrService
   ) {}
 
@@ -130,5 +133,13 @@ export class ExamRoomComponent implements OnInit {
 
   private getTodayDate(): string {
     return new Date().toISOString().split('T')[0];
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 }

@@ -74,8 +74,8 @@ public class BenchmarkService {
             }
 
             result.put("Assessment_Instruments", String.join(", ", assessmentNames));
-            result.put("Benchmark_Score", "<p>BM1 scores:<br>" + String.join("<br>", bm1Results) +
-                    "<br>BM2 scores:<br>" + String.join("<br>", bm2Results) + "</p>");
+            result.put("Benchmark_Score", "<p><strong>BM1 scores:</strong><br>" + String.join("<br>", bm1Results) +
+                    "<br><strong>BM2 scores:</strong><br>" + String.join("<br>", bm2Results) + "</p>");
             result.put("Result", (bm1Met && bm2Met) ? "MET" : (bm1Met || bm2Met) ? "Partially MET" : "NOT MET");
 
             results.add(result);
@@ -99,9 +99,15 @@ public class BenchmarkService {
         }
 
         if ("Mean Score".equals(benchmarkType)) {
-            double meanScore = grades.stream().mapToDouble(Grade::getScore).average().orElse(0.0);
-            resultList.add(String.format("Mean score in %s is %.0f%%", assessment.getName(), meanScore));
-            return meanScore >= threshold;
+            double meanRawScore = grades.stream().mapToDouble(Grade::getScore).average().orElse(0.0);
+            double maxPoints = assessment.getMaxPoints();
+            if (maxPoints <= 0) {
+                resultList.add(String.format("Mean score in %s could not be computed (invalid max points)", assessment.getName()));
+                return false;
+            }
+            double meanPercentage = (meanRawScore / maxPoints) * 100.0;
+            resultList.add(String.format("Mean score in %s is %.2f%%", assessment.getName(), meanPercentage));
+            return meanPercentage >= threshold;
         }
 
         return false;

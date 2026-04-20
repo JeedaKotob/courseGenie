@@ -1,0 +1,179 @@
+<div class="calendar-page">
+  <div class="calendar-card">
+    <header class="calendar-header">
+      <div class="calendar-title">
+        <button class="back-btn mb-2" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <h2>Calendar</h2>
+        <p class="subtitle">Your teaching and event schedule, day by day.</p>
+      </div>
+
+      <div class="calendar-controls">
+        <button class="btn-secondary" (click)="changeMonth(-1)">
+          ‹ Prev
+        </button>
+        <div class="month-label">
+          {{ monthLabel }}
+        </div>
+        <button class="btn-secondary" (click)="changeMonth(1)">
+          Next ›
+        </button>
+        <button class="btn-primary today-btn" (click)="goToToday()">
+          Today
+        </button>
+        <button class="btn-primary" (click)="openAddEventModal()">+ Add Event</button>
+      </div>
+    </header>
+
+    <div class="calendar-status" *ngIf="isLoading || errorMessage">
+      <div *ngIf="isLoading" class="status loading">
+        <span class="spinner"></span>
+        <span>Loading calendar…</span>
+      </div>
+      <div *ngIf="!isLoading && errorMessage" class="status error">
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <div class="calendar-legend">
+      <div class="legend-item">
+        <span class="legend-dot lecture"></span>
+        <span>Lecture</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot event"></span>
+        <span>Event</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot today"></span>
+        <span>Today</span>
+      </div>
+    </div>
+
+    <section class="calendar-grid">
+      <div class="weekday-row">
+        <div class="weekday" *ngFor="let label of weekdayLabels">
+          {{ label }}
+        </div>
+      </div>
+
+      <div class="weeks">
+        <div class="week-row" *ngFor="let week of weeks">
+          <div
+            class="day-cell"
+            *ngFor="let day of week"
+            [ngClass]="{
+              'outside-month': !day.inCurrentMonth,
+              today: day.isToday,
+              'has-events': day.events.length > 0
+            }"
+          >
+            <div class="day-header">
+              <span class="day-number">
+                {{ day.date.getDate() }}
+              </span>
+            </div>
+
+            <div class="day-events">
+              <div
+                class="event-pill"
+                *ngFor="let event of day.events"
+                [ngClass]="{
+                  lecture: event.type === 'LECTURE',
+                  other: event.type !== 'LECTURE'
+                }"
+              >
+                <div class="event-time">
+                  {{ event.startTime | slice:0:5 }}–{{ event.endTime | slice:0:5 }}
+                </div>
+                <div class="event-title" [title]="event.title">
+                  {{ event.title }}
+                </div>
+                <div class="event-meta">
+                  <span class="event-room" *ngIf="event.room">{{ event.room }}</span>
+                  <span class="event-type">{{ event.type | titlecase }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="modal-backdrop" *ngIf="showAddEventModal">
+      <div class="modal-card">
+
+        <h3 class="mb-4">Add New Event</h3>
+
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newEvent.title"
+            placeholder="Enter event title"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="newEvent.date"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label class="form-label">Start Time</label>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvent.startTime"
+              (change)="onStartTimeChange()"
+            >
+              <option value="">Select time</option>
+              <option *ngFor="let time of timeOptions" [value]="time">
+                {{ time }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label class="form-label">End Time</label>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvent.endTime"
+            >
+              <option value="">Select time</option>
+              <option *ngFor="let time of timeOptions" [value]="time">
+                {{ time }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Room</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newEvent.room"
+            placeholder="Enter Room"
+          />
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <button class="btn btn-outline-secondary" (click)="closeAddEventModal()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" (click)="saveEvent()">
+            Add Event
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

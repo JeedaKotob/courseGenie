@@ -4,6 +4,9 @@
     <!-- LOAD COURSE -->
     <ng-container *ngIf="course$ | async as course">
 
+      <button class="back-btn mb-2" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
       <h1 class="bold mb-2">{{ course.name }}</h1>
       <p class="course-code">{{ course.code }} • {{ course.credits }} Credits</p>
       <p class="course-description">{{ course.description }}</p>

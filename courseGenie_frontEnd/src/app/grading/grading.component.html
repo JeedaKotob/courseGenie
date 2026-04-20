@@ -52,7 +52,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let enrollment of enrollments">
-            <td>{{ enrollment.enrollmentId }}</td>
+            <td>{{ enrollment.studentId }}</td>
             <td>{{ enrollment.firstName }}</td>
             <td>{{ enrollment.lastName }}</td>
             <td *ngFor="let assessment of course?.sections?.[0]?.assessments">

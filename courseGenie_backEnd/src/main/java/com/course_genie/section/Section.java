@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 @Entity
 @Data
 @Builder
@@ -72,4 +75,15 @@ public class Section {
         return sectionId;
     }
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "section_meeting_days",
+            joinColumns = @JoinColumn(name = "section_id")
+    )
+    @Column(name = "meeting_day")
+    @Enumerated(EnumType.STRING)
+    private Set<DayOfWeek> meetingDays;
+
+    private LocalTime meetingStartTime;
+    private LocalTime meetingEndTime;
 }
