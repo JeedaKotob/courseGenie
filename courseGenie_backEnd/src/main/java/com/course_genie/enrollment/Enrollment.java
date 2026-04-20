@@ -13,7 +13,7 @@ import lombok.*;
 public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long enrollmentId;
+    private long enrollmentId;
 
     @ManyToOne
     @JoinColumn(name="student_id",nullable=false)
@@ -30,5 +30,9 @@ public class Enrollment {
         ENROLLED,
         WITHDRAWN
         // anythong more ??
+    }
+
+    public Enrollment(long enrollmentId) {
+        this.enrollmentId = enrollmentId;
     }
 }

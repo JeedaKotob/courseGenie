@@ -11,6 +11,7 @@ public record SectionDTO(
         long sectionId,
         String code,
         String semesterName,
+        Long semesterId,
         String class_number,
         boolean configured,
         long courseId,

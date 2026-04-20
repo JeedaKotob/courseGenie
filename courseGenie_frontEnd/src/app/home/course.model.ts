@@ -21,6 +21,7 @@ export interface Section {
   assessments: Assessment[];
   assessmentCount: number;
   semesterName: string;
+  semesterId?: number | null;
 }
 
 export interface Assessment {
@@ -56,10 +57,10 @@ export interface Student {
 }
 
 export interface Grade {
-  gradeId: number | null;
+  gradeId: number;
   score: number;
   assessmentId: number;
-  studentId: string;
+  enrollmentId: number;
 }
 
 export interface Syllabus {
@@ -67,6 +68,9 @@ export interface Syllabus {
   content: string;
   sectionId: number;
   submitted: boolean;
+  submissionDate: string;
+  syllabusDueDate: string;
+  overdueBy: number;
 }
 
 export interface SyllabusDetail {
@@ -74,6 +78,9 @@ export interface SyllabusDetail {
   courseCode: string;
   sectionCode: string;
   submitted: boolean;
+  submissionDate: string;
+  syllabusDueDate: string;
+  overdueBy: number;
 }
 
 export interface SyllabusProgress {
@@ -105,3 +112,101 @@ export interface Benchmark {
   percentage: number;
 }
 
+export interface Enrollment {
+  enrollmentId: number;
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  sectionId: number;
+}
+
+export enum RoomType {
+  CLASSROOM = 'CLASSROOM',
+  LAB = 'LAB'
+}
+
+export interface ExamRoom {
+  roomId: number;
+  capacity: number;
+  roomNumber: string;
+  roomType: RoomType;
+}
+
+export interface ExamSchedule {
+  examScheduleId: number;
+  examDate: string;
+  timeSlot: string;
+  semesterId: number;
+  semesterName: string;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  roomIds: number[];
+}
+
+export interface ExamScheduleAssignmentRequest {
+  examScheduleId: number;
+  roomIds: number[];
+}
+
+export interface ExamScheduleSaveRequest {
+  examDate: string;
+  assignments: ExamScheduleAssignmentRequest[];
+}
+
+export interface ExamCard {
+  examScheduleId: number;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  semesterName: string;
+  timeSlot: string;
+  roomIds: number[];
+}
+export interface CalendarEvent {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  room: string;
+  type: string;
+}
+
+export interface CalendarDay {
+  date: Date;
+  isoDate: string;
+  inCurrentMonth: boolean;
+  isToday: boolean;
+  events: CalendarEvent[];
+}
+
+export interface CloResultDTO {
+  cloId: number;
+  name: string;
+  description: string;
+  assessmentMethods: string;
+  benchmarkThreshold: number;
+  actualResult: number;
+  met: boolean;
+}
+
+export interface Car {
+  carId: number;
+  sectionId: number;
+  courseCode: string;
+  courseTitle: string;
+  enrollment: number;
+  withdrawals: number;
+  classGpa: number;
+  designatedInnovationJourneyCourse: boolean;
+  gradeDistribution: { [key: string]: number };
+  cloResults: CloResultDTO[];
+  studentFeedbackSynopsis: string;
+  impedimentsAnalysis: string;
+  suggestedModifications: string;
+  aiReflection: string;
+  submitted: boolean;
+  submissionDate: string;
+  isComplete: boolean;
+}

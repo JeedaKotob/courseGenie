@@ -3,42 +3,52 @@ package com.course_genie.student;
 import com.course_genie.grade.GradeDTO;
 import com.course_genie.grade.GradeDTOMapper;
 import com.course_genie.grade.GradeRepository;
-import com.course_genie.grade.GradeService;
-import com.course_genie.syllabus.SyllabusDTO;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import com.course_genie.enrollment.Enrollment;
+import com.course_genie.enrollment.EnrollmentRepository;
+import com.course_genie.grade.Grade;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class StudentService {
 
-    private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
-    private final StudentDTOMapper studentDTOMapper;
+    private final EnrollmentRepository enrollmentRepository;
     private final GradeRepository gradeRepository;
+    private final StudentDTOMapper studentDTOMapper;
     private final GradeDTOMapper gradeDTOMapper;
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, StudentDTOMapper studentDTOMapper, GradeRepository gradeRepository, GradeDTOMapper gradeDTOMapper) {
-        this.studentRepository = studentRepository;
-        this.studentMapper = studentMapper;
-        this.studentDTOMapper = studentDTOMapper;
+    public StudentService(EnrollmentRepository enrollmentRepository,
+                          GradeRepository gradeRepository,
+                          StudentDTOMapper studentDTOMapper,
+                          GradeDTOMapper gradeDTOMapper) {
+        this.enrollmentRepository = enrollmentRepository;
         this.gradeRepository = gradeRepository;
+        this.studentDTOMapper = studentDTOMapper;
         this.gradeDTOMapper = gradeDTOMapper;
     }
 
-    // Read
-    public HashMap<StudentDTO,List<GradeDTO>> getAllStudents(Long sectionId) {
-        HashMap<StudentDTO,List<GradeDTO>> result = new HashMap<>();
-        List<StudentDTO> studentsDTO = studentRepository.findAll().stream().map(studentDTOMapper).toList();
-        for (StudentDTO studentDTO : studentsDTO) {
-            List<GradeDTO> gradesDTO = gradeRepository.findGradeByStudentIdAndSectionId(studentDTO.studentId(), sectionId)
-                    .orElse(new ArrayList<>()).stream().map(gradeDTOMapper).toList();
-            result.put(studentDTO,gradesDTO);
+    public Map<StudentDTO, List<GradeDTO>> getAllStudentsWithGradesBySection(Long sectionId) {
+        Map<StudentDTO, List<GradeDTO>> result = new HashMap<>();
+
+        List<Enrollment> enrollments = enrollmentRepository.findEnrollmentBySectionSectionId(sectionId);
+
+        for (Enrollment enrollment : enrollments) {
+            StudentDTO studentDTO = studentDTOMapper.apply(enrollment.getStudent());
+
+            // 3. Find Grades using the ENROLLMENT ID (not student ID)
+            List<Grade> grades = gradeRepository.findGradeByEnrollmentEnrollmentId(enrollment.getEnrollmentId()).orElse(List.of());
+
+            List<GradeDTO> gradeDTOs = grades.stream()
+                    .map(gradeDTOMapper)
+                    .collect(Collectors.toList());
+
+            result.put(studentDTO, gradeDTOs);
         }
+
         return result;
     }
 }

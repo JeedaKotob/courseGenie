@@ -8,15 +8,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GradeRepository extends JpaRepository<Grade, Long> {
-    @Query("SELECT g FROM Grade g WHERE g.student.studentId = :studentId AND g.assessment.section.sectionId = :sectionId")
-    Optional<List<Grade>> findGradeByStudentIdAndSectionId(@Param("studentId") String studentId, @Param("sectionId") Long sectionId);
+    @Query("SELECT g FROM Grade g WHERE g.enrollment.enrollmentId = :enrollmentId")
+    Optional<List<Grade>> findGradeByEnrollmentEnrollmentId(@Param("enrollmentId") long enrollmentId);
 
-    boolean existsByAssessmentAssessmentIdAndStudentStudentId(long assessmentId, String studentId);
+    boolean existsByAssessmentAssessmentIdAndEnrollmentEnrollmentId(long assessmentId, long enrollmentId);
 
-    @Query(value = "SELECT COUNT(grade_id) from grade where assessment_id = :assessmentId and student_id = :studentId", nativeQuery = true)
-    int countGradesByAssessmentAssessmentIdAndStudentStudentId(@Param("assessmentId") long assessmentId, @Param("studentId") String studentId);
+    @Query(value = "SELECT COUNT(grade_id) from grade where assessment_id = :assessmentId and enrollment_id = :enrollmentId", nativeQuery = true)
+    int countGradesByAssessmentAssessmentIdAndEnrollmentEnrollmentId(@Param("assessmentId") long assessmentId, @Param("enrollmentId") long enrollmentId);
 
-    Optional<Grade> findGradeByAssessmentAssessmentIdAndStudentStudentId(long assessmentId, String studentId);
+    Optional<Grade> findGradeByAssessmentAssessmentIdAndEnrollmentEnrollmentId(long assessmentId, long enrollmentId);
 
     Optional<List<Grade>> findGradeByAssessmentAssessmentId(long assessmentId);
+
+    Optional<List<Grade>> findGradeByEnrollmentSectionSectionId(long sectionId);
+
+
 }

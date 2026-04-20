@@ -1,0 +1,69 @@
+<div class="m-3">
+  <div class="rooms-card">
+    <div class="rooms-header">
+      <div>
+        <button class="back-btn mb-2" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <h2>Exam Rooms</h2>
+        <p class="subtitle">Choose exam date and manage available rooms for scheduled exams</p>
+      </div>
+
+      <div class="header-actions">
+        <label class="date-label">
+          Exam Date
+          <input
+            type="date"
+            [(ngModel)]="selectedDate"
+            (change)="onDateChange()"
+          />
+        </label>
+
+        <button
+          class="primary-btn"
+          [disabled]="!hasChanges || isSaving"
+          (click)="saveAssignments()"
+        >
+          <i class="pi pi-save"></i>
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="examCards.length > 0; else noRooms" class="slots-list">
+      <div class="slot-group" *ngFor="let slot of groupedCards | keyvalue">
+        <h4 class="slot-title">{{ slot.key }}</h4>
+
+        <div class="rooms-list">
+          <div class="room-row" *ngFor="let exam of slot.value">
+            <div class="room-main">
+              <div class="room-number">{{ exam.courseCode }} - {{ exam.courseName }}</div>
+              <div class="room-type">{{ exam.semesterName }}</div>
+            </div>
+
+            <div class="selectors">
+              <mat-form-field appearance="outline" class="selector-field room-select">
+                <mat-select
+                  multiple
+                  placeholder="Available Rooms"
+                  [(ngModel)]="exam.roomIds"
+                  (selectionChange)="onCardChanged()"
+                >
+                  <mat-option *ngFor="let room of rooms" [value]="room.roomId">
+                    {{ room.roomNumber }} ({{ room.capacity }} seats)
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noRooms>
+      <div class="empty-state">
+        <h5>No exams are scheduled for the selected date.</h5>
+      </div>
+    </ng-template>
+  </div>
+</div>

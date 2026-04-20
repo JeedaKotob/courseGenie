@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../services/course.service';
 import { Observable } from 'rxjs';
@@ -36,6 +37,7 @@ export class CourseOverviewComponent implements OnInit {
     private courseService: CourseService,
     private authService: AuthService,
     private modalService: NgbModal,
+    private location: Location
     private fb: FormBuilder
   ) {}
 
@@ -242,5 +244,13 @@ export class CourseOverviewComponent implements OnInit {
         this.modalError = err?.error?.message || 'Failed to delete section';
       }
     });
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 }

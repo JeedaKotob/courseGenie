@@ -22,4 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
           AND LOWER(TRIM(u.department.departmentName)) = LOWER(TRIM(:departmentName))
     """)
     List<User> findProfessorsByDepartmentName(@Param("departmentName") String departmentName);
+    
+    @Query("SELECT DISTINCT s.professor FROM Syllabus sy JOIN sy.section s WHERE sy.submitted=false")
+    List<User> findProfessorsWithUnsubmittedSyllabi();
 }

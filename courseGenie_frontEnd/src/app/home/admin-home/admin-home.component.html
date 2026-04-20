@@ -16,15 +16,24 @@
     <div class="overview-card links-card">
       <div class="card-header">
         <h3 class="card-title">
-          <i class="bi bi-link-45deg"></i> Quick Links
+          <i class="bi bi-grid-1x2"></i> Admin Tools
         </h3>
       </div>
       <div class="card-body">
-        <div class="quick-links">
-          <a [routerLink]="['/admin/syllabusProgress']" class="quick-link">
-            <i class="bi bi-clipboard-check"></i>
-            <span>Syllabus Submissions</span>
-          </a>
+        <div class="tools-grid">
+          <div class="tool-card" *ngFor="let tool of adminTools" (click)="navigateToTool(tool.route)">
+            <div class="tool-icon">
+              <i [class]="tool.icon"></i>
+            </div>
+            <div class="tool-content">
+              <h4>{{ tool.title }}</h4>
+              <p>{{ tool.description }}</p>
+            </div>
+            <button class="tool-cta">
+              {{ tool.cta }}
+              <i class="pi pi-arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

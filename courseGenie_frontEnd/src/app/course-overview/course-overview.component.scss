@@ -4,6 +4,27 @@
   gap: 20px;
 }
 
+.back-btn {
+  background: linear-gradient(135deg, #024964, #0394ca);
+  border: none;
+  color: #fff;
+  padding: 0.45rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(3, 148, 202, 0.25);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(3, 148, 202, 0.35);
+}
+
 .section-card {
   background: white;
   border-radius: 12px;

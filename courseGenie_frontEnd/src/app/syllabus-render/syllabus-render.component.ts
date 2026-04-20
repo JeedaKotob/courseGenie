@@ -21,7 +21,7 @@ export class SyllabusRenderComponent {
   rawPdfUrl: string = '';
   currentTotal: number = 0;
   submitStatus = {
-    type: null as 'success' | 'error' | null,
+    type: null as 'success' | 'error' | 'warning' | null,
     message: ''
   };
   private statusTimeout: any;
@@ -107,7 +107,7 @@ export class SyllabusRenderComponent {
     }
   }
 
-  showSubmitStatus(type: 'success' | 'error', message: string) {
+  showSubmitStatus(type: 'success' | 'error' | 'warning', message: string) {
     this.submitStatus = { type, message };
 
     if (this.statusTimeout) {
@@ -132,7 +132,18 @@ export class SyllabusRenderComponent {
         next: () => {
           if (this.syllabus) {
             this.syllabus.submitted = true;
-            this.showSubmitStatus ('success', 'Syllabus submitted successfully!');
+            if (this.syllabus.overdueBy>0) {
+              this.showSubmitStatus(
+                'warning',
+                `Syllabus submitted successfully! Overdue by ${this.syllabus.overdueBy} days.`
+              );
+            } else {
+              this.showSubmitStatus(
+                'success',
+                'Syllabus submitted successfully!'
+              );
+            }
+
           }
         },
         error: err => {

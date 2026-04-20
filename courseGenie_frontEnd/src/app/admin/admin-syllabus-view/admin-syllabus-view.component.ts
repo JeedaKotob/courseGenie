@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { NgZone } from '@angular/core';
 import {SyllabusService} from '../../services/syllabus.service';
@@ -35,6 +36,8 @@ export class AdminSyllabusViewComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private ngZone: NgZone,
     private sectionService: SectionService,
+    private location: Location,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -101,5 +104,13 @@ export class AdminSyllabusViewComponent implements OnInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin/syllabusProgress']);
   }
 }

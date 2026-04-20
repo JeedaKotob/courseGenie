@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Course, Grade, Student } from '../home/course.model';
+import { Course, Grade, Student, Enrollment } from '../home/course.model';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { StudentService } from '../services/student.service';
 import { GradeService } from '../services/grade.service';
@@ -17,7 +17,7 @@ import {SectionService} from '../services/section.service';
 })
 export class StatisticsComponent implements OnInit {
   course: Course | null = null;
-  students: Student[] = [];
+  enrollments: Enrollment[] = [];
   grades: Grade[] = [];
   gradesMatrix: any = {};
 
@@ -89,14 +89,17 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.course = this.sharedDataService.selectedCourseValue;
-    this.getAllStudents();
+    const sectionId = this.course?.sections?.[0]?.sectionId;
+    if (!sectionId) return;
+    this.getEnrollments(sectionId);
   }
+
   // Add this method to your component class
   calculateBarWidth(count: number): number {
-    if (!this.students.length) return 0;
+    if (!this.enrollments.length) return 0;
 
     // Calculate percentage (max 100%)
-    const percentage = (count / this.students.length) * 100;
+    const percentage = (count / this.enrollments.length) * 100;
 
     // Ensure bars have a minimum width to be visible
     return percentage === 0 ? 0 : Math.max(percentage, 4);
@@ -105,9 +108,9 @@ export class StatisticsComponent implements OnInit {
     const sectionId = this.course?.sections?.[0]?.sectionId;
     if (!sectionId) return;
 
-    this.sectionService.getStudentsBySection(sectionId).subscribe({
-      next: (students: Student[]) => {
-        this.students = students;
+    this.sectionService.getEnrollmentsBySection(sectionId).subscribe({
+      next: (enrollments: Enrollment[]) => {
+        this.enrollments = enrollments;
         this.generateChart();
       },
       error: err => console.error(err)
@@ -115,37 +118,49 @@ export class StatisticsComponent implements OnInit {
   }
 
 
-  getTotalScore(studentId: string): number {
-    return Object.values(this.gradesMatrix[studentId] || {})
+  getTotalScore(enrollmentId: number): number {
+    return Object.values(this.gradesMatrix[enrollmentId] || {})
       .filter((score: any) => typeof score === 'number')
       .reduce((a: number, b: number) => a + b, 0);
   }
 
+
   get totalStudents(): number {
-    return this.students.length;
+    return this.enrollments.length;
   }
 
   get averageScore(): number {
     if (!this.totalStudents) return 0;
-    const total = this.students.reduce((sum, s) => sum + this.getTotalScore(s.studentId), 0);
+    const total = this.enrollments.reduce(
+      (sum, e) => sum + this.getTotalScore(e.enrollmentId),
+      0
+    );
     return +(total / this.totalStudents).toFixed(2);
   }
 
   get highestScore(): number {
-    return Math.max(...this.students.map(s => this.getTotalScore(s.studentId)), 0);
+    return Math.max(...this.enrollments.map(e =>
+      this.getTotalScore(e.enrollmentId)
+    ), 0);
   }
 
   get lowestScore(): number {
-    return Math.min(...this.students.map(s => this.getTotalScore(s.studentId)), 100);
+    return Math.min(...this.enrollments.map(e =>
+      this.getTotalScore(e.enrollmentId)
+    ), 100);
   }
 
   get passRate(): number {
-    const passed = this.students.filter(s => this.getTotalScore(s.studentId) >= 60).length;
+    const passed = this.enrollments.filter(e =>
+      this.getTotalScore(e.enrollmentId) >= 60
+    ).length;
+
     return +((passed / this.totalStudents) * 100).toFixed(2);
   }
 
+
   get failRate(): number {
-    const failed = this.students.filter(s => this.getTotalScore(s.studentId) < 60).length;
+    const failed = this.enrollments.filter(e => this.getTotalScore(e.enrollmentId) < 60).length;
     return +((failed / this.totalStudents) * 100).toFixed(2);
   }
 
@@ -154,8 +169,8 @@ export class StatisticsComponent implements OnInit {
     let pass = 0;
     let fail = 0;
 
-    this.students.forEach(student => {
-      const total = this.getTotalScore(student.studentId);
+    this.enrollments.forEach(enrollment => {
+      const total = this.getTotalScore(enrollment.enrollmentId);
       const index = Math.min(Math.floor(total / 10), 9);
       ranges[index]++;
       if (total >= 60) pass++;
@@ -181,7 +196,7 @@ export class StatisticsComponent implements OnInit {
 
   prepareHorizontalData(list: any[]): ChartConfiguration<'bar'>['data'] {
     return {
-      labels: list.map(s => `${s.student.firstName} ${s.student.lastName}`),
+      labels: list.map(s => `${s.enrollment.firstName} ${s.enrollment.lastName}`),
       datasets: [{
         data: list.map(s => s.total),
         backgroundColor: '#0d6efd'
@@ -189,14 +204,18 @@ export class StatisticsComponent implements OnInit {
     };
   }
 
-  get sortedStudents(): { student: Student; total: number }[] {
-    return this.students
-      .map(student => ({
-        student,
-        total: this.getTotalScore(student.studentId)
+  get sortedStudents(): { enrollment: Enrollment; total: number }[] {
+    return this.enrollments
+      .map(e => ({
+        enrollment: e,
+        total: this.getTotalScore(e.enrollmentId)
       }))
       .sort((a, b) => b.total - a.total);
   }
+
+
+
+
 
   get top5(): any[] {
     return this.sortedStudents.slice(0, 5);
@@ -225,14 +244,52 @@ export class StatisticsComponent implements OnInit {
       { label: 'F', min: 0, max: 59.99, count: 0 },
     ];
 
-    this.students.forEach(s => {
-      const total = this.getTotalScore(s.studentId);
+    this.enrollments.forEach(e => {
+      const total = this.getTotalScore(e.enrollmentId);
       const grade = grades.find(g => total >= g.min && total <= g.max);
       if (grade) grade.count++;
     });
 
     return grades.map(({ label, count }) => ({ label, count }));
   }
+
+  getEnrollments(sectionId: number) {
+    this.sectionService.getEnrollmentsBySection(sectionId).subscribe({
+      next: (data: Enrollment[]) => {
+        this.enrollments = data;
+
+        // initialize matrix
+        this.enrollments.forEach(e => {
+          if (!this.gradesMatrix[e.enrollmentId]) {
+            this.gradesMatrix[e.enrollmentId] = {};
+          }
+        });
+
+        this.loadGrades(sectionId);
+      },
+      error: err => console.error(err)
+    });
+  }
+
+  loadGrades(sectionId: number) {
+    this.gradeService.getGradesBySection(sectionId).subscribe({
+      next: (grades: Grade[]) => {
+        this.grades = grades;
+
+        grades.forEach(g => {
+          if (!this.gradesMatrix[g.enrollmentId]) {
+            this.gradesMatrix[g.enrollmentId] = {};
+          }
+
+          this.gradesMatrix[g.enrollmentId][g.assessmentId] = g.score;
+        });
+
+        this.generateChart();
+      },
+      error: err => console.error(err)
+    });
+  }
+
 
 
 }

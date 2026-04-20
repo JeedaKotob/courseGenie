@@ -8,7 +8,7 @@
   </div>
 
   <!-- Stats Overview Cards Row -->
-  <div class="stats-overview" *ngIf="students.length">
+  <div class="stats-overview" *ngIf="enrollments.length">
     <div class="overview-card students-card">
       <div class="card-icon">
         <i class="bi bi-people-fill"></i>
@@ -53,7 +53,7 @@
   <!-- Main Charts Grid -->
   <div class="charts-grid">
     <!-- Score Distribution Chart -->
-    <div class="chart-card distribution-card" *ngIf="students.length">
+    <div class="chart-card distribution-card" *ngIf="enrollments.length">
       <div class="card-header">
         <h3 class="card-title">
           <i class="bi bi-bar-chart-line"></i> Score Distribution
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Pass/Fail Pie Chart -->
-    <div class="chart-card pass-fail-card" *ngIf="students.length">
+    <div class="chart-card pass-fail-card" *ngIf="enrollments.length">
       <div class="card-header">
         <h3 class="card-title">
           <i class="bi bi-pie-chart-fill"></i> Pass/Fail Rate

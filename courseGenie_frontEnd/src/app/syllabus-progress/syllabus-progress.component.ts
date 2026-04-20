@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {SyllabusProgress} from '../home/course.model';
 import {Router} from '@angular/router';
 import {AdminService} from '../services/admin.service';
@@ -14,11 +15,14 @@ export class SyllabusProgressComponent implements OnInit {
   animationClass = '';
   groupedSyllabusProgress: { [key: string]: SyllabusProgress[] } = {};
   expandedSyllabusProgress: Set<number> = new Set<number>();
+  message: string = '';
+  loading: boolean = false;
 
 
   constructor(
     private router: Router,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +47,38 @@ export class SyllabusProgressComponent implements OnInit {
 
   openSyllabus(section: any) {
     this.router.navigate(['/admin/syllabus', section.sectionId]);
+  }
+
+  sendReminders() {
+    this.loading = true;
+    this.message = '';
+
+    this.adminService.sendReminders().subscribe({
+      next: (response) => {
+        this.message = response;
+        this.loading = false;
+
+        setTimeout(() => {
+          this.message = '';
+        }, 3000);
+      },
+      error: () => {
+        this.message = 'Error sending reminders.';
+        this.loading = false;
+
+        setTimeout(() => {
+          this.message = '';
+        }, 3000);
+      }
+    });
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+    this.router.navigate(['/admin']);
   }
 
 

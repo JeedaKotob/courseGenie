@@ -14,4 +14,11 @@ export class GradeService {
     saveGrades(grades: Grade[]) {
         return this.http.post<Boolean>(`${this.apiUrl}`, grades);
     }
+
+    getGradesBySection(sectionId: number) {
+      return this.http.get<Grade[]>(
+        `${this.apiUrl}/section/${sectionId}`
+      );
+    }
+
 }

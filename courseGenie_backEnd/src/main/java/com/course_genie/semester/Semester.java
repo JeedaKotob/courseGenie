@@ -17,4 +17,6 @@ public class Semester {
     private String semesterName;
 
     private LocalDate syllabusDueDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

@@ -27,6 +27,9 @@ import {RoleGuard} from './guard/role.guard';
 import {CourseOverviewComponent} from './course-overview/course-overview.component';
 import {SyllabusProgressComponent} from './syllabus-progress/syllabus-progress.component';
 import {AdminSyllabusViewComponent} from './admin/admin-syllabus-view/admin-syllabus-view.component';
+import {ExamRoomComponent} from './exam-room/exam-room.component';
+import {CalendarComponent} from './calendar/calendar.component';
+import {CarComponent} from './car/car.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -51,6 +54,8 @@ const routes: Routes = [
       { path: 'choose-role', component: ChooseRoleComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'admin/syllabus/:sectionId', component: AdminSyllabusViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      {path: 'examRooms', component: ExamRoomComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }}
     ],
   },
   {
@@ -68,6 +73,7 @@ const routes: Routes = [
       { path: 'book-manager/:courseCode/:sectionCode', component: BookManagerComponent, canActivate: [AuthGuard] },
       { path: 'statistics/:courseCode/:sectionCode', component: StatisticsComponent, canActivate: [AuthGuard] },
       { path: 'teaching-methodology/:courseCode/:sectionCode', component: TeachingMethodologyComponent, canActivate: [AuthGuard] },
+      { path: 'car/:courseCode/:sectionCode', component: CarComponent, canActivate: [AuthGuard] },
 
       // { path: 'admin/clo', component: CLOCrudComponent, canActivate: [AuthGuard] },
       // { path: 'admin/section', component: SectionCrudComponent, canActivate: [AuthGuard] },

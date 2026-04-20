@@ -1,7 +1,7 @@
 package com.course_genie.grade;
 
 import com.course_genie.assessment.Assessment;
-import com.course_genie.student.Student;
+import com.course_genie.enrollment.Enrollment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +19,10 @@ public class Grade {
     @JoinColumn(name = "assessment_id", nullable = false)
     private Assessment assessment;
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    @JoinColumn(name = "enrollment_id", nullable = false)
+    private Enrollment enrollment;
+    @Column(name = "student_id", nullable = false)
+    private String studentId;
 
     public Grade(long gradeId) {
         this.gradeId = gradeId;

@@ -6,6 +6,12 @@
         {{ course?.code }} - {{ course?.sections?.[0]?.code || 'No section available' }}
       </h2>
       <p class="course-name">{{ course?.name }}</p>
+
+      <div class="due-date-badge" [class.overdue]="(syllabus?.overdueBy ?? 0)>0" *ngIf="syllabus?.syllabusDueDate">
+        <i class="bi bi-calendar-event"></i>
+        Syllabus Due:
+        {{ syllabus?.syllabusDueDate }}
+      </div>
     </div>
 
     <div class="syllabus-actions">
@@ -28,14 +34,16 @@
     *ngIf="submitStatus.type"
     [ngClass]="{
     'submit-success': submitStatus.type === 'success',
-    'submit-error': submitStatus.type === 'error'
+    'submit-error': submitStatus.type === 'error',
+    'submit-warning': submitStatus.type === 'warning'
   }"
   >
     <i
       class="bi"
       [ngClass]="{
       'bi-check-circle-fill': submitStatus.type === 'success',
-      'bi-exclamation-triangle-fill': submitStatus.type === 'error'
+      'bi-exclamation-triangle-fill': submitStatus.type === 'error',
+      'bi-exclamation-circle-fill': submitStatus.type === 'warning'
     }"
     ></i>
     {{ submitStatus.message }}
@@ -268,6 +276,49 @@
   .syllabus-html-content li {
     margin-bottom: 0.5rem;
   }
+  .due-date-badge {
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-weight: 500;
+    font-size: 0.95rem;
+    backdrop-filter: blur(6px);
+  }
+
+  .due-date-badge i {
+    font-size: 1rem;
+  }
+
+  .due-date-badge.overdue {
+    background: rgba(255, 77, 77, 0.2);
+    color: #ffdddd;
+    border: 1px solid rgba(255, 77, 77, 0.5);
+  }
+
+  .submit-warning {
+    margin: 1rem 0 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    background-color: #fff4e5;
+    color: #7c4700;
+    border: 1px solid #ffcc80;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .submit-warning i {
+    color: #f59e0b;
+    font-size: 1.2rem;
+  }
+
 
   /* Responsive adjustments */
   @media (max-width: 768px) {

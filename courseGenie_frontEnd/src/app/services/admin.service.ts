@@ -14,4 +14,11 @@ export class AdminService {
   getSyllabusProgress(): Observable<{ [key: string]: SyllabusProgress[] }> {
     return this.http.get<{ [key: string]: SyllabusProgress[] }>(`${environment.apiUrl}/admin/syllabus-progress`);
   }
+
+  sendReminders(): Observable<string> {
+    return this.http.post(`${environment.apiUrl}/admin/send-reminders`, {},
+      { responseType: 'text' }
+    );
+  }
+
 }

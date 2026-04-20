@@ -65,16 +65,17 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public List<Student> getStudentsBySection(Long sectionId) {
+//    public List<Student> getStudentsBySection(Long sectionId) {
+//
+//        sectionRepository.findById(sectionId)
+//                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+//
+//        return enrollmentService.getEnrollmentsBySection(sectionId)
+//                .stream()
+//                .map(Enrollment::getStudent)
+//                .toList();
+//    }
 
-        sectionRepository.findById(sectionId)
-                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
-
-        return enrollmentService.getEnrollmentsForSection(sectionId)
-                .stream()
-                .map(Enrollment::getStudent)
-                .toList();
-    }
 
     public SectionDTO getSectionById(Long sectionId) {
         Section section = sectionRepository.findById(sectionId)
