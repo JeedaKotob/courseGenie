@@ -14,6 +14,22 @@ export class AdminHomeComponent implements OnInit {
   courses: Course[] = [];
   animationClass = '';
   syllabusProgress: SyllabusProgress[]=[];
+  adminTools = [
+    {
+      title: 'Exam Room Allocation',
+      description: 'Assign available rooms for scheduled exams and manage conflicts.',
+      icon: 'bi bi-building',
+      route: '/examRooms',
+      cta: 'Manage Exam Rooms'
+    },
+    {
+      title: 'Syllabus Progress',
+      description: 'Track syllabus submission status across sections and professors.',
+      icon: 'bi bi-clipboard-check',
+      route: '/admin/syllabusProgress',
+      cta: 'View Progress'
+    }
+  ];
 
   constructor(
     private courseService: CourseService,
@@ -39,6 +55,10 @@ export class AdminHomeComponent implements OnInit {
 
   navigateToCourse(courseCode: string) {
     this.router.navigate([`/admin/course/${courseCode}`]);
+  }
+
+  navigateToTool(route: string): void {
+    this.router.navigate([route]);
   }
 
 }
