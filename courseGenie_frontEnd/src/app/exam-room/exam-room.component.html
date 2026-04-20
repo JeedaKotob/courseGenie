@@ -1,57 +1,66 @@
 <div class="m-3">
   <div class="rooms-card">
-
-    <!-- Header -->
     <div class="rooms-header">
       <div>
         <h2>Exam Rooms</h2>
-        <p class="subtitle">Manage available rooms for exam sessions</p>
+        <p class="subtitle">Choose exam date and manage available rooms for scheduled exams</p>
       </div>
 
-      <button class="primary-btn">
-        <i class="pi pi-plus"></i>
-        Add Room
-      </button>
+      <div class="header-actions">
+        <label class="date-label">
+          Exam Date
+          <input
+            type="date"
+            [(ngModel)]="selectedDate"
+            (change)="onDateChange()"
+          />
+        </label>
+
+        <button
+          class="primary-btn"
+          [disabled]="!hasChanges || isSaving"
+          (click)="saveAssignments()"
+        >
+          <i class="pi pi-save"></i>
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
     </div>
 
-    <!-- Rooms List -->
-    <div *ngIf="rooms.length > 0; else noRooms"
-         class="rooms-list">
+    <div *ngIf="examCards.length > 0; else noRooms" class="slots-list">
+      <div class="slot-group" *ngFor="let slot of groupedCards | keyvalue">
+        <h4 class="slot-title">{{ slot.key }}</h4>
 
-      <div class="room-row"
-           *ngFor="let room of rooms">
+        <div class="rooms-list">
+          <div class="room-row" *ngFor="let exam of slot.value">
+            <div class="room-main">
+              <div class="room-number">{{ exam.courseCode }} - {{ exam.courseName }}</div>
+              <div class="room-type">{{ exam.semesterName }}</div>
+            </div>
 
-        <div class="room-main">
-          <div class="room-number">
-            Room {{ room.roomNumber }}
+            <div class="selectors">
+              <mat-form-field appearance="outline" class="selector-field room-select">
+                <mat-select
+                  multiple
+                  placeholder="Available Rooms"
+                  [(ngModel)]="exam.roomIds"
+                  (selectionChange)="onCardChanged()"
+                >
+                  <mat-option *ngFor="let room of rooms" [value]="room.roomId">
+                    {{ room.roomNumber }} ({{ room.capacity }} seats)
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
-          <div class="room-type">
-            {{ room.roomType }}
-          </div>
         </div>
-
-        <div class="room-capacity">
-          {{ room.capacity }} Seats
-        </div>
-
-        <div class="room-actions">
-          <button class="icon-btn">
-            <i class="pi pi-pencil"></i>
-          </button>
-          <button class="icon-btn danger">
-            <i class="pi pi-trash"></i>
-          </button>
-        </div>
-
       </div>
-
     </div>
 
     <ng-template #noRooms>
       <div class="empty-state">
-        <h5>No rooms created yet.</h5>
+        <h5>No exams are scheduled for the selected date.</h5>
       </div>
     </ng-template>
-
   </div>
 </div>

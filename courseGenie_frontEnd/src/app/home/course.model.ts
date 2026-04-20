@@ -19,6 +19,7 @@ export interface Section {
   assessments: Assessment[];
   assessmentCount: number;
   term: string;
+  semesterId?: number | null;
 }
 
 export interface Assessment {
@@ -128,5 +129,37 @@ export interface ExamRoom {
   capacity: number;
   roomNumber: string;
   roomType: RoomType;
+}
+
+export interface ExamSchedule {
+  examScheduleId: number;
+  examDate: string;
+  timeSlot: string;
+  semesterId: number;
+  semesterName: string;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  roomIds: number[];
+}
+
+export interface ExamScheduleAssignmentRequest {
+  examScheduleId: number;
+  roomIds: number[];
+}
+
+export interface ExamScheduleSaveRequest {
+  examDate: string;
+  assignments: ExamScheduleAssignmentRequest[];
+}
+
+export interface ExamCard {
+  examScheduleId: number;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  semesterName: string;
+  timeSlot: string;
+  roomIds: number[];
 }
 
