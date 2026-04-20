@@ -37,7 +37,7 @@ export class CourseOverviewComponent implements OnInit {
     private courseService: CourseService,
     private authService: AuthService,
     private modalService: NgbModal,
-    private location: Location
+    private location: Location,
     private fb: FormBuilder
   ) {}
 
