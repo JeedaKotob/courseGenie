@@ -28,4 +28,13 @@ public class ProfessorExamAllocationController {
     ) {
         return ResponseEntity.ok(professorExamAllocationService.saveProfessorAllocations(sectionId, professorId, request));
     }
+
+    @PostMapping("/{sectionId}/notify-students")
+    public ResponseEntity<String> notifyStudents(
+            @PathVariable Long sectionId,
+            @RequestParam Long professorId
+    ) {
+        int count = professorExamAllocationService.notifyStudentsForSection(sectionId, professorId);
+        return ResponseEntity.ok(count + " student emails queued. Sending continues in background.");
+    }
 }

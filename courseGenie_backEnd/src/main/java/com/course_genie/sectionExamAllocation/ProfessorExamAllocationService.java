@@ -26,6 +26,7 @@ public class ProfessorExamAllocationService {
     private final SectionExamAllocationRepository sectionExamAllocationRepository;
     private final ExamRoomRepository examRoomRepository;
     private final UserRepository userRepository;
+    private final ExamAllocationEmailService examAllocationEmailService;
 
     public ProfessorExamAllocationService(
             SectionRepository sectionRepository,
@@ -33,7 +34,8 @@ public class ProfessorExamAllocationService {
             ExamScheduleRepository examScheduleRepository,
             SectionExamAllocationRepository sectionExamAllocationRepository,
             ExamRoomRepository examRoomRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            ExamAllocationEmailService examAllocationEmailService
     ) {
         this.sectionRepository = sectionRepository;
         this.enrollmentRepository = enrollmentRepository;
@@ -41,6 +43,7 @@ public class ProfessorExamAllocationService {
         this.sectionExamAllocationRepository = sectionExamAllocationRepository;
         this.examRoomRepository = examRoomRepository;
         this.userRepository = userRepository;
+        this.examAllocationEmailService = examAllocationEmailService;
     }
 
     public ProfessorExamAllocationDTO getProfessorAllocationView(Long sectionId, Long professorId) {
@@ -185,6 +188,45 @@ public class ProfessorExamAllocationService {
         return getProfessorAllocationView(sectionId, professorId);
     }
 
+    public int notifyStudentsForSection(Long sectionId, Long professorId) {
+        Section section = getOwnedSection(sectionId, professorId);
+        ExamSchedule examSchedule = getExamScheduleForSection(section);
+
+        List<SectionExamAllocation> allocations = sectionExamAllocationRepository
+                .findBySectionSectionIdAndExamScheduleExamScheduleId(sectionId, examSchedule.getExamScheduleId());
+
+        String examTime = buildSlotLabel(examSchedule);
+        String examDate = String.valueOf(examSchedule.getExamDate());
+        List<ExamAllocationEmailService.StudentExamNotificationPayload> notifications = new ArrayList<>();
+
+        for (SectionExamAllocation allocation : allocations) {
+            if (allocation.getEnrollment() == null
+                    || allocation.getEnrollment().getStudent() == null
+                    || allocation.getEnrollment().getStudent().getEmail() == null) {
+                continue;
+            }
+
+            String studentName = allocation.getEnrollment().getStudent().getFirstName() + " "
+                    + allocation.getEnrollment().getStudent().getLastName();
+            notifications.add(new ExamAllocationEmailService.StudentExamNotificationPayload(
+                    allocation.getEnrollment().getStudent().getEmail(),
+                    studentName,
+                    section.getCourse().getCode(),
+                    section.getCourse().getName(),
+                    section.getCode(),
+                    examDate,
+                    examTime,
+                    allocation.getExamRoom().getRoomNumber()
+            ));
+        }
+
+        if (!notifications.isEmpty()) {
+            examAllocationEmailService.sendStudentExamRoomNotificationsAsync(notifications);
+        }
+
+        return notifications.size();
+    }
+
     private Section getOwnedSection(Long sectionId, Long professorId) {
         Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new EntityNotFoundException("Section not found."));
@@ -262,5 +304,14 @@ public class ProfessorExamAllocationService {
                 examSchedule.getStartTime(),
                 examSchedule.getEndTime()
         );
+    }
+
+    private String buildSlotLabel(ExamSchedule examSchedule) {
+        if (examSchedule.getStartTime() == null || examSchedule.getEndTime() == null) {
+            return "N/A";
+        }
+        return examSchedule.getStartTime().toString().substring(0, 5)
+                + " - "
+                + examSchedule.getEndTime().toString().substring(0, 5);
     }
 }

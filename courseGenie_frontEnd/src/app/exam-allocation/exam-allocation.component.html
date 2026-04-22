@@ -32,6 +32,9 @@
 
       <div class="actions-row">
         <button class="auto-btn" (click)="autoDistribute()">Auto Distribute</button>
+        <button class="auto-btn" (click)="notifyStudents()" [disabled]="notifying">
+          {{ notifying ? 'Sending...' : 'Notify Students' }}
+        </button>
         <button class="auto-btn" (click)="downloadReportPdf()">Download PDF</button>
         <button class="auto-btn" (click)="printReport()">Print Report</button>
       </div>

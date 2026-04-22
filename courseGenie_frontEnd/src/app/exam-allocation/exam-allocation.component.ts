@@ -23,6 +23,7 @@ declare var html2pdf: any;
 export class ExamAllocationComponent implements OnInit {
   loading = true;
   saving = false;
+  notifying = false;
   errorMessage = '';
 
   examData: ProfessorExamAllocation | null = null;
@@ -210,6 +211,27 @@ export class ExamAllocationComponent implements OnInit {
       })
       .catch(() => {
         this.toastr.error('Unable to generate PDF report.');
+      });
+  }
+
+  notifyStudents(): void {
+    if (!this.examData || !this.professorId) {
+      this.toastr.error('Allocation data is not ready.');
+      return;
+    }
+
+    this.notifying = true;
+    this.professorExamAllocationService
+      .notifyStudents(this.examData.sectionId, this.professorId)
+      .subscribe({
+        next: (message) => {
+          this.notifying = false;
+          this.toastr.success(message || 'Student notifications sent.');
+        },
+        error: (error) => {
+          this.notifying = false;
+          this.toastr.error(error?.error || 'Unable to notify students.');
+        }
       });
   }
 

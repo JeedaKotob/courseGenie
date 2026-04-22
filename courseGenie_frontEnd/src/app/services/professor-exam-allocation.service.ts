@@ -28,4 +28,12 @@ export class ProfessorExamAllocationService {
     const params = new HttpParams().set('professorId', professorId);
     return this.http.put<ProfessorExamAllocation>(`${this.apiUrl}/${sectionId}`, payload, { params });
   }
+
+  notifyStudents(sectionId: number, professorId: number): Observable<string> {
+    const params = new HttpParams().set('professorId', professorId);
+    return this.http.post(`${this.apiUrl}/${sectionId}/notify-students`, {}, {
+      params,
+      responseType: 'text'
+    });
+  }
 }
