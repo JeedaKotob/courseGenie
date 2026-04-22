@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { NgZone } from '@angular/core';
 import {
   Course,
   ProfessorExamAllocation,
@@ -31,8 +29,6 @@ export class ExamAllocationComponent implements OnInit {
   students: ProfessorExamStudent[] = [];
   roomSelection: Record<number, number | null> = {};
   hasChanges = false;
-  rawPdfUrl = '';
-  pdfUrl: SafeResourceUrl | null = null;
 
   private professorId: number | null = null;
   private originalSnapshot = '';
@@ -42,9 +38,7 @@ export class ExamAllocationComponent implements OnInit {
     private authService: AuthService,
     private courseService: CourseService,
     private professorExamAllocationService: ProfessorExamAllocationService,
-    private toastr: ToastrService,
-    private sanitizer: DomSanitizer,
-    private ngZone: NgZone
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -143,48 +137,80 @@ export class ExamAllocationComponent implements OnInit {
       });
   }
 
-  generateReportPdf(): void {
+  private generateReportPdfBlob(): Promise<Blob> {
     const element = document.getElementById('examAllocationReport');
     if (!element || !this.examData) {
+      return Promise.reject(new Error('Report content is not ready.'));
+    }
+
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '0';
+    container.style.width = '800px';
+
+    const clone = element.cloneNode(true) as HTMLElement;
+
+    clone.classList.remove('report-export-only');
+    clone.style.display = 'block';
+    clone.style.visibility = 'visible';
+    clone.style.opacity = '1';
+
+    container.appendChild(clone);
+    document.body.appendChild(container);
+
+    return new Promise<Blob>((resolve, reject) => {
+      setTimeout(() => {
+        const opt = {
+          margin: 0.5,
+          filename: `${this.examData?.courseCode}-allocation.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            letterRendering: true
+          },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf()
+          .set(opt)
+          .from(clone)
+          .toPdf()
+          .output('blob')
+          .then((pdfBlob: Blob) => {
+            document.body.removeChild(container);
+            resolve(pdfBlob);
+          })
+          .catch((err: any) => {
+            document.body.removeChild(container);
+            reject(err);
+          });
+      }, 150);
+    });
+  }
+
+  downloadReportPdf(): void {
+    if (!this.examData) {
       this.toastr.error('Report content is not ready.');
       return;
     }
 
-    html2pdf()
-      .set({
-        margin: 0.5,
-        filename: `${this.examData.courseCode}-${this.examData.sectionCode}-exam-allocation.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      })
-      .from(element)
-      .outputPdf('blob')
-      .then((pdfBlob: Blob) => {
+    this.generateReportPdfBlob()
+      .then((pdfBlob) => {
         const rawUrl = URL.createObjectURL(pdfBlob);
-        this.ngZone.run(() => {
-          this.rawPdfUrl = rawUrl;
-          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
-          this.toastr.success('Exam report PDF generated.');
-        });
+        const link = document.createElement('a');
+        link.href = rawUrl;
+        link.download = `${this.examData?.courseCode}-${this.examData?.sectionCode}-exam-allocation.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(rawUrl);
       })
       .catch(() => {
         this.toastr.error('Unable to generate PDF report.');
       });
-  }
-
-  downloadReportPdf(): void {
-    if (!this.rawPdfUrl || !this.examData) {
-      this.toastr.error('Generate the report first.');
-      return;
-    }
-
-    const link = document.createElement('a');
-    link.href = this.rawPdfUrl;
-    link.download = `${this.examData.courseCode}-${this.examData.sectionCode}-exam-allocation.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   printReport(): void {
@@ -245,6 +271,10 @@ export class ExamAllocationComponent implements OnInit {
 
   getUnassignedStudents(): ProfessorExamStudent[] {
     return this.students.filter((student) => !this.roomSelection[student.enrollmentId]);
+  }
+
+  getRoomStudentCount(roomId: number): number {
+    return this.getStudentsForRoom(roomId).length;
   }
 
   getSlotLabel(): string {
