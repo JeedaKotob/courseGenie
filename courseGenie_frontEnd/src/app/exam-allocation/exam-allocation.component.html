@@ -32,6 +32,9 @@
 
       <div class="actions-row">
         <button class="auto-btn" (click)="autoDistribute()">Auto Distribute</button>
+        <button class="auto-btn" (click)="generateReportPdf()">Generate Report PDF</button>
+        <button class="auto-btn" (click)="downloadReportPdf()" [disabled]="!rawPdfUrl">Download PDF</button>
+        <button class="auto-btn" (click)="printReport()">Print Report</button>
       </div>
 
       <div class="rooms-grid">
@@ -72,6 +75,57 @@
               </select>
             </span>
           </div>
+        </div>
+      </div>
+
+      <div id="examAllocationReport" class="report-card">
+        <h3>Exam Allocation Report</h3>
+        <p><strong>Course:</strong> {{ examData.courseCode }} - {{ examData.courseName }}</p>
+        <p><strong>Section:</strong> {{ examData.sectionCode }}</p>
+        <p><strong>Date:</strong> {{ examData.examDate }} | <strong>Time:</strong> {{ getSlotLabel() }}</p>
+        <p><strong>Total Students:</strong> {{ examData.enrolledStudentCount }}</p>
+
+        <div *ngFor="let room of examData.rooms" class="report-room-block">
+          <h4>Room {{ room.roomNumber }} ({{ room.capacity }} seats)</h4>
+          <table class="report-table">
+            <thead>
+            <tr>
+              <th>Student</th>
+              <th>Student ID</th>
+              <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let student of getStudentsForRoom(room.roomId)">
+              <td>{{ formatStudentName(student) }}</td>
+              <td>{{ student.studentId }}</td>
+              <td>{{ student.email }}</td>
+            </tr>
+            <tr *ngIf="getStudentsForRoom(room.roomId).length === 0">
+              <td colspan="3">No students assigned to this room.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="report-room-block" *ngIf="getUnassignedStudents().length > 0">
+          <h4>Unassigned Students</h4>
+          <table class="report-table">
+            <thead>
+            <tr>
+              <th>Student</th>
+              <th>Student ID</th>
+              <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let student of getUnassignedStudents()">
+              <td>{{ formatStudentName(student) }}</td>
+              <td>{{ student.studentId }}</td>
+              <td>{{ student.email }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </ng-container>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { NgZone } from '@angular/core';
 import {
   Course,
   ProfessorExamAllocation,
@@ -11,6 +13,8 @@ import {
 import { AuthService } from '../services/auth.service';
 import { CourseService } from '../services/course.service';
 import { ProfessorExamAllocationService } from '../services/professor-exam-allocation.service';
+
+declare var html2pdf: any;
 
 @Component({
   selector: 'app-exam-allocation',
@@ -27,6 +31,8 @@ export class ExamAllocationComponent implements OnInit {
   students: ProfessorExamStudent[] = [];
   roomSelection: Record<number, number | null> = {};
   hasChanges = false;
+  rawPdfUrl = '';
+  pdfUrl: SafeResourceUrl | null = null;
 
   private professorId: number | null = null;
   private originalSnapshot = '';
@@ -36,7 +42,9 @@ export class ExamAllocationComponent implements OnInit {
     private authService: AuthService,
     private courseService: CourseService,
     private professorExamAllocationService: ProfessorExamAllocationService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private sanitizer: DomSanitizer,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -135,6 +143,83 @@ export class ExamAllocationComponent implements OnInit {
       });
   }
 
+  generateReportPdf(): void {
+    const element = document.getElementById('examAllocationReport');
+    if (!element || !this.examData) {
+      this.toastr.error('Report content is not ready.');
+      return;
+    }
+
+    html2pdf()
+      .set({
+        margin: 0.5,
+        filename: `${this.examData.courseCode}-${this.examData.sectionCode}-exam-allocation.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      })
+      .from(element)
+      .outputPdf('blob')
+      .then((pdfBlob: Blob) => {
+        const rawUrl = URL.createObjectURL(pdfBlob);
+        this.ngZone.run(() => {
+          this.rawPdfUrl = rawUrl;
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
+          this.toastr.success('Exam report PDF generated.');
+        });
+      })
+      .catch(() => {
+        this.toastr.error('Unable to generate PDF report.');
+      });
+  }
+
+  downloadReportPdf(): void {
+    if (!this.rawPdfUrl || !this.examData) {
+      this.toastr.error('Generate the report first.');
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = this.rawPdfUrl;
+    link.download = `${this.examData.courseCode}-${this.examData.sectionCode}-exam-allocation.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  printReport(): void {
+    const element = document.getElementById('examAllocationReport');
+    if (!element) {
+      this.toastr.error('Report content is not ready.');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank', 'width=1000,height=800');
+    if (!printWindow) {
+      this.toastr.error('Unable to open print window.');
+      return;
+    }
+
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>Exam Allocation Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 16px; }
+          .report-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+          .report-table th, .report-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+          .report-table th { background: #f5f5f5; }
+        </style>
+      </head>
+      <body>${element.innerHTML}</body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
   getAssignedCount(roomId: number): number {
     return Object.values(this.roomSelection).filter((value) => value === roomId).length;
   }
@@ -152,6 +237,14 @@ export class ExamAllocationComponent implements OnInit {
 
   formatStudentName(student: ProfessorExamStudent): string {
     return `${student.firstName} ${student.lastName}`;
+  }
+
+  getStudentsForRoom(roomId: number): ProfessorExamStudent[] {
+    return this.students.filter((student) => this.roomSelection[student.enrollmentId] === roomId);
+  }
+
+  getUnassignedStudents(): ProfessorExamStudent[] {
+    return this.students.filter((student) => !this.roomSelection[student.enrollmentId]);
   }
 
   getSlotLabel(): string {
