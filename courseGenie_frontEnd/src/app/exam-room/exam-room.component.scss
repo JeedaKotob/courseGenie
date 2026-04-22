@@ -162,6 +162,13 @@
   font-weight: 600;
 }
 
+.exam-stats span.assigned-rooms-pill {
+  max-width: min(800px, 100%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .exam-stats span.warning-pill {
   background: #fdeceb;
   color: #b42318;

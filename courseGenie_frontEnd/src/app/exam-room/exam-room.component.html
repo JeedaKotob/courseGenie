@@ -41,7 +41,7 @@
               <div class="room-type">{{ exam.semesterName }}</div>
               <div class="exam-stats">
                 <span>Enrolled Students: {{ exam.enrolledStudentCount }}</span>
-                <span>Assigned Rooms: {{ exam.roomIds.length }}</span>
+                <span class="assigned-rooms-pill">Assigned Rooms: {{ getAssignedRoomsSummary(exam) }}</span>
                 <span>Total Seats: {{ getSelectedSeatCapacity(exam) }}</span>
                 <span [ngClass]="{ 'warning-pill': getUnseatedStudents(exam) > 0 }">
                   Unseated: {{ getUnseatedStudents(exam) }}

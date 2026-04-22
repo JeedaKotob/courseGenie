@@ -197,6 +197,27 @@ export class ExamRoomComponent implements OnInit {
     return `${slotKey}::${roomId}`;
   }
 
+  getAssignedRoomsSummary(card: ExamCard): string {
+    if (!card.roomIds?.length) {
+      return '0';
+    }
+
+    const slotKey = this.getSlotLabel(card);
+    const roomById = new Map(this.rooms.map((room) => [room.roomId, room]));
+    const details = card.roomIds
+      .map((roomId) => {
+        const room = roomById.get(roomId);
+        if (!room) {
+          return null;
+        }
+        const left = this.globalRemainingSeatsBySlotRoom.get(this.getSlotRoomKey(slotKey, roomId)) ?? room.capacity;
+        return `${room.roomNumber} (${left}/${room.capacity})`;
+      })
+      .filter((value): value is string => !!value);
+
+    return `${card.roomIds.length} [ ${details.join(', ')} ]`;
+  }
+
   private getCardCapacityContext(card: ExamCard): CardCapacityContext {
     return this.buildSlotCapacityContext().get(card.examScheduleId) || {
       effectiveSeats: 0,
