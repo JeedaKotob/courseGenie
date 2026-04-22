@@ -1,0 +1,89 @@
+<div class="m-3">
+  <div class="exam-page-card" *ngIf="!loading; else loadingState">
+    <ng-container *ngIf="!errorMessage && examData; else errorState">
+      <div class="exam-header">
+        <div>
+          <h2>Exam Allocation</h2>
+          <p class="subtitle">{{ examData.courseCode }} - {{ examData.courseName }} | Section {{ examData.sectionCode }}</p>
+        </div>
+        <button class="save-btn" (click)="saveAllocations()" [disabled]="!hasChanges || saving">
+          {{ saving ? 'Saving...' : 'Save Allocation' }}
+        </button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span>Exam Date</span>
+          <strong>{{ examData.examDate }}</strong>
+        </div>
+        <div class="info-item">
+          <span>Time Slot</span>
+          <strong>{{ getSlotLabel() }}</strong>
+        </div>
+        <div class="info-item">
+          <span>Semester</span>
+          <strong>{{ examData.semesterName }}</strong>
+        </div>
+        <div class="info-item">
+          <span>Enrolled Students</span>
+          <strong>{{ examData.enrolledStudentCount }}</strong>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="auto-btn" (click)="autoDistribute()">Auto Distribute</button>
+      </div>
+
+      <div class="rooms-grid">
+        <div class="room-card" *ngFor="let room of examData.rooms">
+          <h5>{{ room.roomNumber }}</h5>
+          <p>{{ room.roomType }}</p>
+          <div class="seat-meta">
+            <span>Capacity: {{ room.capacity }}</span>
+            <span>Total Assigned: {{ getProjectedTotalAssigned(room) }}</span>
+            <span>In This Section: {{ getAssignedCount(room.roomId) }}</span>
+            <span>Seats Left: {{ getAvailableSeatsForRoom(room) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="students-card">
+        <h4>Student Room Assignment</h4>
+        <div class="students-table">
+          <div class="student-row header">
+            <span>Student</span>
+            <span>Student ID</span>
+            <span>Email</span>
+            <span>Assigned Room</span>
+          </div>
+          <div class="student-row" *ngFor="let student of students">
+            <span>{{ formatStudentName(student) }}</span>
+            <span>{{ student.studentId }}</span>
+            <span>{{ student.email }}</span>
+            <span>
+              <select
+                [(ngModel)]="roomSelection[student.enrollmentId]"
+                (ngModelChange)="onAssignmentChange()"
+              >
+                <option [ngValue]="null">Unassigned</option>
+                <option *ngFor="let room of examData.rooms" [ngValue]="room.roomId">
+                  {{ room.roomNumber }} ({{ room.capacity }} seats)
+                </option>
+              </select>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loadingState>
+  <div class="exam-page-card">Loading exam allocation...</div>
+</ng-template>
+
+<ng-template #errorState>
+  <div class="exam-page-card">
+    <h5>{{ errorMessage }}</h5>
+  </div>
+</ng-template>

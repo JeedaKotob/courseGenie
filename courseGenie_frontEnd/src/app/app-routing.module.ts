@@ -30,6 +30,7 @@ import {AdminSyllabusViewComponent} from './admin/admin-syllabus-view/admin-syll
 import {ExamRoomComponent} from './exam-room/exam-room.component';
 import {CalendarComponent} from './calendar/calendar.component';
 import {CarComponent} from './car/car.component';
+import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -74,6 +75,7 @@ const routes: Routes = [
       { path: 'statistics/:courseCode/:sectionCode', component: StatisticsComponent, canActivate: [AuthGuard] },
       { path: 'teaching-methodology/:courseCode/:sectionCode', component: TeachingMethodologyComponent, canActivate: [AuthGuard] },
       { path: 'car/:courseCode/:sectionCode', component: CarComponent, canActivate: [AuthGuard] },
+      { path: 'exam-allocation/:courseCode/:sectionCode', component: ExamAllocationComponent, canActivate: [AuthGuard] },
 
       // { path: 'admin/clo', component: CLOCrudComponent, canActivate: [AuthGuard] },
       // { path: 'admin/section', component: SectionCrudComponent, canActivate: [AuthGuard] },

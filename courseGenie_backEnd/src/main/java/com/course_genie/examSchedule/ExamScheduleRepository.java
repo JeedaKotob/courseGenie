@@ -8,5 +8,7 @@ import java.util.List;
 public interface ExamScheduleRepository extends JpaRepository<ExamSchedule, Long> {
     List<ExamSchedule> findByExamDate(LocalDate examDate);
 
+    List<ExamSchedule> findByCourseCourseIdAndSemesterSemesterIdOrderByExamDateDesc(Long courseId, Long semesterId);
+
     void deleteByExamDate(LocalDate examDate);
 }

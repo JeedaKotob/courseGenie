@@ -78,6 +78,7 @@ import {CalendarComponent} from './calendar/calendar.component';
 import {Calendar} from "primeng/calendar";
 import {CarComponent} from './car/car.component';
 import {CarRenderComponent} from './car-render/car-render.component';
+import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
 
 
 
@@ -131,7 +132,8 @@ import {CarRenderComponent} from './car-render/car-render.component';
     ExamRoomComponent,
     CalendarComponent,
     CarComponent,
-    CarRenderComponent
+    CarRenderComponent,
+    ExamAllocationComponent
 
 
 

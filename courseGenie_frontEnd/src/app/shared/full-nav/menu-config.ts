@@ -82,6 +82,12 @@ export const menuItems: MenuItem[] = [
     roles: ['ROLE_PROFESSOR', 'ROLE_ADMIN'],
   },
   {
+    label: 'Exam Allocation',
+    path: '/exam-allocation/:courseCode/:sectionCode',
+    icon: 'pi pi-building',
+    roles: ['ROLE_PROFESSOR'],
+  },
+  {
     label: 'Books',
     path: '/book-manager/:courseCode/:sectionCode',
     icon: 'pi pi-book',

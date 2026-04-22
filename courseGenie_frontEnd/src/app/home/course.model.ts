@@ -136,13 +136,22 @@ export interface ExamRoom {
 export interface ExamSchedule {
   examScheduleId: number;
   examDate: string;
-  timeSlot: string;
+  startTime?: string;
+  endTime?: string;
   semesterId: number;
   semesterName: string;
   courseId: number;
   courseCode: string;
   courseName: string;
   roomIds: number[];
+  roomSeatAvailability?: RoomSeatAvailability[];
+  enrolledStudentCount: number;
+  assignedSeatCapacity: number;
+}
+
+export interface RoomSeatAvailability {
+  roomId: number;
+  remainingSeats: number;
 }
 
 export interface ExamScheduleAssignmentRequest {
@@ -161,8 +170,12 @@ export interface ExamCard {
   courseCode: string;
   courseName: string;
   semesterName: string;
-  timeSlot: string;
+  startTime?: string;
+  endTime?: string;
   roomIds: number[];
+  roomSeatAvailability?: RoomSeatAvailability[];
+  enrolledStudentCount: number;
+  assignedSeatCapacity: number;
 }
 export interface CalendarEvent {
   title: string;
@@ -209,4 +222,49 @@ export interface Car {
   submitted: boolean;
   submissionDate: string;
   isComplete: boolean;
+}
+
+export interface ProfessorExamRoom {
+  roomId: number;
+  roomNumber: string;
+  roomType: string;
+  capacity: number;
+  assignedCountTotal: number;
+  assignedCountInSection: number;
+}
+
+export interface ProfessorExamStudent {
+  enrollmentId: number;
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  assignedRoomId: number | null;
+}
+
+export interface ProfessorExamAllocation {
+  examScheduleId: number;
+  examDate: string;
+  startTime?: string;
+  endTime?: string;
+  sectionId: number;
+  sectionCode: string;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  semesterName: string;
+  enrolledStudentCount: number;
+  rooms: ProfessorExamRoom[];
+  students: ProfessorExamStudent[];
+}
+
+export interface StudentRoomAssignmentRequest {
+  enrollmentId: number;
+  roomId: number;
+}
+
+export interface SaveProfessorExamAllocationRequest {
+  examScheduleId: number;
+  assignments: StudentRoomAssignmentRequest[];
 }

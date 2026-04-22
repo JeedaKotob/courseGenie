@@ -24,6 +24,7 @@ export class ExamRoomComponent implements OnInit {
   isSaving = false;
 
   private originalSnapshot = '';
+  private globalRemainingSeatsBySlotRoom = new Map<string, number>();
 
   constructor(
     private router: Router,
@@ -51,7 +52,8 @@ export class ExamRoomComponent implements OnInit {
   }
 
   onCardChanged(): void {
-    this.groupCardsByTimeSlot();
+    this.groupCardsBySlot();
+    this.rebuildGlobalRemainingSeats();
     this.hasChanges = this.buildSnapshot() !== this.originalSnapshot;
   }
 
@@ -71,10 +73,9 @@ export class ExamRoomComponent implements OnInit {
 
     this.examRoomService.saveSchedulesByDate(payload).subscribe({
       next: () => {
-        this.originalSnapshot = this.buildSnapshot();
-        this.hasChanges = false;
         this.isSaving = false;
         this.toastr.success('Exam room assignments saved.');
+        this.loadSchedulesForSelectedDate();
       },
       error: (error) => {
         this.isSaving = false;
@@ -97,10 +98,15 @@ export class ExamRoomComponent implements OnInit {
           courseCode: schedule.courseCode,
           courseName: schedule.courseName,
           semesterName: schedule.semesterName,
-          timeSlot: schedule.timeSlot,
-          roomIds: schedule.roomIds || []
+          startTime: schedule.startTime,
+          endTime: schedule.endTime,
+          roomIds: schedule.roomIds || [],
+          roomSeatAvailability: schedule.roomSeatAvailability || [],
+          enrolledStudentCount: schedule.enrolledStudentCount || 0,
+          assignedSeatCapacity: schedule.assignedSeatCapacity || 0
         }));
-        this.groupCardsByTimeSlot();
+        this.groupCardsBySlot();
+        this.rebuildGlobalRemainingSeats();
         this.originalSnapshot = this.buildSnapshot();
         this.hasChanges = false;
       },
@@ -108,11 +114,11 @@ export class ExamRoomComponent implements OnInit {
     });
   }
 
-  private groupCardsByTimeSlot(): void {
+  private groupCardsBySlot(): void {
     const grouped: Record<string, ExamCard[]> = {};
 
     this.examCards.forEach((card) => {
-      const slot = card.timeSlot || 'Unassigned';
+      const slot = this.getSlotLabel(card);
       if (!grouped[slot]) {
         grouped[slot] = [];
       }
@@ -122,6 +128,17 @@ export class ExamRoomComponent implements OnInit {
     this.groupedCards = grouped;
   }
 
+  private getSlotLabel(card: ExamCard): string {
+    if (card.startTime && card.endTime) {
+      return `${this.formatTime(card.startTime)} - ${this.formatTime(card.endTime)}`;
+    }
+    return 'Unscheduled';
+  }
+
+  private formatTime(value: string): string {
+    return value?.slice(0, 5) || value;
+  }
+
   private buildSnapshot(): string {
     return JSON.stringify(
       this.examCards.map((card) => ({
@@ -129,6 +146,105 @@ export class ExamRoomComponent implements OnInit {
         roomIds: [...card.roomIds].sort((a, b) => a - b)
       }))
     );
+  }
+
+  getSelectedSeatCapacity(card: ExamCard): number {
+    return this.getCardCapacityContext(card).effectiveSeats;
+  }
+
+  getUnseatedStudents(card: ExamCard): number {
+    return this.getCardCapacityContext(card).unseated;
+  }
+
+  getRoomOptionLabel(card: ExamCard, room: ExamRoom): string {
+    const slotKey = this.getSlotLabel(card);
+    const seats = this.globalRemainingSeatsBySlotRoom.get(this.getSlotRoomKey(slotKey, room.roomId)) ?? room.capacity;
+    return `${room.roomNumber} (${seats}/${room.capacity} seats left)`;
+  }
+
+  private rebuildGlobalRemainingSeats(): void {
+    this.globalRemainingSeatsBySlotRoom = new Map<string, number>();
+    const baseCapacityByRoom = new Map(this.rooms.map((room) => [room.roomId, room.capacity]));
+
+    Object.entries(this.groupedCards).forEach(([slotKey, slotCards]) => {
+      const remainingByRoom = new Map(baseCapacityByRoom);
+
+      slotCards.forEach((slotCard) => {
+        const selectedRoomIds = slotCard.roomIds || [];
+        let toConsume = slotCard.enrolledStudentCount || 0;
+
+        selectedRoomIds.forEach((roomId) => {
+          if (toConsume <= 0) {
+            return;
+          }
+          const remaining = remainingByRoom.get(roomId) || 0;
+          const consumed = Math.min(remaining, toConsume);
+          remainingByRoom.set(roomId, remaining - consumed);
+          toConsume -= consumed;
+        });
+      });
+
+      this.rooms.forEach((room) => {
+        this.globalRemainingSeatsBySlotRoom.set(
+          this.getSlotRoomKey(slotKey, room.roomId),
+          remainingByRoom.get(room.roomId) || 0
+        );
+      });
+    });
+  }
+
+  private getSlotRoomKey(slotKey: string, roomId: number): string {
+    return `${slotKey}::${roomId}`;
+  }
+
+  private getCardCapacityContext(card: ExamCard): CardCapacityContext {
+    return this.buildSlotCapacityContext().get(card.examScheduleId) || {
+      effectiveSeats: 0,
+      unseated: card.enrolledStudentCount,
+      roomRemainingBefore: new Map<number, number>(),
+      roomRemainingAfter: new Map<number, number>()
+    };
+  }
+
+  private buildSlotCapacityContext(): Map<number, CardCapacityContext> {
+    const context = new Map<number, CardCapacityContext>();
+    const baseCapacityByRoom = new Map(this.rooms.map((room) => [room.roomId, room.capacity]));
+
+    Object.values(this.groupedCards).forEach((slotCards) => {
+      const remainingByRoom = new Map(baseCapacityByRoom);
+
+      slotCards.forEach((slotCard) => {
+        const selectedRoomIds = slotCard.roomIds || [];
+        const roomRemainingBefore = new Map<number, number>(remainingByRoom);
+
+        const effectiveSeats = selectedRoomIds.reduce(
+          (total, roomId) => total + (remainingByRoom.get(roomId) || 0),
+          0
+        );
+
+        const requiredSeats = slotCard.enrolledStudentCount || 0;
+        let toConsume = Math.min(requiredSeats, effectiveSeats);
+
+        selectedRoomIds.forEach((roomId) => {
+          if (toConsume <= 0) {
+            return;
+          }
+          const remaining = remainingByRoom.get(roomId) || 0;
+          const consumed = Math.min(remaining, toConsume);
+          remainingByRoom.set(roomId, remaining - consumed);
+          toConsume -= consumed;
+        });
+
+        context.set(slotCard.examScheduleId, {
+          effectiveSeats,
+          unseated: Math.max(0, requiredSeats - effectiveSeats),
+          roomRemainingBefore,
+          roomRemainingAfter: new Map<number, number>(remainingByRoom)
+        });
+      });
+    });
+
+    return context;
   }
 
   private getTodayDate(): string {
@@ -142,4 +258,11 @@ export class ExamRoomComponent implements OnInit {
     }
     this.router.navigate(['/admin']);
   }
+}
+
+interface CardCapacityContext {
+  effectiveSeats: number;
+  unseated: number;
+  roomRemainingBefore: Map<number, number>;
+  roomRemainingAfter: Map<number, number>;
 }

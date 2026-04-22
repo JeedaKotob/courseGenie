@@ -13,4 +13,10 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             Enrollment.EnrollmentStatus status
     );
     List<Enrollment> findEnrollmentBySectionSectionId(long sectionId);
+
+    long countBySectionCourseCourseIdAndSectionSemesterSemesterIdAndStatus(
+            Long courseId,
+            Long semesterId,
+            Enrollment.EnrollmentStatus status
+    );
 }

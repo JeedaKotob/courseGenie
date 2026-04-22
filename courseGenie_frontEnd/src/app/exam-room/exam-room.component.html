@@ -39,6 +39,14 @@
             <div class="room-main">
               <div class="room-number">{{ exam.courseCode }} - {{ exam.courseName }}</div>
               <div class="room-type">{{ exam.semesterName }}</div>
+              <div class="exam-stats">
+                <span>Enrolled Students: {{ exam.enrolledStudentCount }}</span>
+                <span>Assigned Rooms: {{ exam.roomIds.length }}</span>
+                <span>Total Seats: {{ getSelectedSeatCapacity(exam) }}</span>
+                <span [ngClass]="{ 'warning-pill': getUnseatedStudents(exam) > 0 }">
+                  Unseated: {{ getUnseatedStudents(exam) }}
+                </span>
+              </div>
             </div>
 
             <div class="selectors">
@@ -50,7 +58,7 @@
                   (selectionChange)="onCardChanged()"
                 >
                   <mat-option *ngFor="let room of rooms" [value]="room.roomId">
-                    {{ room.roomNumber }} ({{ room.capacity }} seats)
+                    {{ getRoomOptionLabel(exam, room) }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

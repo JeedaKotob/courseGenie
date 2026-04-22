@@ -7,13 +7,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"examDate", "timeSlot", "course_id", "semester_id"})
+                @UniqueConstraint(columnNames = {"examDate", "startTime", "endTime", "course_id", "semester_id"})
         }
 )
 @Builder
@@ -27,7 +28,9 @@ public class ExamSchedule {
 
     private LocalDate examDate;
 
-    private String timeSlot;
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "semester_id", nullable = false)

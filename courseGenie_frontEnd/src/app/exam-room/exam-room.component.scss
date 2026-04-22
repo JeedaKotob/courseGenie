@@ -146,6 +146,27 @@
   color: #6c757d;
 }
 
+.exam-stats {
+  margin-top: .45rem;
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+}
+
+.exam-stats span {
+  background: #eef6fa;
+  color: #024964;
+  border-radius: 999px;
+  padding: .2rem .55rem;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.exam-stats span.warning-pill {
+  background: #fdeceb;
+  color: #b42318;
+}
+
 .room-capacity {
   font-weight: 500;
   color: #024964;
