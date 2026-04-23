@@ -21,5 +21,7 @@ public record CarDTO(
         String aiReflection,
         boolean submitted,
         LocalDate submissionDate,
-        boolean isComplete
+        boolean isComplete,
+        LocalDate carDueDate,
+        long overdueBy
 ) {}

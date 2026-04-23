@@ -1,6 +1,7 @@
 package com.course_genie.car;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,5 +24,11 @@ public class CarController {
     @GetMapping("/section/{sectionId}/html")
     public String getCarHtml(@PathVariable Long sectionId) {
         return carService.generateCarHtml(sectionId);
+    }
+
+    @PostMapping("/submit/{carId}")
+    public ResponseEntity<Void> submitCar(@PathVariable Long carId) {
+        carService.submitCar(carId);
+        return ResponseEntity.ok().build();
     }
 }

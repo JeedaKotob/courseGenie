@@ -18,6 +18,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
 
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -66,6 +67,17 @@ public class CarService {
 
         Car savedCar = carRepository.save(car);
         return getCarBySection(savedCar.getSection().getSectionId());
+    }
+
+    public void submitCar(Long carId) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new EntityNotFoundException("CAR not found"));
+
+        if (!car.isSubmitted()) {
+            car.setSubmitted(true);
+            car.setSubmissionDate(LocalDate.now());
+            carRepository.save(car);
+        }
     }
 
     private Map<String, Integer> calculateGradeDistribution(List<Enrollment> enrollments, List<Grade> grades) {

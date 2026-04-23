@@ -3,6 +3,8 @@ package com.course_genie.car;
 import com.course_genie.section.Section;
 import com.course_genie.enrollment.Enrollment;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.List;
 
@@ -21,6 +23,13 @@ public class CarDTOMapper {
         int withdrawals = (int) enrollments.stream()
                 .filter(e -> e.getStatus() == Enrollment.EnrollmentStatus.WITHDRAWN)
                 .count();
+        LocalDate carDueDate = section.getSemester() != null ? section.getSemester().getCarDueDate() : null;
+        LocalDate comparisonDate = car.isSubmitted() ? car.getSubmissionDate() : LocalDate.now();
+        long overdueBy = 0;
+
+        if (carDueDate != null && comparisonDate != null && comparisonDate.isAfter(carDueDate)) {
+            overdueBy = ChronoUnit.DAYS.between(carDueDate, comparisonDate);
+        }
 
         return new CarDTO(
                 car.getCarId(),
@@ -39,7 +48,9 @@ public class CarDTOMapper {
                 car.getAiReflection(),
                 car.isSubmitted(),
                 car.getSubmissionDate(),
-                checkIfComplete(car)
+                checkIfComplete(car),
+                carDueDate,
+                overdueBy
         );
     }
 

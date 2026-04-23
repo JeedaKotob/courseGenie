@@ -25,4 +25,8 @@ export class CarService {
       responseType: 'text'
     });
   }
+
+  submitCar(carId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/submit/${carId}`, null);
+  }
 }

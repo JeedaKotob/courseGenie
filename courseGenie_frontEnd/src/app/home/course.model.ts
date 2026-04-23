@@ -222,6 +222,8 @@ export interface Car {
   submitted: boolean;
   submissionDate: string;
   isComplete: boolean;
+  carDueDate: string;
+  overdueBy: number;
 }
 
 export interface ProfessorExamRoom {

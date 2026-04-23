@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, NgZone, OnInit, ViewEncapsulation} from '@
 import { SharedDataService } from '../services/shared-data.sevice';
 import { CarService } from '../services/car.service';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { Car } from '../home/course.model';
 
 declare var html2pdf: any;
 
@@ -19,8 +20,13 @@ export class CarRenderComponent implements OnInit {
   pdfUrl: SafeResourceUrl | null = null;
   rawPdfUrl: string = '';
 
-  car: any;
+  car: Car | null = null;
   course: any;
+  submitStatus = {
+    type: null as 'success' | 'error' | 'warning' | null,
+    message: ''
+  };
+  private statusTimeout: any;
 
   /** While true, CAR HTML stays visible so html2pdf can capture it (even when pdfUrl is set). */
   pdfCaptureInProgress = false;
@@ -98,5 +104,43 @@ export class CarRenderComponent implements OnInit {
     link.href = this.rawPdfUrl;
     link.download = 'car.pdf';
     link.click();
+  }
+
+  showSubmitStatus(type: 'success' | 'error' | 'warning', message: string) {
+    this.submitStatus = { type, message };
+
+    if (this.statusTimeout) {
+      clearTimeout(this.statusTimeout);
+    }
+
+    this.statusTimeout = setTimeout(() => {
+      this.submitStatus = { type: null, message: '' };
+    }, 2000);
+  }
+
+  submitCar(): void {
+    if (!this.car) return;
+
+    this.submitStatus = { type: null, message: '' };
+
+    this.carService.submitCar(this.car.carId).subscribe({
+      next: () => {
+        if (!this.car) return;
+        this.car.submitted = true;
+
+        if ((this.car.overdueBy ?? 0) > 0) {
+          this.showSubmitStatus(
+            'warning',
+            `CAR submitted successfully! Overdue by ${this.car.overdueBy} days.`
+          );
+          return;
+        }
+
+        this.showSubmitStatus('success', 'CAR submitted successfully!');
+      },
+      error: () => {
+        this.showSubmitStatus('error', 'Unable to submit CAR. Please try again later');
+      }
+    });
   }
 }

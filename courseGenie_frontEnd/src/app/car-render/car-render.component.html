@@ -13,6 +13,12 @@
         {{ course?.name }}
       </p>
 
+      <div class="due-date-badge" [class.overdue]="(car?.overdueBy ?? 0) > 0" *ngIf="car?.carDueDate">
+        <i class="bi bi-calendar-event"></i>
+        CAR Due:
+        {{ car?.carDueDate }}
+      </div>
+
     </div>
 
     <!-- ACTION BUTTON -->
@@ -20,7 +26,34 @@
       <button class="action-btn generate-btn" (click)="generatePdf()">
         Generate PDF
       </button>
+      <button class="action-btn download-btn" (click)="download()" [class.hidden]="!pdfUrl">
+        Download
+      </button>
+      <button class="action-btn generate-btn"
+              (click)="submitCar()"
+              [disabled]="car?.submitted">
+        {{ car?.submitted ? 'Submitted' : 'Submit CAR' }}
+      </button>
     </div>
+  </div>
+
+  <div
+    *ngIf="submitStatus.type"
+    [ngClass]="{
+      'submit-success': submitStatus.type === 'success',
+      'submit-error': submitStatus.type === 'error',
+      'submit-warning': submitStatus.type === 'warning'
+    }"
+  >
+    <i
+      class="bi"
+      [ngClass]="{
+        'bi-check-circle-fill': submitStatus.type === 'success',
+        'bi-exclamation-triangle-fill': submitStatus.type === 'error',
+        'bi-exclamation-circle-fill': submitStatus.type === 'warning'
+      }"
+    ></i>
+    {{ submitStatus.message }}
   </div>
 
   <!-- CONTENT CARD -->
