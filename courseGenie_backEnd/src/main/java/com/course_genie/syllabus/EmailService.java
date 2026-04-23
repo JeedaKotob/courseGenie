@@ -31,4 +31,22 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
+    public void sendCarReminder(String to, String professorName) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom("CourseGenie+ <jeedakotob@gmail.com>");
+        message.setTo(to);
+        message.setSubject("[CourseGenie+] CAR Submission Reminder");
+        message.setText(
+                "Dear Dr. " + professorName + ",\n\n" +
+                        "This is an automated reminder from Course Genie.\n\n" +
+                        "Our records show that one or more Course Assessment Reports (CARs) have not yet been submitted.\n\n" +
+                        "Please log in to the system to complete submission.\n\n" +
+                        "Thank you,\n" +
+                        "Course Genie+"
+        );
+
+        mailSender.send(message);
+    }
 }

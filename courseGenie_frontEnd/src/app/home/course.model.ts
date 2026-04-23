@@ -93,6 +93,27 @@ export interface SyllabusProgress {
   sections: SyllabusDetail[];
 }
 
+export interface CarDetail {
+  sectionId: number;
+  courseName: string;
+  courseCode: string;
+  sectionCode: string;
+  submitted: boolean;
+  submissionDate: string;
+  carDueDate: string;
+  overdueBy: number;
+}
+
+export interface CarProgress {
+  professorId: number;
+  professorName: string;
+  departmentName: string;
+  totalSections: number;
+  submittedCars: number;
+  progressPercentage: number;
+  sections: CarDetail[];
+}
+
 
 export interface User {
   userId: number;

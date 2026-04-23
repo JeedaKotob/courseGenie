@@ -79,6 +79,8 @@ import {Calendar} from "primeng/calendar";
 import {CarComponent} from './car/car.component';
 import {CarRenderComponent} from './car-render/car-render.component';
 import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
+import {CarProgressComponent} from './car-progress/car-progress.component';
+import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
 
 
 
@@ -133,7 +135,9 @@ import {ExamAllocationComponent} from './exam-allocation/exam-allocation.compone
     CalendarComponent,
     CarComponent,
     CarRenderComponent,
-    ExamAllocationComponent
+    ExamAllocationComponent,
+    CarProgressComponent,
+    AdminCarViewComponent
 
 
 

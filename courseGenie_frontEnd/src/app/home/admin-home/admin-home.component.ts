@@ -28,6 +28,13 @@ export class AdminHomeComponent implements OnInit {
       icon: 'bi bi-clipboard-check',
       route: '/admin/syllabusProgress',
       cta: 'View Progress'
+    },
+    {
+      title: 'CAR Progress',
+      description: 'Track CAR submission status across sections and professors.',
+      icon: 'bi bi-bar-chart-steps',
+      route: '/admin/carProgress',
+      cta: 'View Progress'
     }
   ];
 

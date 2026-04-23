@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {Syllabus, SyllabusProgress} from '../home/course.model';
+import {CarProgress, SyllabusProgress} from '../home/course.model';
 import { environment } from '../../environments/environment';
 import {Observable} from 'rxjs';
 
@@ -17,6 +17,16 @@ export class AdminService {
 
   sendReminders(): Observable<string> {
     return this.http.post(`${environment.apiUrl}/admin/send-reminders`, {},
+      { responseType: 'text' }
+    );
+  }
+
+  getCarProgress(): Observable<{ [key: string]: CarProgress[] }> {
+    return this.http.get<{ [key: string]: CarProgress[] }>(`${environment.apiUrl}/admin/car-progress`);
+  }
+
+  sendCarReminders(): Observable<string> {
+    return this.http.post(`${environment.apiUrl}/admin/send-car-reminders`, {},
       { responseType: 'text' }
     );
   }

@@ -1,0 +1,94 @@
+.syllabus-container {
+  padding: 1.5rem;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 80px);
+}
+
+.syllabus-header {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #024964, #0394CA);
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(3, 148, 202, 0.2);
+}
+
+.course-title {
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.course-name {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  margin-top: 8px;
+}
+
+.syllabus-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.back-btn {
+  background: linear-gradient(135deg, #024964, #0394ca);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(3, 148, 202, 0.28);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+}
+
+.generate-btn {
+  background-color: white;
+  color: #024964;
+}
+
+.download-btn {
+  background-color: #0394CA;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.content-card {
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.preview-container iframe {
+  width: 100%;
+  height: 750px;
+  border-radius: 8px;
+}
+
+.syllabus-html-content {
+  padding: 2rem;
+}

@@ -31,6 +31,8 @@ import {ExamRoomComponent} from './exam-room/exam-room.component';
 import {CalendarComponent} from './calendar/calendar.component';
 import {CarComponent} from './car/car.component';
 import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
+import {CarProgressComponent} from './car-progress/car-progress.component';
+import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -52,9 +54,11 @@ const routes: Routes = [
       { path: 'professor', component: ProfHomeComponent, canActivate: [RoleGuard], data: {roles: ['ROLE_PROFESSOR']}},
       { path: 'admin', component: AdminHomeComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/syllabusProgress', component: SyllabusProgressComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      { path: 'admin/carProgress', component: CarProgressComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'choose-role', component: ChooseRoleComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'admin/syllabus/:sectionId', component: AdminSyllabusViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      {path: 'admin/car/:sectionId', component: AdminCarViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'examRooms', component: ExamRoomComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }}
     ],
