@@ -104,6 +104,13 @@ export interface CarDetail {
   overdueBy: number;
 }
 
+export interface CourseCollaborator {
+  professorId: number;
+  professorName: string;
+  professorEmail: string;
+  sectionCodes: string[];
+}
+
 export interface CarProgress {
   professorId: number;
   professorName: string;

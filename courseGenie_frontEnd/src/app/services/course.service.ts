@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { Course, CoursesBySemester, Section } from '../home/course.model';
+import { Course, CourseCollaborator, CoursesBySemester, Section } from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,12 @@ export class CourseService {
   // Fetch a single course by ID
   getCourseByCourseCodeAndSectionCode(courseCode: string, sectionCode: string): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/${courseCode}/section/${sectionCode}`);
+  }
+
+  getCourseCollaborators(courseCode: string, sectionCode: string): Observable<CourseCollaborator[]> {
+    return this.http.get<CourseCollaborator[]>(
+      `${this.apiUrl}/${courseCode}/section/${sectionCode}/collaborators`
+    );
   }
 
   // Add a new course

@@ -50,6 +50,13 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseByCodeAndSectionCode(courseCode, sectionCode));
     }
 
+    @GetMapping(path = "/{courseCode}/section/{sectionCode}/collaborators")
+    public ResponseEntity<List<CourseCollaboratorDTO>> getCourseCollaborators(
+            @PathVariable String courseCode,
+            @PathVariable String sectionCode) {
+        return ResponseEntity.ok(courseService.getCourseCollaboratorsBySection(courseCode, sectionCode));
+    }
+
     /**
      * GET /api/courses/dtos
      * Returns a flat list of all courses as CourseDTOs.

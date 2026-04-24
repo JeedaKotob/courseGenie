@@ -114,6 +114,53 @@ public class CourseService {
         return courseDTO;
     }
 
+    public List<CourseCollaboratorDTO> getCourseCollaboratorsBySection(String courseCode, String sectionCode) {
+        Section currentSection = sectionRepository
+                .findSectionByCodeAndCourseCode(sectionCode, courseCode)
+                .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+
+        Long semesterId = currentSection.getSemester() != null ? currentSection.getSemester().getSemesterId() : null;
+        if (semesterId == null) {
+            return new ArrayList<>();
+        }
+
+        Long currentProfessorId = currentSection.getProfessor() != null ? currentSection.getProfessor().getUserId() : null;
+
+        List<Section> sameCourseSameSemesterSections = sectionRepository
+                .findByCourseCodeAndSemesterSemesterId(courseCode, semesterId)
+                .orElse(new ArrayList<>());
+
+        Map<Long, List<Section>> sectionsByProfessor = sameCourseSameSemesterSections.stream()
+                .filter(section -> section.getProfessor() != null)
+                .filter(section -> currentProfessorId == null || !Objects.equals(section.getProfessor().getUserId(), currentProfessorId))
+                .collect(Collectors.groupingBy(section -> section.getProfessor().getUserId()));
+
+        List<CourseCollaboratorDTO> collaborators = new ArrayList<>();
+        for (Map.Entry<Long, List<Section>> entry : sectionsByProfessor.entrySet()) {
+            List<Section> professorSections = entry.getValue();
+            if (professorSections.isEmpty()) {
+                continue;
+            }
+
+            User professor = professorSections.get(0).getProfessor();
+            List<String> sectionCodes = professorSections.stream()
+                    .map(Section::getCode)
+                    .filter(Objects::nonNull)
+                    .sorted()
+                    .toList();
+
+            collaborators.add(new CourseCollaboratorDTO(
+                    professor.getUserId(),
+                    professor.getFullName(),
+                    professor.getEmail(),
+                    sectionCodes
+            ));
+        }
+
+        collaborators.sort(Comparator.comparing(CourseCollaboratorDTO::professorName, String.CASE_INSENSITIVE_ORDER));
+        return collaborators;
+    }
+
     public Map<String, Set<CourseDTO>> getCoursesByProfessorId(Long professorId) {
         // Fetch courses for the given professor and map them to CourseDTO objects.
         List<CourseDTO> courseDTOList = courseRepository.findCourseByProfessorId(professorId)
