@@ -30,6 +30,8 @@ export class CourseOverviewComponent implements OnInit {
 
   selectedSectionId: number | null = null;
   sectionToDelete: Section | null = null;
+  createSubmitAttempted = false;
+  editSubmitAttempted = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,7 +63,7 @@ export class CourseOverviewComponent implements OnInit {
   private buildSectionForm(): FormGroup {
     return this.fb.group({
       sectionNumber: ['', Validators.required],
-      semesterName: ['', Validators.required],
+      semesterName: [null, Validators.required],
       professorId: [null, Validators.required]
     });
   }
@@ -75,9 +77,10 @@ export class CourseOverviewComponent implements OnInit {
 
     this.selectedSectionId = null;
     this.modalError = null;
+    this.createSubmitAttempted = false;
     this.createSectionForm.reset({
       sectionNumber: '',
-      semesterName: '',
+      semesterName: null,
       professorId: null
     });
 
@@ -98,6 +101,7 @@ export class CourseOverviewComponent implements OnInit {
 
     this.selectedSectionId = section.sectionId;
     this.modalError = null;
+    this.editSubmitAttempted = false;
 
     this.editSectionForm.reset({
       sectionNumber: section.code,
@@ -151,8 +155,9 @@ export class CourseOverviewComponent implements OnInit {
   }
 
   onSectionCreateSubmit() {
+    this.createSubmitAttempted = true;
+
     if (this.createSectionForm.invalid) {
-      this.createSectionForm.markAllAsTouched();
       return;
     }
 
@@ -183,8 +188,9 @@ export class CourseOverviewComponent implements OnInit {
   }
 
   onSectionEditSubmit() {
+    this.editSubmitAttempted = true;
+
     if (this.editSectionForm.invalid) {
-      this.editSectionForm.markAllAsTouched();
       return;
     }
 

@@ -78,4 +78,20 @@ export class AuthService {
         })
       );
   }
+
+  setCurrentUser(user: User) {
+    const existingUser = this.currentUserValue;
+    const jwtToken = user.jwtToken || existingUser?.jwtToken || this.getTokenRaw() || '';
+    const mergedUser: User = {
+      ...(existingUser ?? {} as User),
+      ...user,
+      jwtToken
+    };
+  
+    localStorage.setItem('currentUser', JSON.stringify(mergedUser));
+    if (jwtToken) {
+      localStorage.setItem('token', jwtToken);
+    }
+    this.currentUserSubject.next(mergedUser);
+  }
 }

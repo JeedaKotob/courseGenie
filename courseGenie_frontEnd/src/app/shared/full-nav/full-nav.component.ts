@@ -183,7 +183,7 @@ export class FullNavComponent implements OnInit {
   navigateToProfile(event: Event): void {
     event.stopPropagation();
     // Navigate to profile page
-    // this.router.navigate(['/profile']);
+    this.router.navigate(['/profile']);
     this.isDropdownOpen = false;
   }
 

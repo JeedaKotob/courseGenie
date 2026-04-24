@@ -139,7 +139,7 @@
           </div>
           <small
             class="text-danger"
-            *ngIf="createSectionForm.get('sectionNumber')?.touched && createSectionForm.get('sectionNumber')?.hasError('required')"
+            *ngIf="createSubmitAttempted && createSectionForm.get('sectionNumber')?.hasError('required')"
           >
             Section number is required.
           </small>
@@ -149,12 +149,12 @@
         <div class="mb-3">
           <label class="form-label">Term</label>
           <select class="form-select" formControlName="semesterName">
-            <option value="">Select Term</option>
-            <option *ngFor="let semesterName of semesterNames" [value]="semesterName">{{ semesterName }}</option>
+            <option [ngValue]="null" disabled>Select Term</option>
+            <option *ngFor="let semesterName of semesterNames" [ngValue]="semesterName">{{ semesterName }}</option>
           </select>
           <small
             class="text-danger"
-            *ngIf="createSectionForm.get('semesterName')?.touched && createSectionForm.get('semesterName')?.hasError('required')"
+            *ngIf="createSubmitAttempted && createSectionForm.get('semesterName')?.hasError('required')"
           >
             Term is required.
           </small>
@@ -171,7 +171,7 @@
           </select>
           <small
             class="text-danger"
-            *ngIf="createSectionForm.get('professorId')?.touched && createSectionForm.get('professorId')?.hasError('required')"
+            *ngIf="createSubmitAttempted && createSectionForm.get('professorId')?.hasError('required')"
           >
             Professor is required.
           </small>
@@ -232,7 +232,7 @@
           </div>
           <small
             class="text-danger"
-            *ngIf="editSectionForm.get('sectionNumber')?.touched && editSectionForm.get('sectionNumber')?.hasError('required')"
+            *ngIf="editSubmitAttempted && editSectionForm.get('sectionNumber')?.hasError('required')"
           >
             Section number is required.
           </small>
@@ -242,12 +242,12 @@
         <div class="mb-3">
           <label class="form-label">Term</label>
           <select class="form-select" formControlName="semesterName">
-            <option value="">Select Term</option>
-            <option *ngFor="let semesterName of semesterNames" [value]="semesterName">{{ semesterName }}</option>
+            <option [ngValue]="null" disabled>Select Term</option>
+            <option *ngFor="let semesterName of semesterNames" [ngValue]="semesterName">{{ semesterName }}</option>
           </select>
           <small
             class="text-danger"
-            *ngIf="editSectionForm.get('semesterName')?.touched && editSectionForm.get('semesterName')?.hasError('required')"
+            *ngIf="editSubmitAttempted && editSectionForm.get('semesterName')?.hasError('required')"
           >
             Term is required.
           </small>
@@ -264,7 +264,7 @@
           </select>
           <small
             class="text-danger"
-            *ngIf="editSectionForm.get('professorId')?.touched && editSectionForm.get('professorId')?.hasError('required')"
+            *ngIf="editSubmitAttempted && editSectionForm.get('professorId')?.hasError('required')"
           >
             Professor is required.
           </small>

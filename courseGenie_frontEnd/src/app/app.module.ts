@@ -83,7 +83,7 @@ import {CarProgressComponent} from './car-progress/car-progress.component';
 import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
 import {AdminPeerReviewAssignmentComponent} from './admin/admin-peer-review-assignment/admin-peer-review-assignment.component';
 import {PeerReviewReviewerComponent} from './peer-review-reviewer/peer-review-reviewer.component';
-
+import { ProfileComponent } from './profile/profile.component';
 
 
 
@@ -141,7 +141,8 @@ import {PeerReviewReviewerComponent} from './peer-review-reviewer/peer-review-re
     CarProgressComponent,
     AdminCarViewComponent,
     AdminPeerReviewAssignmentComponent,
-    PeerReviewReviewerComponent
+    PeerReviewReviewerComponent,
+    ProfileComponent
 
 
 

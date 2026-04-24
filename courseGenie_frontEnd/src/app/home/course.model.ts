@@ -128,8 +128,19 @@ export interface User {
   lastName: string;
   userName: string;
   email: string;
+  departmentName?: string | null;
+  office?: string | null;
+  officeHours?: string | null;
+  phone?: string | null;
   jwtToken: string;
   roles: string[];
+}
+
+export interface UserProfileUpdateRequest {
+  email?: string | null;
+  office?: string | null;
+  officeHours?: string | null;
+  phone?: string | null;
 }
 
 export interface Benchmark {
