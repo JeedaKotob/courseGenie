@@ -1,0 +1,149 @@
+<div class="profile-page container-fluid py-4">
+    <div *ngIf="loading" class="state-card text-center shadow-sm">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading profile...</span>
+      </div>
+      <p class="text-secondary mt-3 mb-0">Loading your profile...</p>
+    </div>
+  
+    <div *ngIf="!loading && loadError" class="alert alert-danger shadow-sm">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <h2 class="h5 mb-1">Unable to load your profile</h2>
+          <p class="mb-0">{{ loadError }}</p>
+        </div>
+        <button type="button" class="btn btn-outline-danger" (click)="loadProfile()">Try Again</button>
+      </div>
+    </div>
+  
+    <div *ngIf="!loading && !loadError" class="row g-4">
+      <div class="col-12 col-lg-4">
+        <div class="profile-card shadow-sm h-100">
+          <div class="profile-avatar" [style.background]="getUserColor()">
+            {{ profile?.firstName?.charAt(0) }}{{ profile?.lastName?.charAt(0) }}
+          </div>
+          <h1 class="h4 mb-1">{{ profile?.firstName }} {{ profile?.lastName }}</h1>
+          <p class="text-secondary mb-4">{{ profile?.email }}</p>
+  
+          <div class="profile-meta">
+            <div class="meta-item">
+              <span class="meta-label">Username</span>
+              <span class="meta-value">{{ profile?.userName }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Department</span>
+              <span class="meta-value">{{ profile?.departmentName || 'Unassigned' }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Office</span>
+              <span class="meta-value">{{ profile?.office || 'Not provided' }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Office Hours</span>
+              <span class="meta-value">{{ profile?.officeHours || 'Not provided' }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Phone</span>
+              <span class="meta-value">{{ profile?.phone || 'Not provided' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-12 col-lg-8">
+        <div class="profile-card shadow-sm">
+          <div class="mb-4">
+            <button class="back-btn mb-2" (click)="goBack()">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <h2 class="h4 mb-1">Edit Profile</h2>
+            <p class="text-secondary mb-0">Keep your contact details and office information up to date.</p>
+          </div>
+  
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label for="firstName" class="form-label">First Name</label>
+                <input id="firstName" type="text" class="form-control" formControlName="firstName" readonly>
+              </div>
+  
+              <div class="col-12 col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input id="lastName" type="text" class="form-control" formControlName="lastName" readonly>
+              </div>
+  
+              <div class="col-12 col-md-6">
+                <label for="userName" class="form-label">Username</label>
+                <input id="userName" type="text" class="form-control" formControlName="userName" readonly>
+              </div>
+  
+              <div class="col-12 col-md-6">
+                <label for="departmentName" class="form-label">Department</label>
+                <input id="departmentName" type="text" class="form-control" formControlName="departmentName" readonly>
+              </div>
+  
+              <div class="col-12">
+                <label for="email" class="form-label">Email</label>
+                <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+                readonly
+              >
+              </div>
+  
+              <div class="col-12 col-md-6">
+                <label for="office" class="form-label">Office Location</label>
+                <input
+                  id="office"
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="isInvalid('office')"
+                  formControlName="office"
+                  placeholder="Enter your office location"
+                >
+                <div *ngIf="getFieldError('office')" class="invalid-feedback d-block">{{ getFieldError('office') }}</div>
+              </div>
+  
+              <div class="col-12 col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input
+                  id="phone"
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="isInvalid('phone')"
+                  formControlName="phone"
+                  placeholder="Enter your phone number"
+                >
+                <div *ngIf="getFieldError('phone')" class="invalid-feedback d-block">{{ getFieldError('phone') }}</div>
+              </div>
+  
+              <div class="col-12">
+                <label for="officeHours" class="form-label">Office Hours</label>
+                <textarea
+                  id="officeHours"
+                  class="form-control"
+                  rows="4"
+                  [class.is-invalid]="isInvalid('officeHours')"
+                  formControlName="officeHours"
+                  placeholder="Add your office hours"
+                ></textarea>
+                <div *ngIf="getFieldError('officeHours')" class="invalid-feedback d-block">{{ getFieldError('officeHours') }}</div>
+              </div>
+            </div>
+  
+            <div class="d-flex justify-content-end mt-4">
+              <button type="submit" class="btn btn-primary save-btn" [disabled]="saving">
+                <span *ngIf="!saving">Save Changes</span>
+                <span *ngIf="saving" class="d-inline-flex align-items-center gap-2">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Saving...
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

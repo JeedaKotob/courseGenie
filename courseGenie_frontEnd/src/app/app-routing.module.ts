@@ -35,6 +35,7 @@ import {CarProgressComponent} from './car-progress/car-progress.component';
 import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
 import {AdminPeerReviewAssignmentComponent} from './admin/admin-peer-review-assignment/admin-peer-review-assignment.component';
 import {PeerReviewReviewerComponent} from './peer-review-reviewer/peer-review-reviewer.component';
+import {ProfileComponent} from './profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -64,7 +65,8 @@ const routes: Routes = [
       {path: 'admin/syllabus/:sectionId', component: AdminSyllabusViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'admin/car/:sectionId', component: AdminCarViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'examRooms', component: ExamRoomComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
-      {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }}
+      {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }},
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
     ],
   },
   {

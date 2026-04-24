@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -27,5 +29,45 @@ public class UserService {
                 .stream()
                 .map(userDTOMapper)
                 .toList();
+    }
+
+    public UserDTO getCurrentUserProfile(String username) {
+        return userDTOMapper.apply(findUserByUsername(username));
+    }
+    
+    @Transactional
+    public UserDTO updateCurrentUserProfile(String username, UserProfileUpdateRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Profile update is required.");
+        }
+    
+        User user = findUserByUsername(username);
+        user.setOffice(normalizeOptionalValue(request.office(), "Office location", 100));
+        user.setOfficeHours(normalizeOptionalValue(request.officeHours(), "Office hours", 255));
+        user.setPhone(normalizeOptionalValue(request.phone(), "Phone number", 50));
+    
+        return userDTOMapper.apply(userRepository.save(user));
+    }
+    
+    private User findUserByUsername(String username) {
+        return userRepository.findByUserName(username)
+                .orElseThrow(() -> new EntityNotFoundException("User profile was not found."));
+    }
+    
+    private String normalizeOptionalValue(String value, String fieldName, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+    
+        String normalizedValue = value.trim();
+        if (normalizedValue.isEmpty()) {
+            return null;
+        }
+    
+        if (normalizedValue.length() > maxLength) {
+            throw new IllegalArgumentException(fieldName + " must be " + maxLength + " characters or fewer.");
+        }
+    
+        return normalizedValue;
     }
 }

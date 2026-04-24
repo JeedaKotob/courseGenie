@@ -1,0 +1,116 @@
+.back-btn {
+    background: linear-gradient(135deg, #024964, #0394ca);
+    border: none;
+    color: #fff;
+    padding: 0.45rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(3, 148, 202, 0.25);
+    transition: all 0.2s ease;
+  }
+  
+  .back-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(3, 148, 202, 0.35);
+  }
+.profile-page {
+    max-width: 1200px;
+  }
+  
+  .profile-card,
+  .state-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(2, 73, 100, 0.08);
+  }
+  
+  .state-card {
+    max-width: 480px;
+    margin: 3rem auto 0;
+  }
+  
+  .profile-card {
+    height: 100%;
+  }
+  
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  
+  .profile-meta {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  
+  .meta-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c757d;
+  }
+  
+  .meta-value {
+    font-size: 0.98rem;
+    color: #1f2933;
+    word-break: break-word;
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: #1f2933;
+  }
+  
+  .form-control {
+    border-radius: 12px;
+    min-height: 48px;
+  }
+  
+  textarea.form-control {
+    min-height: 120px;
+  }
+  
+  .save-btn {
+    min-width: 180px;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #024964, #0394ca);
+  }
+  
+  .save-btn:disabled {
+    opacity: 0.8;
+  }
+  
+  @media (max-width: 767.98px) {
+    .profile-card,
+    .state-card {
+      padding: 1.5rem;
+    }
+  
+    .save-btn {
+      width: 100%;
+    }
+  }
