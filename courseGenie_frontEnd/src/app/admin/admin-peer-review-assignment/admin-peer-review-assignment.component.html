@@ -104,6 +104,22 @@
           <strong>{{ assignment.reviewerName }}</strong>
           <i class="bi bi-arrow-right-short mx-1"></i>
           {{ assignment.courseCode }} - {{ assignment.sectionCode }} ({{ assignment.revieweeName }})
+          <span
+            class="status-chip ms-2"
+            [ngClass]="{
+              'not-started': assignment.progressStatus === 'NOT_STARTED',
+              'reviewer-finished': assignment.progressStatus === 'REVIEWER_FINISHED',
+              'done': assignment.progressStatus === 'DONE'
+            }"
+          >
+            {{
+              assignment.progressStatus === 'NOT_STARTED'
+                ? 'Not Started'
+                : assignment.progressStatus === 'REVIEWER_FINISHED'
+                  ? 'Reviewer Finished'
+                  : 'Done'
+            }}
+          </span>
         </div>
         <button class="delete-btn" (click)="removeAssignment(i)">
           <i class="bi bi-trash"></i>

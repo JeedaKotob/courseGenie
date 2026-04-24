@@ -157,7 +157,8 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
         courseName: revieweeSection.courseName,
         sectionCode: revieweeSection.sectionCode,
         departmentName: this.selectedDepartment,
-        pairingSource: 'MANUAL'
+        pairingSource: 'MANUAL',
+        progressStatus: 'NOT_STARTED'
       }
     ];
     this.selectedReviewerId = null;

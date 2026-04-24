@@ -333,6 +333,7 @@ export interface PeerReviewAssignment {
   sectionCode: string;
   departmentName: string;
   pairingSource: string;
+  progressStatus: 'NOT_STARTED' | 'REVIEWER_FINISHED' | 'DONE';
 }
 
 export interface PeerReviewPairRequest {

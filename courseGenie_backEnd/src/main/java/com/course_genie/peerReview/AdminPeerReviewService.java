@@ -25,19 +25,25 @@ public class AdminPeerReviewService {
     private final PeerReviewAssignmentRepository assignmentRepository;
     private final SectionRepository sectionRepository;
     private final SemesterService semesterService;
+    private final PeerReviewRepository peerReviewRepository;
+    private final ActionPlanRepository actionPlanRepository;
 
     public AdminPeerReviewService(
             UserRepository userRepository,
             DepartmentRepository departmentRepository,
             PeerReviewAssignmentRepository assignmentRepository,
             SectionRepository sectionRepository,
-            SemesterService semesterService
+            SemesterService semesterService,
+            PeerReviewRepository peerReviewRepository,
+            ActionPlanRepository actionPlanRepository
     ) {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.assignmentRepository = assignmentRepository;
         this.sectionRepository = sectionRepository;
         this.semesterService = semesterService;
+        this.peerReviewRepository = peerReviewRepository;
+        this.actionPlanRepository = actionPlanRepository;
     }
 
     public List<PeerReviewDepartmentOverviewDTO> getDepartmentOverviews() {
@@ -247,7 +253,8 @@ public class AdminPeerReviewService {
                 section != null && section.getCourse() != null ? section.getCourse().getName() : "",
                 section != null ? section.getCode() : "",
                 assignment.getDepartment().getDepartmentName(),
-                assignment.getPairingSource()
+                assignment.getPairingSource(),
+                resolveProgressStatus(assignment.getAssignmentId())
         );
     }
 
@@ -275,5 +282,17 @@ public class AdminPeerReviewService {
                 .filter(dept -> dept.assignmentCount() == 0)
                 .map(PeerReviewDepartmentOverviewDTO::departmentName)
                 .toList();
+    }
+
+    private String resolveProgressStatus(Long assignmentId) {
+        PeerReview review = peerReviewRepository.findByAssignmentId(assignmentId).orElse(null);
+        if (review == null) {
+            return "NOT_STARTED";
+        }
+        ActionPlan plan = actionPlanRepository.findByPeerReviewPeerReviewId(review.getPeerReviewId()).orElse(null);
+        if (plan != null && plan.isSubmitted()) {
+            return "DONE";
+        }
+        return "REVIEWER_FINISHED";
     }
 }
