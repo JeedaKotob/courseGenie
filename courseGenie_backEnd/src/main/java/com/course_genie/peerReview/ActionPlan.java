@@ -3,6 +3,8 @@ package com.course_genie.peerReview;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Data
@@ -15,6 +17,9 @@ public class ActionPlan {
 
     @Column(length = 2000)
     private String plan;
+
+    private boolean submitted;
+    private LocalDateTime submittedAt;
 
     @OneToOne
     @JoinColumn(name = "peer_review_id", nullable = false)

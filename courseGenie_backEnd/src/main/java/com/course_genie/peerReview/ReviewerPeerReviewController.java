@@ -19,9 +19,20 @@ public class ReviewerPeerReviewController {
         return reviewerPeerReviewService.getAssignments(reviewerId);
     }
 
+    @GetMapping("/received")
+    public List<RevieweeReceivedReviewDTO> getReceivedReviews(@RequestParam Long revieweeId) {
+        return reviewerPeerReviewService.getReceivedReviews(revieweeId);
+    }
+
     @PostMapping("/submit")
     public ResponseEntity<String> submitReview(@RequestBody ReviewerSubmitPeerReviewRequest request) {
         reviewerPeerReviewService.submitReview(request);
         return ResponseEntity.ok("Peer review submitted successfully.");
+    }
+
+    @PostMapping("/reflection")
+    public ResponseEntity<String> submitReflection(@RequestBody RevieweeReflectionRequest request) {
+        reviewerPeerReviewService.saveReflection(request);
+        return ResponseEntity.ok("Reflection submitted successfully.");
     }
 }

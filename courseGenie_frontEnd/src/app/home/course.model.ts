@@ -371,3 +371,29 @@ export interface ReviewerSubmitPeerReviewRequest {
   otherNote: string;
   summary: string;
 }
+
+export interface RevieweeReceivedReview {
+  peerReviewId: number;
+  revieweeId: number;
+  reviewerName: string;
+  courseCode: string;
+  courseName: string;
+  sectionCode: string;
+  alignmentScore: number | null;
+  alignmentComment: string;
+  assessmentDesignScore: number | null;
+  assessmentDesignComment: string;
+  gradingClarityScore: number | null;
+  gradingClarityComment: string;
+  feedbackEfficiencyScore: number | null;
+  feedbackEfficiencyComment: string;
+  courseGradeDistributionNote: string;
+  courseReflectionNote: string;
+  innovationJourneyNote: string;
+  otherNote: string;
+  summary: string;
+  submittedAt: string;
+  actionPlan: string;
+  reflectionSubmitted: boolean;
+  reflectionSubmittedAt: string | null;
+}

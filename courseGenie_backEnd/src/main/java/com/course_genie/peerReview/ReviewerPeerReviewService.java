@@ -21,17 +21,20 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ReviewerPeerReviewService {
     private final PeerReviewAssignmentRepository assignmentRepository;
     private final PeerReviewRepository peerReviewRepository;
+    private final ActionPlanRepository actionPlanRepository;
     private final SectionRepository sectionRepository;
     private final UserRepository userRepository;
 
     public ReviewerPeerReviewService(
             PeerReviewAssignmentRepository assignmentRepository,
             PeerReviewRepository peerReviewRepository,
+            ActionPlanRepository actionPlanRepository,
             SectionRepository sectionRepository,
             UserRepository userRepository
     ) {
         this.assignmentRepository = assignmentRepository;
         this.peerReviewRepository = peerReviewRepository;
+        this.actionPlanRepository = actionPlanRepository;
         this.sectionRepository = sectionRepository;
         this.userRepository = userRepository;
     }
@@ -107,6 +110,64 @@ public class ReviewerPeerReviewService {
         peerReviewRepository.save(review);
     }
 
+    public List<RevieweeReceivedReviewDTO> getReceivedReviews(Long revieweeId) {
+        List<PeerReview> reviews = peerReviewRepository.findByRevieweeUserId(revieweeId);
+        return reviews.stream().map(review -> {
+            Section section = resolveSection(review.getRevieweeSectionId());
+            ActionPlan actionPlanEntity = actionPlanRepository.findByPeerReviewPeerReviewId(review.getPeerReviewId())
+                    .orElse(null);
+            String actionPlan = actionPlanEntity != null ? actionPlanEntity.getPlan() : "";
+            String criteria = nullable(review.getCriteria());
+            String appendix = nullable(review.getAppendix());
+            return new RevieweeReceivedReviewDTO(
+                    review.getPeerReviewId(),
+                    review.getReviewee().getUserId(),
+                    review.getReviewer().getFullName(),
+                    section != null && section.getCourse() != null ? section.getCourse().getCode() : "",
+                    section != null && section.getCourse() != null ? section.getCourse().getName() : "",
+                    section != null ? section.getCode() : "",
+                    parseIntegerField(criteria, "alignmentScore"),
+                    parseStringField(criteria, "alignmentComment"),
+                    parseIntegerField(criteria, "assessmentDesignScore"),
+                    parseStringField(criteria, "assessmentDesignComment"),
+                    parseIntegerField(criteria, "gradingClarityScore"),
+                    parseStringField(criteria, "gradingClarityComment"),
+                    parseIntegerField(criteria, "feedbackEfficiencyScore"),
+                    parseStringField(criteria, "feedbackEfficiencyComment"),
+                    parseStringField(appendix, "courseGradeDistributionNote"),
+                    parseStringField(appendix, "courseReflectionNote"),
+                    parseStringField(appendix, "innovationJourneyNote"),
+                    parseStringField(appendix, "otherNote"),
+                    nullable(review.getSummary()),
+                    review.getSubmittedAt(),
+                    nullable(actionPlan),
+                    actionPlanEntity != null && actionPlanEntity.isSubmitted(),
+                    actionPlanEntity != null ? actionPlanEntity.getSubmittedAt() : null
+            );
+        }).toList();
+    }
+
+    @Transactional
+    public void saveReflection(RevieweeReflectionRequest request) {
+        PeerReview review = peerReviewRepository.findById(request.peerReviewId())
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Peer review not found."));
+        if (!review.getReviewee().getUserId().equals(request.revieweeId())) {
+            throw new ResponseStatusException(FORBIDDEN, "You are not allowed to submit reflection for this review.");
+        }
+        if (nullable(request.actionPlan()).isEmpty()) {
+            throw new ResponseStatusException(BAD_REQUEST, "Reflection cannot be empty.");
+        }
+        ActionPlan plan = actionPlanRepository.findByPeerReviewPeerReviewId(review.getPeerReviewId())
+                .orElse(ActionPlan.builder().peerReview(review).build());
+        if (plan.isSubmitted()) {
+            throw new ResponseStatusException(BAD_REQUEST, "Reflection already submitted and cannot be changed.");
+        }
+        plan.setPlan(nullable(request.actionPlan()));
+        plan.setSubmitted(true);
+        plan.setSubmittedAt(LocalDateTime.now());
+        actionPlanRepository.save(plan);
+    }
+
     private void validateScore(Integer score, String fieldLabel) {
         if (score == null || score < 1 || score > 5) {
             throw new ResponseStatusException(BAD_REQUEST, fieldLabel + " must be between 1 and 5.");
@@ -142,5 +203,34 @@ public class ReviewerPeerReviewService {
 
     private String escapeJson(String value) {
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private String parseStringField(String json, String key) {
+        String marker = "\"" + key + "\":\"";
+        int start = json.indexOf(marker);
+        if (start < 0) return "";
+        start += marker.length();
+        int end = json.indexOf("\"", start);
+        if (end < 0) return "";
+        return json.substring(start, end)
+                .replace("\\\"", "\"")
+                .replace("\\\\", "\\");
+    }
+
+    private Integer parseIntegerField(String json, String key) {
+        String marker = "\"" + key + "\":";
+        int start = json.indexOf(marker);
+        if (start < 0) return null;
+        start += marker.length();
+        int end = start;
+        while (end < json.length() && Character.isDigit(json.charAt(end))) {
+            end++;
+        }
+        if (end == start) return null;
+        try {
+            return Integer.parseInt(json.substring(start, end));
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
     }
 }

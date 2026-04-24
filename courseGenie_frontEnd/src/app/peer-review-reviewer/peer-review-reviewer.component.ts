@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { PeerReviewService } from '../services/peer-review.service';
-import { ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
+import { RevieweeReceivedReview, ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
 
 @Component({
   selector: 'app-peer-review-reviewer',
@@ -13,6 +13,8 @@ import { ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/cou
 })
 export class PeerReviewReviewerComponent implements OnInit {
   assignments: ReviewerAssignment[] = [];
+  receivedReviews: (RevieweeReceivedReview & { draftActionPlan: string; saving: boolean })[] = [];
+  expandedReceivedReviewIds: Set<number> = new Set<number>();
   selectedAssignment: ReviewerAssignment | null = null;
   loading = false;
   submitting = false;
@@ -65,6 +67,18 @@ export class PeerReviewReviewerComponent implements OnInit {
         this.loading = false;
       }
     });
+    this.peerReviewService.getReceivedReviews(user.userId).subscribe({
+      next: reviews => {
+        this.receivedReviews = reviews.map(review => ({
+          ...review,
+          draftActionPlan: review.actionPlan || '',
+          saving: false
+        }));
+      },
+      error: () => {
+        this.receivedReviews = [];
+      }
+    });
   }
 
   startReview(assignment: ReviewerAssignment): void {
@@ -110,6 +124,36 @@ export class PeerReviewReviewerComponent implements OnInit {
 
   cancel(): void {
     this.selectedAssignment = null;
+  }
+
+  submitReflection(review: RevieweeReceivedReview & { draftActionPlan: string; saving: boolean }): void {
+    const user = this.sharedDataService.currentUserValue;
+    if (!user) return;
+    if (!review.draftActionPlan.trim()) {
+      this.showMessage('Reflection cannot be empty.', true);
+      return;
+    }
+    review.saving = true;
+    this.peerReviewService.submitReflection(review.peerReviewId, user.userId, review.draftActionPlan).subscribe({
+      next: (response) => {
+        review.saving = false;
+        review.reflectionSubmitted = true;
+        review.reflectionSubmittedAt = new Date().toISOString();
+        this.showMessage(response);
+      },
+      error: (err) => {
+        review.saving = false;
+        this.showMessage(err?.error?.message || 'Failed to save reflection.', true);
+      }
+    });
+  }
+
+  toggleReceivedDetails(peerReviewId: number): void {
+    if (this.expandedReceivedReviewIds.has(peerReviewId)) {
+      this.expandedReceivedReviewIds.delete(peerReviewId);
+      return;
+    }
+    this.expandedReceivedReviewIds.add(peerReviewId);
   }
 
   goBack(): void {

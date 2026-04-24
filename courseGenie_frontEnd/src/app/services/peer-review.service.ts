@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
+import { RevieweeReceivedReview, ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +20,19 @@ export class PeerReviewService {
     return this.http.post(`${environment.apiUrl}/peer-review/reviewer/submit`, payload, {
       responseType: 'text'
     });
+  }
+
+  getReceivedReviews(revieweeId: number): Observable<RevieweeReceivedReview[]> {
+    return this.http.get<RevieweeReceivedReview[]>(`${environment.apiUrl}/peer-review/reviewer/received`, {
+      params: { revieweeId }
+    });
+  }
+
+  submitReflection(peerReviewId: number, revieweeId: number, actionPlan: string): Observable<string> {
+    return this.http.post(`${environment.apiUrl}/peer-review/reviewer/reflection`, {
+      peerReviewId,
+      revieweeId,
+      actionPlan
+    }, { responseType: 'text' });
   }
 }

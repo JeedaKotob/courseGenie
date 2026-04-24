@@ -29,6 +29,57 @@
           </button>
         </div>
       </div>
+
+      <div class="mt-5">
+        <h4 class="mb-3">Reviews You Received</h4>
+        <div *ngIf="receivedReviews.length === 0" class="empty-state">
+          No received reviews yet.
+        </div>
+        <div *ngFor="let review of receivedReviews" class="assignment-card mb-3">
+          <h5 class="mb-1">{{ review.courseCode }} - {{ review.sectionCode }}</h5>
+          <div class="text-muted">{{ review.courseName }}</div>
+          <div class="mt-1 small">Reviewer: {{ review.reviewerName }}</div>
+          <div class="mt-2"><strong>Summary:</strong> {{ review.summary || 'No summary provided.' }}</div>
+          <div class="mt-2">
+            <button class="cancel-btn" (click)="toggleReceivedDetails(review.peerReviewId)">
+              {{ expandedReceivedReviewIds.has(review.peerReviewId) ? 'Hide Full Feedback' : 'View Full Feedback' }}
+            </button>
+          </div>
+
+          <div *ngIf="expandedReceivedReviewIds.has(review.peerReviewId)" class="criteria-card mt-3">
+            <h6 class="mb-2">Detailed Feedback</h6>
+            <div><strong>1) Alignment:</strong> {{ review.alignmentScore ?? 'N/A' }} / 5</div>
+            <div class="small text-muted mb-2">{{ review.alignmentComment || 'No comment.' }}</div>
+            <div><strong>2) Assessment Design:</strong> {{ review.assessmentDesignScore ?? 'N/A' }} / 5</div>
+            <div class="small text-muted mb-2">{{ review.assessmentDesignComment || 'No comment.' }}</div>
+            <div><strong>3) Grading Clarity:</strong> {{ review.gradingClarityScore ?? 'N/A' }} / 5</div>
+            <div class="small text-muted mb-2">{{ review.gradingClarityComment || 'No comment.' }}</div>
+            <div><strong>4) Feedback Efficiency:</strong> {{ review.feedbackEfficiencyScore ?? 'N/A' }} / 5</div>
+            <div class="small text-muted mb-2">{{ review.feedbackEfficiencyComment || 'No comment.' }}</div>
+            <div><strong>Grade Distribution Note:</strong> {{ review.courseGradeDistributionNote || 'N/A' }}</div>
+            <div><strong>Course Reflection Note:</strong> {{ review.courseReflectionNote || 'N/A' }}</div>
+            <div><strong>Innovation Journey Note:</strong> {{ review.innovationJourneyNote || 'N/A' }}</div>
+            <div><strong>Other Note:</strong> {{ review.otherNote || 'N/A' }}</div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label"><strong>Your Reflection / Action Plan</strong></label>
+            <textarea
+              class="form-control mb-2"
+              rows="3"
+              [(ngModel)]="review.draftActionPlan"
+              [disabled]="review.reflectionSubmitted"
+              [ngModelOptions]="{standalone: true}"
+              placeholder="Write your reflection based on reviewer feedback">
+            </textarea>
+            <div class="d-flex align-items-center gap-2">
+              <button class="action-btn" (click)="submitReflection(review)" [disabled]="review.saving || review.reflectionSubmitted">
+                {{ review.saving ? 'Submitting...' : (review.reflectionSubmitted ? 'Submitted' : 'Submit Reflection') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <form *ngIf="selectedAssignment" (ngSubmit)="submitReview()">
