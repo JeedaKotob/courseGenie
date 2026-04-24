@@ -35,6 +35,13 @@ export class AdminHomeComponent implements OnInit {
       icon: 'bi bi-bar-chart-steps',
       route: '/admin/carProgress',
       cta: 'View Progress'
+    },
+    {
+      title: 'Peer Review Assignment',
+      description: 'Assign reviewers to reviewees and auto-pair professors by department.',
+      icon: 'bi bi-people',
+      route: '/admin/peer-review',
+      cta: 'Manage Pairings'
     }
   ];
 

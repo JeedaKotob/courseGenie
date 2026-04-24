@@ -298,3 +298,30 @@ export interface SaveProfessorExamAllocationRequest {
   examScheduleId: number;
   assignments: StudentRoomAssignmentRequest[];
 }
+
+export interface ProfessorOption {
+  userId: number;
+  fullName: string;
+  email: string;
+}
+
+export interface PeerReviewDepartmentOverview {
+  departmentName: string;
+  professors: ProfessorOption[];
+  assignmentCount: number;
+}
+
+export interface PeerReviewAssignment {
+  assignmentId: number;
+  reviewerId: number;
+  reviewerName: string;
+  revieweeId: number;
+  revieweeName: string;
+  departmentName: string;
+  pairingSource: string;
+}
+
+export interface PeerReviewPairRequest {
+  reviewerId: number;
+  revieweeId: number;
+}

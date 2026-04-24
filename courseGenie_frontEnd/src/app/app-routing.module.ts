@@ -33,6 +33,7 @@ import {CarComponent} from './car/car.component';
 import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
 import {CarProgressComponent} from './car-progress/car-progress.component';
 import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
+import {AdminPeerReviewAssignmentComponent} from './admin/admin-peer-review-assignment/admin-peer-review-assignment.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -55,6 +56,7 @@ const routes: Routes = [
       { path: 'admin', component: AdminHomeComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/syllabusProgress', component: SyllabusProgressComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/carProgress', component: CarProgressComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
+      { path: 'admin/peer-review', component: AdminPeerReviewAssignmentComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'choose-role', component: ChooseRoleComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'admin/course/:courseCode', component: CourseOverviewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'admin/syllabus/:sectionId', component: AdminSyllabusViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},

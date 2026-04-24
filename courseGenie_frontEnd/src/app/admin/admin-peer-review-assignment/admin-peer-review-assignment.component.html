@@ -1,0 +1,103 @@
+<div class="m-3">
+  <div class="card main-dashboard-card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <button class="back-btn mb-2" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <h1 class="bold mb-0 display-title">Peer Review Assignment</h1>
+      </div>
+      <button class="primary-btn" (click)="saveAssignments()" [disabled]="saveLoading || !selectedDepartment">
+        <span *ngIf="!saveLoading"><i class="bi bi-save me-2"></i>Save Assignments</span>
+        <span *ngIf="saveLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Saving...</span>
+      </button>
+    </div>
+
+    <div *ngIf="message" class="status-alert" [class.error]="isError">
+      <i class="bi" [ngClass]="isError ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'"></i>
+      {{ message }}
+    </div>
+
+    <div class="controls-grid mb-4">
+      <div class="control-block">
+        <label class="form-label">Department</label>
+        <select class="form-select" [(ngModel)]="selectedDepartment" (change)="onDepartmentChange()">
+          <option value="" disabled>Select department</option>
+          <option *ngFor="let dept of departments" [value]="dept.departmentName">
+            {{ dept.departmentName }}
+          </option>
+        </select>
+      </div>
+
+      <div class="control-block">
+        <label class="form-label">Reviews Per Professor</label>
+        <input
+          type="number"
+          class="form-control"
+          min="1"
+          [(ngModel)]="reviewsPerProfessor"
+        />
+      </div>
+
+      <div class="control-block action-block">
+        <button class="secondary-btn" (click)="autoPair()" [disabled]="autoPairLoading || !selectedDepartment">
+          <span *ngIf="!autoPairLoading"><i class="bi bi-magic me-2"></i>Auto Pair</span>
+          <span *ngIf="autoPairLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Pairing...</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="manual-assignment-card mb-4">
+      <h5 class="mb-3">Add Manual Assignment</h5>
+      <div class="manual-grid">
+        <div>
+          <label class="form-label">Reviewer</label>
+          <select class="form-select" [(ngModel)]="selectedReviewerId">
+            <option [ngValue]="null">Select reviewer</option>
+            <option *ngFor="let prof of selectedDepartmentProfessors" [ngValue]="prof.userId">
+              {{ prof.fullName }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Reviewee</label>
+          <select class="form-select" [(ngModel)]="selectedRevieweeId">
+            <option [ngValue]="null">Select reviewee</option>
+            <option *ngFor="let prof of selectedDepartmentProfessors" [ngValue]="prof.userId">
+              {{ prof.fullName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="align-end">
+          <button class="secondary-btn w-100" (click)="addManualAssignment()">
+            <i class="bi bi-plus-circle me-2"></i>Add Pair
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assignment-list-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Current Assignments</h5>
+        <span class="count-badge">{{ assignments.length }} pair(s)</span>
+      </div>
+
+      <div *ngIf="!loading && assignments.length === 0" class="empty-state">
+        No assignments yet. Use Auto Pair or add manual pairs.
+      </div>
+
+      <div *ngFor="let assignment of assignments; let i = index" class="assignment-row">
+        <div>
+          <strong>{{ assignment.reviewerName }}</strong>
+          <i class="bi bi-arrow-right-short mx-1"></i>
+          {{ assignment.revieweeName }}
+        </div>
+        <button class="delete-btn" (click)="removeAssignment(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

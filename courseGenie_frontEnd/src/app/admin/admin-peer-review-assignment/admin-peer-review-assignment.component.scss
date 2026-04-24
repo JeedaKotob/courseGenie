@@ -1,0 +1,133 @@
+$primary-dark: #024964;
+$accent-teal: #0394CA;
+$bg-light: #f8f9fa;
+$border-color: #e9ecef;
+
+.main-dashboard-card {
+  background-color: #ffffff;
+  border-radius: 20px !important;
+}
+
+.display-title {
+  color: $primary-dark;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.back-btn,
+.primary-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 50px;
+  padding: 0.55rem 1.2rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.back-btn,
+.primary-btn {
+  background: linear-gradient(90deg, $primary-dark, $accent-teal);
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #e7f5ff;
+  color: $primary-dark;
+  border: 1px solid #b5e1f4;
+}
+
+.primary-btn:hover:not(:disabled),
+.secondary-btn:hover:not(:disabled),
+.back-btn:hover {
+  transform: translateY(-1px);
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+}
+
+.manual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 180px;
+  gap: 16px;
+}
+
+.manual-assignment-card,
+.assignment-list-card {
+  background: $bg-light;
+  border-radius: 14px;
+  border: 1px solid $border-color;
+  padding: 1rem;
+}
+
+.align-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+.status-alert {
+  margin-bottom: 14px;
+  background: #e7f5ff;
+  border: 1px solid $accent-teal;
+  color: $primary-dark;
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.error {
+    background: #ffe7e7;
+    border-color: #ffb3b3;
+    color: #a60000;
+  }
+}
+
+.assignment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 10px;
+}
+
+.source-tag {
+  background: #edf2ff;
+  color: #2d4c8f;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.count-badge {
+  background: #fff;
+  border: 1px solid $border-color;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  color: #b01c1c;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}

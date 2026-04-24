@@ -81,6 +81,7 @@ import {CarRenderComponent} from './car-render/car-render.component';
 import {ExamAllocationComponent} from './exam-allocation/exam-allocation.component';
 import {CarProgressComponent} from './car-progress/car-progress.component';
 import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.component';
+import {AdminPeerReviewAssignmentComponent} from './admin/admin-peer-review-assignment/admin-peer-review-assignment.component';
 
 
 
@@ -137,7 +138,8 @@ import {AdminCarViewComponent} from './admin/admin-car-view/admin-car-view.compo
     CarRenderComponent,
     ExamAllocationComponent,
     CarProgressComponent,
-    AdminCarViewComponent
+    AdminCarViewComponent,
+    AdminPeerReviewAssignmentComponent
 
 
 
