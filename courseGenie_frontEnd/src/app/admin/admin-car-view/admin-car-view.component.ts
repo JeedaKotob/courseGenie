@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '@angular/common';
@@ -11,7 +11,8 @@ declare var html2pdf: any;
   selector: 'app-admin-car-view',
   templateUrl: './admin-car-view.component.html',
   styleUrls: ['./admin-car-view.component.scss'],
-  standalone: false
+  standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
 export class AdminCarViewComponent implements OnInit {
   trustedHtmlContent: SafeHtml = '';
