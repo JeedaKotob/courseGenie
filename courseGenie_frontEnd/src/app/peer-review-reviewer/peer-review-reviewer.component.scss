@@ -1,0 +1,52 @@
+.main-card {
+  border-radius: 20px !important;
+}
+
+.display-title {
+  color: #024964;
+  font-weight: 800;
+}
+
+.back-btn, .action-btn {
+  background: linear-gradient(90deg, #024964, #0394CA);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+.cancel-btn {
+  border: 1px solid #ced4da;
+  background: #fff;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+}
+
+.assignment-card, .criteria-card, .prefill-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.status-alert {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #e7f5ff;
+  color: #024964;
+  border: 1px solid #0394CA;
+}
+
+.status-alert.error {
+  background: #ffe7e7;
+  border-color: #ffb3b3;
+  color: #a60000;
+}
+
+.empty-state {
+  text-align: center;
+  color: #6c757d;
+  padding: 30px;
+}

@@ -339,3 +339,35 @@ export interface PeerReviewPairRequest {
   reviewerId: number;
   revieweeSectionId: number;
 }
+
+export interface ReviewerAssignment {
+  assignmentId: number;
+  reviewerId: number;
+  reviewerName: string;
+  revieweeId: number;
+  revieweeName: string;
+  revieweeSectionId: number;
+  courseCode: string;
+  courseName: string;
+  sectionCode: string;
+  departmentName: string;
+  completed: boolean;
+}
+
+export interface ReviewerSubmitPeerReviewRequest {
+  assignmentId: number;
+  reviewerId: number;
+  alignmentScore: number | null;
+  alignmentComment: string;
+  assessmentDesignScore: number | null;
+  assessmentDesignComment: string;
+  gradingClarityScore: number | null;
+  gradingClarityComment: string;
+  feedbackEfficiencyScore: number | null;
+  feedbackEfficiencyComment: string;
+  courseGradeDistributionNote: string;
+  courseReflectionNote: string;
+  innovationJourneyNote: string;
+  otherNote: string;
+  summary: string;
+}

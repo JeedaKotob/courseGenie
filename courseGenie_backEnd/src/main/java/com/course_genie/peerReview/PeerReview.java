@@ -4,6 +4,8 @@ import com.course_genie.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Data
@@ -33,5 +35,8 @@ public class PeerReview {
     @JoinColumn(name="reviewee_id",nullable=false)
     private User reviewee;
 
+    private Long assignmentId;
+    private Long revieweeSectionId;
+    private LocalDateTime submittedAt;
 
 }

@@ -16,8 +16,9 @@
     <div class="dashboard-card mt-4 p-4 shadow-sm rounded">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-0">Today's Schedule</h3>
-        <button class="btn btn-link p-0" (click)="goToCalendar()">
-          View Full Calendar →
+        <button class="dashboard-action-btn" (click)="goToCalendar()">
+          View Full Calendar
+          <i class="pi pi-arrow-right ms-2"></i>
         </button>
       </div>
 
@@ -48,6 +49,26 @@
       </div>
 
     <div *ngIf="semestersWithSections$ | async as semesterData" class="home-content mt-4">
+      <div class="dashboard-card peer-review-dashboard-card mb-4 p-4 shadow-sm rounded">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h3 class="mb-1">Peer Review Status</h3>
+            <p class="text-muted mb-3" *ngIf="!peerReviewLoading">
+              Track your assigned peer-review evaluations.
+            </p>
+            <p class="text-muted mb-3" *ngIf="peerReviewLoading">Loading peer review status...</p>
+            <div class="status-metrics" *ngIf="!peerReviewLoading">
+              <span class="metric-chip pending">{{ peerReviewPendingCount }} Pending</span>
+              <span class="metric-chip completed">{{ peerReviewCompletedCount }} Completed</span>
+            </div>
+          </div>
+          <button class="dashboard-action-btn" (click)="goToPeerReviews()">
+            Open Reviews
+            <i class="pi pi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">Your courses</h1>
         <div class="semester-filter">

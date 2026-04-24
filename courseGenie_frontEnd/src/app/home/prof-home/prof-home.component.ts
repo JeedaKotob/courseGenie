@@ -10,6 +10,7 @@ import { Course, CoursesBySemester, Section } from '../course.model';
 
 import { CalendarService } from '../../services/calendar.service';
 import { CalendarEvent } from '../course.model';
+import { PeerReviewService } from '../../services/peer-review.service';
 
 type SemesterViewModel = {
   semester: string;
@@ -38,6 +39,9 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
   isTodayLoading = false;
   allSemesters: string[] = [];
   selectedSemester: string = 'all';
+  peerReviewPendingCount = 0;
+  peerReviewCompletedCount = 0;
+  peerReviewLoading = false;
 
   constructor(
     private courseService: CourseService,
@@ -45,6 +49,7 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private sharedDataService: SharedDataService,
     private calendarService: CalendarService,
+    private peerReviewService: PeerReviewService,
   ) {}
 
   ngOnInit(): void {
@@ -86,6 +91,7 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     setTimeout(() => { this.animationClass = 'animate-hero'; }, 100);
     this.loadTodayEvents();
     this.loadSemesterOptions();
+    this.loadPeerReviewStatus();
   }
 
   navigateToOverview(sectionId: number): void {
@@ -112,6 +118,10 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
 
   goToCalendar(): void {
     this.router.navigate(['/professor/calendar']);
+  }
+
+  goToPeerReviews(): void {
+    this.router.navigate(['/peer-reviews']);
   }
   private loadTodayEvents(): void {
     this.isTodayLoading = true;
@@ -145,6 +155,24 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.allSemesters = [];
+      }
+    });
+  }
+
+  private loadPeerReviewStatus(): void {
+    const user = this.sharedDataService.currentUserValue;
+    if (!user) return;
+    this.peerReviewLoading = true;
+    this.peerReviewService.getReviewerAssignments(user.userId).subscribe({
+      next: assignments => {
+        this.peerReviewCompletedCount = assignments.filter(a => a.completed).length;
+        this.peerReviewPendingCount = assignments.filter(a => !a.completed).length;
+        this.peerReviewLoading = false;
+      },
+      error: () => {
+        this.peerReviewLoading = false;
+        this.peerReviewCompletedCount = 0;
+        this.peerReviewPendingCount = 0;
       }
     });
   }
