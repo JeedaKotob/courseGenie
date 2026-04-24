@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CourseService } from '../../services/course.service';
-import {Course, SyllabusProgress} from '../course.model';
+import { Course } from '../course.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
 export class AdminHomeComponent implements OnInit {
 
   courses: Course[] = [];
+  groupedCourses: { [department: string]: Course[] } = {};
   animationClass = '';
-  syllabusProgress: SyllabusProgress[]=[];
   adminTools = [
     {
       title: 'Exam Room Allocation',
@@ -53,11 +53,23 @@ export class AdminHomeComponent implements OnInit {
     this.courseService.getAllCourseDTOs().subscribe({
       next: (data) => {
         this.courses = data;
+        this.groupCoursesByDepartment(data);
       },
       error: (err) => {
         console.error('Error loading courses:', err);
       }
     });
+  }
+
+  private groupCoursesByDepartment(courses: Course[]): void {
+    this.groupedCourses = courses.reduce((grouped, course) => {
+      const departmentName = (course.departmentName || '').trim() || 'Unassigned';
+      if (!grouped[departmentName]) {
+        grouped[departmentName] = [];
+      }
+      grouped[departmentName].push(course);
+      return grouped;
+    }, {} as { [department: string]: Course[] });
   }
 
   navigateToCourse(courseCode: string) {

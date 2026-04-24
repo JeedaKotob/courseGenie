@@ -44,33 +44,41 @@
       </div>
 
       <div *ngIf="courses.length > 0; else noCourses">
-        <div class="courses-grid">
-
-          <div class="course-card"
-               *ngFor="let course of courses"
-               (click)="navigateToCourse(course.code)">
-
-            <div class="course-tag">{{ course.credits }} Credits</div>
-
-            <div class="course-content">
-              <h3 class="course-title">{{ course.name }}</h3>
-              <div class="course-code">{{ course.code }}</div>
-
-              <div class="course-details mt-3">
-                <div class="course-detail">
-                  <i class="pi pi-folder"></i>
-                  <span>{{ course.discipline }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="view-course-btn">
-              <span>View Course</span>
-              <i class="pi pi-arrow-right"></i>
-            </div>
-
+        <div *ngFor="let entry of groupedCourses | keyvalue" class="dept-section mb-5">
+          <div class="dept-header d-flex align-items-center mb-4">
+            <div class="dept-indicator"></div>
+            <h3 class="dept-title mb-0 ms-3">
+              {{ entry.key }} Department
+            </h3>
           </div>
 
+          <div class="courses-grid">
+
+            <div class="course-card"
+                 *ngFor="let course of entry.value"
+                 (click)="navigateToCourse(course.code)">
+
+              <div class="course-tag">{{ course.credits }} Credits</div>
+
+              <div class="course-content">
+                <h3 class="course-title">{{ course.name }}</h3>
+                <div class="course-code">{{ course.code }}</div>
+
+                <div class="course-details mt-3">
+                  <div class="course-detail">
+                    <i class="pi pi-folder"></i>
+                    <span>{{ course.discipline }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="view-course-btn">
+                <span>View Course</span>
+                <i class="pi pi-arrow-right"></i>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
 
