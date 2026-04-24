@@ -116,8 +116,30 @@ public class CarService {
     }
 
     private double calculateSectionGpa(Map<String, Integer> dist) {
-        double points = (dist.get("A") * 4.0) + (dist.get("B") * 3.0) + (dist.get("C") * 2.0) + (dist.get("D") * 1.0);
-        int totalGraded = dist.get("A") + dist.get("B") + dist.get("C") + dist.get("D") + dist.get("F");
+        double points =
+                (dist.getOrDefault("A", 0) * 4.0) +
+                (dist.getOrDefault("A-", 0) * 3.67) +
+                (dist.getOrDefault("B+", 0) * 3.33) +
+                (dist.getOrDefault("B", 0) * 3.0) +
+                (dist.getOrDefault("B-", 0) * 2.67) +
+                (dist.getOrDefault("C+", 0) * 2.33) +
+                (dist.getOrDefault("C", 0) * 2.0) +
+                (dist.getOrDefault("C-", 0) * 1.67) +
+                (dist.getOrDefault("D", 0) * 1.0) +
+                (dist.getOrDefault("F", 0) * 0.0);
+
+        int totalGraded =
+                dist.getOrDefault("A", 0) +
+                dist.getOrDefault("A-", 0) +
+                dist.getOrDefault("B+", 0) +
+                dist.getOrDefault("B", 0) +
+                dist.getOrDefault("B-", 0) +
+                dist.getOrDefault("C+", 0) +
+                dist.getOrDefault("C", 0) +
+                dist.getOrDefault("C-", 0) +
+                dist.getOrDefault("D", 0) +
+                dist.getOrDefault("F", 0);
+
         return totalGraded == 0 ? 0.0 : points / totalGraded;
     }
 

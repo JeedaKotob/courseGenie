@@ -48,4 +48,9 @@ public class SectionController {
     public ResponseEntity<List<String>> getSemesterNames() {
         return ResponseEntity.ok(sectionService.getSemesterNames());
     }
+
+    @GetMapping("/{sectionId}/average-gpa")
+    public ResponseEntity<Double> getAverageGpa(@PathVariable Long sectionId) {
+        return ResponseEntity.ok(sectionService.calculateAverageGpa(sectionId));
+    }
 }

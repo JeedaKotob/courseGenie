@@ -38,4 +38,8 @@ export class SectionService {
     return this.http.get<any>(`${this.apiUrl}/${sectionId}`);
   }
 
+  getAverageGpaBySection(sectionId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/${sectionId}/average-gpa`);
+  }
+
 }

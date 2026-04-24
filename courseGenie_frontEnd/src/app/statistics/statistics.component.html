@@ -29,6 +29,16 @@
       </div>
     </div>
 
+    <div class="overview-card gpa-card">
+      <div class="card-icon">
+        <i class="bi bi-mortarboard-fill"></i>
+      </div>
+      <div class="card-data">
+        <h3 class="data-value">{{ averageGpa }}</h3>
+        <p class="data-label">Average GPA </p>
+      </div>
+    </div>
+
     <div class="overview-card high-card">
       <div class="card-icon">
         <i class="bi bi-trophy-fill"></i>
@@ -254,6 +264,10 @@
 
   .average-card .card-icon {
     background: linear-gradient(135deg, #11998e, #38ef7d);
+  }
+
+  .gpa-card .card-icon {
+    background: linear-gradient(135deg, #6f42c1, #9c27b0);
   }
 
   .high-card .card-icon {

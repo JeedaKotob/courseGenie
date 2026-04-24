@@ -17,6 +17,7 @@ import {SectionService} from '../services/section.service';
 })
 export class StatisticsComponent implements OnInit {
   course: Course | null = null;
+  averageGpa = 0;
   enrollments: Enrollment[] = [];
   grades: Grade[] = [];
   gradesMatrix: any = {};
@@ -91,6 +92,7 @@ export class StatisticsComponent implements OnInit {
     this.course = this.sharedDataService.selectedCourseValue;
     const sectionId = this.course?.sections?.[0]?.sectionId;
     if (!sectionId) return;
+    this.loadAverageGpa(sectionId);
     this.getEnrollments(sectionId);
   }
 
@@ -136,6 +138,18 @@ export class StatisticsComponent implements OnInit {
       0
     );
     return +(total / this.totalStudents).toFixed(2);
+  }
+
+  private loadAverageGpa(sectionId: number): void {
+    this.sectionService.getAverageGpaBySection(sectionId).subscribe({
+      next: (gpa: number) => {
+        this.averageGpa = +gpa.toFixed(2);
+      },
+      error: (err) => {
+        console.error('Error loading average GPA:', err);
+        this.averageGpa = 0;
+      }
+    });
   }
 
   get highestScore(): number {
