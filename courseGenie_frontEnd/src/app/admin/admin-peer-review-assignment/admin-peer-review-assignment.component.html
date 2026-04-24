@@ -30,12 +30,12 @@
       </div>
 
       <div class="control-block">
-        <label class="form-label">Reviews Per Professor</label>
+        <label class="form-label">Reviewers Per Section</label>
         <input
           type="number"
           class="form-control"
           min="1"
-          [(ngModel)]="reviewsPerProfessor"
+          [(ngModel)]="reviewsPerSection"
         />
       </div>
 
@@ -61,11 +61,11 @@
         </div>
 
         <div>
-          <label class="form-label">Reviewee</label>
-          <select class="form-select" [(ngModel)]="selectedRevieweeId">
-            <option [ngValue]="null">Select reviewee</option>
-            <option *ngFor="let prof of selectedDepartmentProfessors" [ngValue]="prof.userId">
-              {{ prof.fullName }}
+          <label class="form-label">Reviewee Section</label>
+          <select class="form-select" [(ngModel)]="selectedRevieweeSectionId">
+            <option [ngValue]="null">Select section</option>
+            <option *ngFor="let section of selectedDepartmentSections" [ngValue]="section.sectionId">
+              {{ section.courseCode }} - {{ section.sectionCode }} | {{ section.revieweeName }}
             </option>
           </select>
         </div>
@@ -92,7 +92,7 @@
         <div>
           <strong>{{ assignment.reviewerName }}</strong>
           <i class="bi bi-arrow-right-short mx-1"></i>
-          {{ assignment.revieweeName }}
+          {{ assignment.courseCode }} - {{ assignment.sectionCode }} ({{ assignment.revieweeName }})
         </div>
         <button class="delete-btn" (click)="removeAssignment(i)">
           <i class="bi bi-trash"></i>

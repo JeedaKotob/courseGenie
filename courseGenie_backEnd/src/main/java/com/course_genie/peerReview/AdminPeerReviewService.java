@@ -2,6 +2,8 @@ package com.course_genie.peerReview;
 
 import com.course_genie.department.Department;
 import com.course_genie.department.DepartmentRepository;
+import com.course_genie.section.Section;
+import com.course_genie.section.SectionRepository;
 import com.course_genie.user.User;
 import com.course_genie.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,15 +21,18 @@ public class AdminPeerReviewService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PeerReviewAssignmentRepository assignmentRepository;
+    private final SectionRepository sectionRepository;
 
     public AdminPeerReviewService(
             UserRepository userRepository,
             DepartmentRepository departmentRepository,
-            PeerReviewAssignmentRepository assignmentRepository
+            PeerReviewAssignmentRepository assignmentRepository,
+            SectionRepository sectionRepository
     ) {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.assignmentRepository = assignmentRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     public List<PeerReviewDepartmentOverviewDTO> getDepartmentOverviews() {
@@ -44,6 +49,19 @@ public class AdminPeerReviewService {
                                 .map(user -> new ProfessorOptionDTO(user.getUserId(), user.getFullName(), user.getEmail()))
                                 .sorted(Comparator.comparing(ProfessorOptionDTO::fullName, String.CASE_INSENSITIVE_ORDER))
                                 .toList(),
+                        getDepartmentSections(entry.getKey()).stream()
+                                .map(section -> new RevieweeSectionOptionDTO(
+                                        section.getSectionId(),
+                                        section.getCourse() != null ? section.getCourse().getCode() : "",
+                                        section.getCourse() != null ? section.getCourse().getName() : "",
+                                        section.getCode(),
+                                        section.getProfessor().getUserId(),
+                                        section.getProfessor().getFullName()
+                                ))
+                                .sorted(Comparator
+                                        .comparing(RevieweeSectionOptionDTO::courseCode, String.CASE_INSENSITIVE_ORDER)
+                                        .thenComparing(RevieweeSectionOptionDTO::sectionCode, String.CASE_INSENSITIVE_ORDER))
+                                .toList(),
                         assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(entry.getKey()).size()
                 ))
                 .toList();
@@ -59,36 +77,48 @@ public class AdminPeerReviewService {
     @Transactional
     public List<PeerReviewAssignmentDTO> autoPair(PeerReviewAutoPairRequest request) {
         String departmentName = request.departmentName();
-        int reviewsPerProfessor = Optional.ofNullable(request.reviewsPerProfessor()).orElse(1);
-        if (reviewsPerProfessor <= 0) {
-            throw new ResponseStatusException(BAD_REQUEST, "reviewsPerProfessor must be greater than 0.");
+        int reviewsPerSection = Optional.ofNullable(request.reviewsPerSection()).orElse(1);
+        if (reviewsPerSection <= 0) {
+            throw new ResponseStatusException(BAD_REQUEST, "reviewsPerSection must be greater than 0.");
         }
 
         Department department = validateDepartment(departmentName);
         List<User> professors = userRepository.findProfessorsByDepartmentName(departmentName);
-        if (professors.size() < 2) {
-            throw new ResponseStatusException(BAD_REQUEST, "At least 2 professors are required for same-department pairing.");
+        List<Section> sections = new ArrayList<>(getDepartmentSections(departmentName));
+        if (professors.size() < 2 || sections.isEmpty()) {
+            throw new ResponseStatusException(BAD_REQUEST, "At least 2 professors and 1 section are required.");
         }
 
-        int maxDirectionalPerProfessor = professors.size() - 1;
-        if (reviewsPerProfessor > maxDirectionalPerProfessor) {
+        int maxReviewersPerSection = professors.size() - 1;
+        if (reviewsPerSection > maxReviewersPerSection) {
             throw new ResponseStatusException(
                     BAD_REQUEST,
-                    "reviewsPerProfessor cannot exceed " + maxDirectionalPerProfessor + " for this department."
+                    "reviewsPerSection cannot exceed " + maxReviewersPerSection + " for this department."
             );
         }
 
-        List<User> ordered = new ArrayList<>(professors);
-        ordered.sort(Comparator.comparing(User::getFullName, String.CASE_INSENSITIVE_ORDER));
+        List<User> reviewers = new ArrayList<>(professors);
+        reviewers.sort(Comparator.comparing(User::getFullName, String.CASE_INSENSITIVE_ORDER));
+        sections.sort(Comparator
+                .comparing((Section s) -> s.getCourse() != null ? s.getCourse().getCode() : "", String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Section::getCode, String.CASE_INSENSITIVE_ORDER));
+        Map<Long, Integer> reviewerLoad = reviewers.stream()
+                .collect(Collectors.toMap(User::getUserId, r -> 0));
 
         List<PeerReviewAssignment> generated = new ArrayList<>();
-        for (int i = 0; i < ordered.size(); i++) {
-            User reviewer = ordered.get(i);
-            for (int offset = 1; offset <= reviewsPerProfessor; offset++) {
-                User reviewee = ordered.get((i + offset) % ordered.size());
+        for (Section section : sections) {
+            for (int slot = 0; slot < reviewsPerSection; slot++) {
+                User reviewee = section.getProfessor();
+                User reviewer = reviewers.stream()
+                        .filter(candidate -> !Objects.equals(candidate.getUserId(), reviewee.getUserId()))
+                        .sorted(Comparator.comparingInt(candidate -> reviewerLoad.getOrDefault(candidate.getUserId(), 0)))
+                        .findFirst()
+                        .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "No eligible reviewer found for section " + section.getCode()));
+                reviewerLoad.put(reviewer.getUserId(), reviewerLoad.getOrDefault(reviewer.getUserId(), 0) + 1);
                 generated.add(PeerReviewAssignment.builder()
                         .reviewer(reviewer)
                         .reviewee(reviewee)
+                        .revieweeSectionId(section.getSectionId())
                         .department(department)
                         .pairingSource("AUTO")
                         .build());
@@ -118,21 +148,24 @@ public class AdminPeerReviewService {
 
         for (PeerReviewPairRequest pair : pairs) {
             User reviewer = usersById.get(pair.reviewerId());
-            User reviewee = usersById.get(pair.revieweeId());
+            Section revieweeSection = sectionRepository.findById(pair.revieweeSectionId())
+                    .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Selected reviewee section is invalid."));
+            User reviewee = revieweeSection.getProfessor();
             if (reviewer == null || reviewee == null) {
-                throw new ResponseStatusException(BAD_REQUEST, "Reviewer or reviewee is not a valid professor.");
+                throw new ResponseStatusException(BAD_REQUEST, "Reviewer or section owner is not a valid professor.");
             }
             validateSameDepartment(departmentName, reviewer, reviewee);
             if (Objects.equals(reviewer.getUserId(), reviewee.getUserId())) {
-                throw new ResponseStatusException(BAD_REQUEST, "Self-review is not allowed.");
+                throw new ResponseStatusException(BAD_REQUEST, "Reviewer cannot review their own section.");
             }
-            String key = reviewer.getUserId() + "->" + reviewee.getUserId();
+            String key = reviewer.getUserId() + "->" + revieweeSection.getSectionId();
             if (!seenPairs.add(key)) {
                 throw new ResponseStatusException(BAD_REQUEST, "Duplicate assignment found for pair " + key + ".");
             }
             assignments.add(PeerReviewAssignment.builder()
                     .reviewer(reviewer)
                     .reviewee(reviewee)
+                    .revieweeSectionId(revieweeSection.getSectionId())
                     .department(department)
                     .pairingSource("MANUAL")
                     .build());
@@ -159,14 +192,37 @@ public class AdminPeerReviewService {
     }
 
     private PeerReviewAssignmentDTO toDTO(PeerReviewAssignment assignment) {
+        Section section = resolveSection(assignment.getRevieweeSectionId());
         return new PeerReviewAssignmentDTO(
                 assignment.getAssignmentId(),
                 assignment.getReviewer().getUserId(),
                 assignment.getReviewer().getFullName(),
                 assignment.getReviewee().getUserId(),
                 assignment.getReviewee().getFullName(),
+                assignment.getRevieweeSectionId(),
+                section != null && section.getCourse() != null ? section.getCourse().getCode() : "",
+                section != null && section.getCourse() != null ? section.getCourse().getName() : "",
+                section != null ? section.getCode() : "",
                 assignment.getDepartment().getDepartmentName(),
                 assignment.getPairingSource()
         );
+    }
+
+    private List<Section> getDepartmentSections(String departmentName) {
+        return sectionRepository.findAll().stream()
+                .filter(section -> section.getProfessor() != null)
+                .filter(section -> section.getProfessor().getDepartment() != null)
+                .filter(section -> {
+                    String profDepartment = section.getProfessor().getDepartment().getDepartmentName();
+                    return profDepartment != null && profDepartment.equalsIgnoreCase(departmentName);
+                })
+                .toList();
+    }
+
+    private Section resolveSection(Long sectionId) {
+        if (sectionId == null) {
+            return null;
+        }
+        return sectionRepository.findById(sectionId).orElse(null);
     }
 }

@@ -6,6 +6,10 @@ public record PeerReviewAssignmentDTO(
         String reviewerName,
         Long revieweeId,
         String revieweeName,
+        Long revieweeSectionId,
+        String courseCode,
+        String courseName,
+        String sectionCode,
         String departmentName,
         String pairingSource
 ) {

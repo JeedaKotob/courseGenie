@@ -25,6 +25,8 @@ public class PeerReviewAssignment {
     @JoinColumn(name = "reviewee_id", nullable = false)
     private User reviewee;
 
+    private Long revieweeSectionId;
+
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;

@@ -6,7 +6,8 @@ import {
   PeerReviewAssignment,
   PeerReviewDepartmentOverview,
   PeerReviewPairRequest,
-  ProfessorOption
+  ProfessorOption,
+  RevieweeSectionOption
 } from '../../home/course.model';
 
 @Component({
@@ -19,8 +20,8 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
   departments: PeerReviewDepartmentOverview[] = [];
   selectedDepartment = '';
   selectedReviewerId: number | null = null;
-  selectedRevieweeId: number | null = null;
-  reviewsPerProfessor = 1;
+  selectedRevieweeSectionId: number | null = null;
+  reviewsPerSection = 1;
   assignments: PeerReviewAssignment[] = [];
 
   loading = false;
@@ -43,6 +44,10 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
     return this.departments.find(dept => dept.departmentName === this.selectedDepartment)?.professors ?? [];
   }
 
+  get selectedDepartmentSections(): RevieweeSectionOption[] {
+    return this.departments.find(dept => dept.departmentName === this.selectedDepartment)?.revieweeSections ?? [];
+  }
+
   loadDepartments(): void {
     this.loading = true;
     this.adminService.getPeerReviewDepartments().subscribe({
@@ -63,7 +68,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
 
   onDepartmentChange(): void {
     this.selectedReviewerId = null;
-    this.selectedRevieweeId = null;
+    this.selectedRevieweeSectionId = null;
     this.loadAssignments();
   }
 
@@ -80,7 +85,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
   autoPair(): void {
     if (!this.selectedDepartment) return;
     this.autoPairLoading = true;
-    this.adminService.autoPairPeerReviews(this.selectedDepartment, this.reviewsPerProfessor).subscribe({
+    this.adminService.autoPairPeerReviews(this.selectedDepartment, this.reviewsPerSection).subscribe({
       next: (data) => {
         this.assignments = data;
         this.autoPairLoading = false;
@@ -95,16 +100,21 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
   }
 
   addManualAssignment(): void {
-    if (!this.selectedReviewerId || !this.selectedRevieweeId) {
-      this.showMessage('Select both reviewer and reviewee first.', true);
+    if (!this.selectedReviewerId || !this.selectedRevieweeSectionId) {
+      this.showMessage('Select both reviewer and reviewee section first.', true);
       return;
     }
-    if (this.selectedReviewerId === this.selectedRevieweeId) {
-      this.showMessage('Self-review is not allowed.', true);
+    const revieweeSection = this.selectedDepartmentSections.find(s => s.sectionId === this.selectedRevieweeSectionId);
+    if (!revieweeSection) {
+      this.showMessage('Selected reviewee section is invalid.', true);
+      return;
+    }
+    if (this.selectedReviewerId === revieweeSection.revieweeId) {
+      this.showMessage('Reviewer cannot review their own section.', true);
       return;
     }
     const duplicate = this.assignments.some(a =>
-      a.reviewerId === this.selectedReviewerId && a.revieweeId === this.selectedRevieweeId
+      a.reviewerId === this.selectedReviewerId && a.revieweeSectionId === this.selectedRevieweeSectionId
     );
     if (duplicate) {
       this.showMessage('That directional pair already exists.', true);
@@ -112,9 +122,8 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
     }
 
     const reviewer = this.selectedDepartmentProfessors.find(p => p.userId === this.selectedReviewerId);
-    const reviewee = this.selectedDepartmentProfessors.find(p => p.userId === this.selectedRevieweeId);
-    if (!reviewer || !reviewee) {
-      this.showMessage('Reviewer or reviewee is invalid for this department.', true);
+    if (!reviewer) {
+      this.showMessage('Reviewer is invalid for this department.', true);
       return;
     }
 
@@ -124,14 +133,18 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
         assignmentId: 0,
         reviewerId: reviewer.userId,
         reviewerName: reviewer.fullName,
-        revieweeId: reviewee.userId,
-        revieweeName: reviewee.fullName,
+        revieweeId: revieweeSection.revieweeId,
+        revieweeName: revieweeSection.revieweeName,
+        revieweeSectionId: revieweeSection.sectionId,
+        courseCode: revieweeSection.courseCode,
+        courseName: revieweeSection.courseName,
+        sectionCode: revieweeSection.sectionCode,
         departmentName: this.selectedDepartment,
         pairingSource: 'MANUAL'
       }
     ];
     this.selectedReviewerId = null;
-    this.selectedRevieweeId = null;
+    this.selectedRevieweeSectionId = null;
     this.showMessage('Pair added locally. Click Save Assignments to persist.');
   }
 
@@ -144,7 +157,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
     this.saveLoading = true;
     const payload: PeerReviewPairRequest[] = this.assignments.map(a => ({
       reviewerId: a.reviewerId,
-      revieweeId: a.revieweeId
+      revieweeSectionId: a.revieweeSectionId
     }));
     this.adminService.savePeerReviewAssignments(this.selectedDepartment, payload).subscribe({
       next: (data) => {

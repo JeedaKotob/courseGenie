@@ -47,10 +47,10 @@ export class AdminService {
     });
   }
 
-  autoPairPeerReviews(departmentName: string, reviewsPerProfessor: number): Observable<PeerReviewAssignment[]> {
+  autoPairPeerReviews(departmentName: string, reviewsPerSection: number): Observable<PeerReviewAssignment[]> {
     return this.http.post<PeerReviewAssignment[]>(`${environment.apiUrl}/admin/peer-review/auto-pair`, {
       departmentName,
-      reviewsPerProfessor
+      reviewsPerSection
     });
   }
 

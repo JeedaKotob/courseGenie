@@ -308,7 +308,17 @@ export interface ProfessorOption {
 export interface PeerReviewDepartmentOverview {
   departmentName: string;
   professors: ProfessorOption[];
+  revieweeSections: RevieweeSectionOption[];
   assignmentCount: number;
+}
+
+export interface RevieweeSectionOption {
+  sectionId: number;
+  courseCode: string;
+  courseName: string;
+  sectionCode: string;
+  revieweeId: number;
+  revieweeName: string;
 }
 
 export interface PeerReviewAssignment {
@@ -317,11 +327,15 @@ export interface PeerReviewAssignment {
   reviewerName: string;
   revieweeId: number;
   revieweeName: string;
+  revieweeSectionId: number;
+  courseCode: string;
+  courseName: string;
+  sectionCode: string;
   departmentName: string;
   pairingSource: string;
 }
 
 export interface PeerReviewPairRequest {
   reviewerId: number;
-  revieweeId: number;
+  revieweeSectionId: number;
 }
