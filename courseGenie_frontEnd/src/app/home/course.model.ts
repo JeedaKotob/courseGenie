@@ -408,3 +408,11 @@ export interface PeerReviewProfessorVisibility {
   departmentAssigned: boolean;
   warning: string;
 }
+
+export interface PeerReviewProgressSummary {
+  totalAssignments: number;
+  notStarted: number;
+  reviewerFinished: number;
+  done: number;
+  completionPercentage: number;
+}

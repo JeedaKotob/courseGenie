@@ -90,6 +90,32 @@ public class AdminPeerReviewService {
                 .toList();
     }
 
+    public PeerReviewProgressSummaryDTO getProgressSummary() {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
+        List<PeerReviewAssignment> currentSemesterAssignments = assignmentRepository.findAll().stream()
+                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
+                .toList();
+
+        int total = currentSemesterAssignments.size();
+        int notStarted = 0;
+        int reviewerFinished = 0;
+        int done = 0;
+
+        for (PeerReviewAssignment assignment : currentSemesterAssignments) {
+            String status = resolveProgressStatus(assignment.getAssignmentId());
+            if ("DONE".equals(status)) {
+                done++;
+            } else if ("REVIEWER_FINISHED".equals(status)) {
+                reviewerFinished++;
+            } else {
+                notStarted++;
+            }
+        }
+
+        double completionPercentage = total == 0 ? 0 : (done * 100.0) / total;
+        return new PeerReviewProgressSummaryDTO(total, notStarted, reviewerFinished, done, completionPercentage);
+    }
+
     public PeerReviewPublishResponseDTO getPublishStatus() {
         Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         boolean visible = currentSemester.isPeerReviewVisible();

@@ -153,7 +153,7 @@
   flex-wrap: wrap;
 }
 
-.exam-stats span {
+.exam-stats .stats-pill {
   background: #eef6fa;
   color: #024964;
   border-radius: 999px;
@@ -162,14 +162,31 @@
   font-weight: 600;
 }
 
-.exam-stats span.assigned-rooms-pill {
+.exam-stats .enrolled-pill {
+  background: #eaf4ff;
+  color: #3d6d99;
+}
+
+.exam-stats .assigned-rooms-pill {
+  background: #eaf9ef;
+  color: #3f7c56;
   max-width: min(800px, 100%);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.exam-stats span.warning-pill {
+.exam-stats .total-seats-pill {
+  background: #fffbe8;
+  color: #8d7a32;
+}
+
+.exam-stats .unseated-pill {
+  background: #fff2e8;
+  color: #9b6a45;
+}
+
+.exam-stats .unseated-pill.warning-pill {
   background: #fdeceb;
   color: #b42318;
 }

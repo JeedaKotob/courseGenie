@@ -4,6 +4,7 @@ import {
   CarProgress,
   PeerReviewAssignment,
   PeerReviewDepartmentOverview,
+  PeerReviewProgressSummary,
   PeerReviewPublishStatus,
   PeerReviewPairRequest,
   SyllabusProgress
@@ -46,6 +47,10 @@ export class AdminService {
     return this.http.get<PeerReviewAssignment[]>(`${environment.apiUrl}/admin/peer-review/assignments`, {
       params: { departmentName }
     });
+  }
+
+  getPeerReviewProgressSummary(): Observable<PeerReviewProgressSummary> {
+    return this.http.get<PeerReviewProgressSummary>(`${environment.apiUrl}/admin/peer-review/progress-summary`);
   }
 
   autoPairPeerReviews(departmentName: string, reviewsPerSection: number): Observable<PeerReviewAssignment[]> {

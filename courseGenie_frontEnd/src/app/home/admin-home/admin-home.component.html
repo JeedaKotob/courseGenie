@@ -1,5 +1,5 @@
 <div class="m-3">
-  <div class="card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4">
+  <div class="card shadow-sm border-0 rounded-lg ps-5 pe-5 pt-4 pb-4 admin-dashboard-shell">
 
     <div class="hero-section">
       <div class="hero-section-bg d-flex align-items-center justify-content-end">
@@ -13,19 +13,38 @@
       </div>
     </div>
 
-    <div class="overview-card links-card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="bi bi-grid-1x2"></i> Admin Tools
-        </h3>
+    <div class="overview-card links-card mb-4" *ngFor="let group of toolGroups">
+      <div class="card-header grouped-header">
+        <div>
+          <h3 class="card-title">
+            <i class="bi bi-grid-1x2"></i> {{ group.title }}
+          </h3>
+        </div>
       </div>
       <div class="card-body">
         <div class="tools-grid">
-          <div class="tool-card" *ngFor="let tool of adminTools" (click)="navigateToTool(tool.route)">
-            <div class="tool-icon">
+          <div
+            class="tool-card"
+            [ngClass]="isProgressTool(tool.title) ? getProgressCardClass(tool.title) : ''"
+            *ngFor="let tool of getGroupedTools(group.tools)"
+            (click)="navigateToTool(tool.route)">
+            <div class="tool-icon" *ngIf="!isProgressTool(tool.title)">
               <i [class]="tool.icon"></i>
             </div>
-            <div class="tool-content">
+            <div class="progress-card-row" *ngIf="isProgressTool(tool.title)">
+              <div class="tool-content progress-content">
+                <h4>{{ tool.title }}</h4>
+                <p>{{ tool.description }}</p>
+              </div>
+              <div class="tool-progress-wrap">
+                <div class="progress-ring" [ngStyle]="getToolProgressStyle(tool.title)">
+                  <div class="progress-ring-inner">
+                    {{ getToolProgress(tool.title) }}%
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-content" *ngIf="!isProgressTool(tool.title)">
               <h4>{{ tool.title }}</h4>
               <p>{{ tool.description }}</p>
             </div>
@@ -40,19 +59,22 @@
 
     <div class="home-content mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="bold mb-0">All Courses</h1>
+        <h1 class="bold mb-0">Course Directory</h1>
       </div>
 
       <div *ngIf="courses.length > 0; else noCourses">
         <div *ngFor="let entry of groupedCourses | keyvalue" class="dept-section mb-5">
-          <div class="dept-header d-flex align-items-center mb-4">
-            <div class="dept-indicator"></div>
-            <h3 class="dept-title mb-0 ms-3">
-              {{ entry.key }} Department
-            </h3>
+          <div class="dept-header d-flex align-items-center justify-content-between mb-4" (click)="toggleDepartment(entry.key)">
+            <div class="d-flex align-items-center">
+              <div class="dept-indicator"></div>
+              <h3 class="dept-title mb-0 ms-3">
+                {{ entry.key }} Department
+              </h3>
+            </div>
+            <i class="bi" [ngClass]="isDepartmentExpanded(entry.key) ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
           </div>
 
-          <div class="courses-grid">
+          <div class="courses-grid" *ngIf="isDepartmentExpanded(entry.key)">
 
             <div class="course-card"
                  *ngFor="let course of entry.value"

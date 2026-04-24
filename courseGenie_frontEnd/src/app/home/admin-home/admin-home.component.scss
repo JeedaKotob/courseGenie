@@ -3,6 +3,113 @@
   margin: 0 auto;
 }
 
+.admin-dashboard-shell {
+  background: #fcfdff;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.kpi-card {
+  background: #fff;
+  border: 1px solid #e8edf3;
+  border-radius: 14px;
+  padding: 1rem 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 170px;
+}
+
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  right: -14px;
+  top: -14px;
+  width: 70px;
+  height: 70px;
+  border-radius: 999px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.kpi-card.courses::after { background: #4e54c8; }
+.kpi-card.departments::after { background: #11998e; }
+.kpi-card.modules::after { background: #6f42c1; }
+.kpi-card.warning::after { background: #f46b45; }
+
+.kpi-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 0.9rem;
+  font-size: 1.45rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-card.courses .kpi-icon {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+}
+
+.kpi-card.departments .kpi-icon {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.kpi-card.modules .kpi-icon {
+  background: linear-gradient(135deg, #6f42c1, #9c27b0);
+}
+
+.kpi-card.warning .kpi-icon {
+  background: linear-gradient(135deg, #f46b45, #eea849);
+}
+
+.kpi-card.warning {
+  background: #fff6e7;
+  border-color: #ffdca8;
+}
+
+.kpi-label {
+  color: #6c757d;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.kpi-value {
+  color: #024964;
+  font-size: 2.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 0.3rem;
+}
+
+.grouped-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.group-subtitle {
+  color: #7a8793;
+  font-size: 0.9rem;
+}
+
+.overview-card.links-card {
+  border: 1px solid #e8edf3;
+  box-shadow: 0 8px 18px rgba(2, 73, 100, 0.06);
+}
+
 .hero-section {
   margin-bottom: 2rem;
 }
@@ -167,6 +274,14 @@
 
 .dept-header {
   margin-top: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0.25rem;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.dept-header:hover {
+  background: rgba(3, 148, 202, 0.06);
 }
 
 .dept-indicator {
@@ -179,6 +294,11 @@
 .dept-title {
   color: #024964;
   font-weight: 700;
+}
+
+.dept-header .bi {
+  color: #024964;
+  font-size: 1rem;
 }
 
 .progress-card {
@@ -379,6 +499,13 @@
   transition: .2s ease;
 }
 
+.progress-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .tool-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
@@ -397,6 +524,37 @@
   font-size: 1.25rem;
 }
 
+.tool-progress-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.progress-ring {
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.progress-ring-inner {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: var(--progress-inner-bg, rgba(255, 255, 255, 0.14));
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
 .tool-content h4 {
   margin: 0;
   color: #024964;
@@ -409,6 +567,49 @@
   color: #6c757d;
   font-size: .9rem;
   line-height: 1.4;
+}
+
+.tool-card.syllabus-progress {
+  background: linear-gradient(135deg, #5b7bff 0%, #6f42c1 100%);
+  border-color: transparent;
+  --progress-inner-bg: #5e54d1;
+}
+
+.tool-card.car-progress {
+  background: linear-gradient(135deg, #4f8cff 0%, #5b6bff 100%);
+  border-color: transparent;
+  --progress-inner-bg: #5677f8;
+}
+
+.tool-card.peer-progress {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border-color: transparent;
+  --progress-inner-bg: #1cab8f;
+}
+
+.tool-card.syllabus-progress .tool-content h4,
+.tool-card.car-progress .tool-content h4,
+.tool-card.peer-progress .tool-content h4,
+.tool-card.syllabus-progress .tool-content p,
+.tool-card.car-progress .tool-content p,
+.tool-card.peer-progress .tool-content p,
+.tool-card.syllabus-progress .tool-cta,
+.tool-card.car-progress .tool-cta,
+.tool-card.peer-progress .tool-cta {
+  color: #fff;
+}
+
+.tool-card.syllabus-progress .tool-content p,
+.tool-card.car-progress .tool-content p,
+.tool-card.peer-progress .tool-content p {
+  opacity: 0.9;
+}
+
+.tool-card.syllabus-progress .tool-cta,
+.tool-card.car-progress .tool-cta,
+.tool-card.peer-progress .tool-cta {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .tool-cta {
@@ -463,6 +664,16 @@
 
   .tools-grid {
     grid-template-columns: 1fr;
+  }
+
+  .progress-ring {
+    width: 72px;
+    height: 72px;
+  }
+
+  .progress-ring-inner {
+    width: 58px;
+    height: 58px;
   }
 }
 

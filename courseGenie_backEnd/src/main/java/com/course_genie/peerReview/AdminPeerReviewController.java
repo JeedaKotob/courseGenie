@@ -23,6 +23,11 @@ public class AdminPeerReviewController {
         return adminPeerReviewService.getAssignmentsByDepartment(departmentName);
     }
 
+    @GetMapping("/progress-summary")
+    public PeerReviewProgressSummaryDTO getProgressSummary() {
+        return adminPeerReviewService.getProgressSummary();
+    }
+
     @PostMapping("/auto-pair")
     public List<PeerReviewAssignmentDTO> autoPair(@RequestBody PeerReviewAutoPairRequest request) {
         return adminPeerReviewService.autoPair(request);
