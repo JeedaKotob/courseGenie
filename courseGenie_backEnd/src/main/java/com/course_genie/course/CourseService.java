@@ -13,6 +13,7 @@ import com.course_genie.clo.CLORepository;
 import com.course_genie.semester.Semester;
 import com.course_genie.semester.SemesterRepository;
 import com.course_genie.section.Section;
+import com.course_genie.section.SectionArtifactService;
 import com.course_genie.section.SectionDTO;
 import com.course_genie.section.SectionDTOMapper;
 import com.course_genie.section.SectionRepository;
@@ -35,8 +36,9 @@ public class CourseService {
     private final CLODTOMapper cloDTOMapper;
     private final UserRepository userRepository;
     private final SemesterRepository semesterRepository;
+    private final SectionArtifactService sectionArtifactService;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository, SectionArtifactService sectionArtifactService) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseDTOMapper = courseDTOMapper;
@@ -48,6 +50,7 @@ public class CourseService {
         this.cloDTOMapper = cloDTOMapper;
         this.userRepository = userRepository;
         this.semesterRepository = semesterRepository;
+        this.sectionArtifactService = sectionArtifactService;
     }
 
     public CourseDTO createCourse(CourseDTO courseDTO) {
@@ -296,6 +299,7 @@ public class CourseService {
                 .build();
     
         Section saved = sectionRepository.save(section);
+        sectionArtifactService.ensureArtifactsForSection(saved);
         return sectionDTOMapper.apply(saved);
     }
 
