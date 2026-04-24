@@ -32,4 +32,14 @@ public class AdminPeerReviewController {
     public List<PeerReviewAssignmentDTO> saveAssignments(@RequestBody PeerReviewManualAssignmentRequest request) {
         return adminPeerReviewService.saveManualAssignments(request);
     }
+
+    @GetMapping("/publish-status")
+    public PeerReviewPublishResponseDTO getPublishStatus() {
+        return adminPeerReviewService.getPublishStatus();
+    }
+
+    @PostMapping("/publish")
+    public PeerReviewPublishResponseDTO publishForAllDepartments() {
+        return adminPeerReviewService.setGlobalVisibility(true);
+    }
 }

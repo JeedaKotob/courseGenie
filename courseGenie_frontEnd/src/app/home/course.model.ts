@@ -397,3 +397,14 @@ export interface RevieweeReceivedReview {
   reflectionSubmitted: boolean;
   reflectionSubmittedAt: string | null;
 }
+
+export interface PeerReviewPublishStatus {
+  globallyVisible: boolean;
+  unassignedDepartments: string[];
+}
+
+export interface PeerReviewProfessorVisibility {
+  visible: boolean;
+  departmentAssigned: boolean;
+  warning: string;
+}

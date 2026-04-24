@@ -20,4 +20,5 @@ public class Semester {
     private LocalDate carDueDate;
     private LocalDate startDate;
     private LocalDate endDate;
+    private boolean peerReviewVisible;
 }

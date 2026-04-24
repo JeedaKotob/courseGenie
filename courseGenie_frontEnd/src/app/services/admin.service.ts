@@ -4,6 +4,7 @@ import {
   CarProgress,
   PeerReviewAssignment,
   PeerReviewDepartmentOverview,
+  PeerReviewPublishStatus,
   PeerReviewPairRequest,
   SyllabusProgress
 } from '../home/course.model';
@@ -59,6 +60,14 @@ export class AdminService {
       departmentName,
       assignments
     });
+  }
+
+  getPeerReviewPublishStatus(): Observable<PeerReviewPublishStatus> {
+    return this.http.get<PeerReviewPublishStatus>(`${environment.apiUrl}/admin/peer-review/publish-status`);
+  }
+
+  publishPeerReviewForAllDepartments(): Observable<PeerReviewPublishStatus> {
+    return this.http.post<PeerReviewPublishStatus>(`${environment.apiUrl}/admin/peer-review/publish`, {});
   }
 
 }

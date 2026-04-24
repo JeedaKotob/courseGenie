@@ -2,6 +2,8 @@ package com.course_genie.peerReview;
 
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterService;
 import com.course_genie.user.User;
 import com.course_genie.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -24,24 +27,29 @@ public class ReviewerPeerReviewService {
     private final ActionPlanRepository actionPlanRepository;
     private final SectionRepository sectionRepository;
     private final UserRepository userRepository;
+    private final SemesterService semesterService;
 
     public ReviewerPeerReviewService(
             PeerReviewAssignmentRepository assignmentRepository,
             PeerReviewRepository peerReviewRepository,
             ActionPlanRepository actionPlanRepository,
             SectionRepository sectionRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            SemesterService semesterService
     ) {
         this.assignmentRepository = assignmentRepository;
         this.peerReviewRepository = peerReviewRepository;
         this.actionPlanRepository = actionPlanRepository;
         this.sectionRepository = sectionRepository;
         this.userRepository = userRepository;
+        this.semesterService = semesterService;
     }
 
     public List<ReviewerAssignmentDTO> getAssignments(Long reviewerId) {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         List<PeerReviewAssignment> assignments = assignmentRepository.findAll().stream()
                 .filter(a -> a.getReviewer() != null && reviewerId.equals(a.getReviewer().getUserId()))
+                .filter(a -> Objects.equals(currentSemester.getSemesterId(), a.getSemesterId()))
                 .toList();
 
         return assignments.stream().map(assignment -> {
@@ -61,6 +69,24 @@ public class ReviewerPeerReviewService {
                     completed
             );
         }).toList();
+    }
+
+    public PeerReviewProfessorVisibilityDTO getPeerReviewVisibilityForProfessor(Long userId) {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found."));
+        boolean globallyVisible = currentSemester.isPeerReviewVisible();
+        if (!globallyVisible) {
+            return new PeerReviewProfessorVisibilityDTO(false, false, "Peer review is not published by admin yet.");
+        }
+        if (user.getDepartment() == null || user.getDepartment().getDepartmentName() == null) {
+            return new PeerReviewProfessorVisibilityDTO(true, false, "Your department is not assigned yet.");
+        }
+        String departmentName = user.getDepartment().getDepartmentName();
+        boolean departmentAssigned = assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
+                .anyMatch(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()));
+        String warning = departmentAssigned ? "" : "Your department has no peer-review assignments yet. Please contact admin.";
+        return new PeerReviewProfessorVisibilityDTO(true, departmentAssigned, warning);
     }
 
     @Transactional

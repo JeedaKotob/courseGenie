@@ -11,7 +11,15 @@
 
     <div *ngIf="message" class="status-alert" [class.error]="isError">{{ message }}</div>
 
-    <div *ngIf="!selectedAssignment">
+    <div *ngIf="!peerReviewVisible" class="empty-state">
+      {{ availabilityWarning || 'Peer review is not available yet.' }}
+    </div>
+
+    <div *ngIf="peerReviewVisible && !departmentAssigned" class="empty-state">
+      {{ availabilityWarning || 'Your department has no assignments yet.' }}
+    </div>
+
+    <div *ngIf="peerReviewVisible && departmentAssigned && !selectedAssignment">
       <div *ngIf="loading" class="text-muted">Loading assignments...</div>
       <div *ngIf="!loading && assignments.length === 0" class="empty-state">
         No peer review assignments available.
@@ -82,7 +90,7 @@
       </div>
     </div>
 
-    <form *ngIf="selectedAssignment" (ngSubmit)="submitReview()">
+    <form *ngIf="peerReviewVisible && departmentAssigned && selectedAssignment" (ngSubmit)="submitReview()">
       <div class="prefill-card mb-4">
         <h5 class="mb-2">Review Context</h5>
         <div><strong>Reviewee:</strong> {{ selectedAssignment.revieweeName }}</div>

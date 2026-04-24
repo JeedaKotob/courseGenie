@@ -2,6 +2,8 @@ package com.course_genie.car;
 
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterService;
 import com.course_genie.user.User;
 import com.course_genie.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,20 +22,27 @@ public class AdminCarService {
     private final UserRepository userRepository;
     private final SectionRepository sectionRepository;
     private final CarRepository carRepository;
+    private final SemesterService semesterService;
 
     public AdminCarService(UserRepository userRepository,
                            SectionRepository sectionRepository,
-                           CarRepository carRepository) {
+                           CarRepository carRepository,
+                           SemesterService semesterService) {
         this.userRepository = userRepository;
         this.sectionRepository = sectionRepository;
         this.carRepository = carRepository;
+        this.semesterService = semesterService;
     }
 
     public Map<String, List<CarProgressDTO>> getCarProgressByDepartment() {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         List<User> professors = userRepository.findByRoles("ROLE_PROFESSOR");
 
         List<CarProgressDTO> flatList = professors.stream().map(user -> {
-            List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId());
+            List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId()).stream()
+                    .filter(section -> section.getSemester() != null)
+                    .filter(section -> Objects.equals(section.getSemester().getSemesterId(), currentSemester.getSemesterId()))
+                    .toList();
             int totalSections = sections.size();
 
             List<CarDetailDTO> sectionDetails = sections.stream()

@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { RevieweeReceivedReview, ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
+import {
+  PeerReviewProfessorVisibility,
+  RevieweeReceivedReview,
+  ReviewerAssignment,
+  ReviewerSubmitPeerReviewRequest
+} from '../home/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +18,12 @@ export class PeerReviewService {
   getReviewerAssignments(reviewerId: number): Observable<ReviewerAssignment[]> {
     return this.http.get<ReviewerAssignment[]>(`${environment.apiUrl}/peer-review/reviewer/assignments`, {
       params: { reviewerId }
+    });
+  }
+
+  getVisibility(userId: number): Observable<PeerReviewProfessorVisibility> {
+    return this.http.get<PeerReviewProfessorVisibility>(`${environment.apiUrl}/peer-review/reviewer/visibility`, {
+      params: { userId }
     });
   }
 

@@ -7,15 +7,26 @@
         </button>
         <h1 class="bold mb-0 display-title">Peer Review Assignment</h1>
       </div>
-      <button class="primary-btn" (click)="saveAssignments()" [disabled]="saveLoading || !selectedDepartment">
-        <span *ngIf="!saveLoading"><i class="bi bi-save me-2"></i>Save Assignments</span>
-        <span *ngIf="saveLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Saving...</span>
-      </button>
+      <div class="d-flex gap-2">
+        <button class="secondary-btn" (click)="publishForAllDepartments()" [disabled]="publishLoading || globallyVisible">
+          <span *ngIf="!publishLoading"><i class="bi bi-eye me-2"></i>{{ globallyVisible ? 'Published' : 'Publish For All Departments' }}</span>
+          <span *ngIf="publishLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Publishing...</span>
+        </button>
+        <button class="primary-btn" (click)="saveAssignments()" [disabled]="saveLoading || !selectedDepartment">
+          <span *ngIf="!saveLoading"><i class="bi bi-save me-2"></i>Save Assignments</span>
+          <span *ngIf="saveLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Saving...</span>
+        </button>
+      </div>
     </div>
 
     <div *ngIf="message" class="status-alert" [class.error]="isError">
       <i class="bi" [ngClass]="isError ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'"></i>
       {{ message }}
+    </div>
+
+    <div *ngIf="globallyVisible && unassignedDepartments.length > 0" class="status-alert error mb-3">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      Warning: no assignments yet for {{ unassignedDepartments.join(', ') }}.
     </div>
 
     <div class="controls-grid mb-4">

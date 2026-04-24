@@ -19,6 +19,11 @@ public class ReviewerPeerReviewController {
         return reviewerPeerReviewService.getAssignments(reviewerId);
     }
 
+    @GetMapping("/visibility")
+    public PeerReviewProfessorVisibilityDTO getVisibility(@RequestParam Long userId) {
+        return reviewerPeerReviewService.getPeerReviewVisibilityForProfessor(userId);
+    }
+
     @GetMapping("/received")
     public List<RevieweeReceivedReviewDTO> getReceivedReviews(@RequestParam Long revieweeId) {
         return reviewerPeerReviewService.getReceivedReviews(revieweeId);

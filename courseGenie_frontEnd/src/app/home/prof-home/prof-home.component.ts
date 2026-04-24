@@ -42,6 +42,7 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
   peerReviewPendingCount = 0;
   peerReviewCompletedCount = 0;
   peerReviewLoading = false;
+  peerReviewVisible = false;
 
   constructor(
     private courseService: CourseService,
@@ -163,16 +164,31 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     const user = this.sharedDataService.currentUserValue;
     if (!user) return;
     this.peerReviewLoading = true;
-    this.peerReviewService.getReviewerAssignments(user.userId).subscribe({
-      next: assignments => {
-        this.peerReviewCompletedCount = assignments.filter(a => a.completed).length;
-        this.peerReviewPendingCount = assignments.filter(a => !a.completed).length;
-        this.peerReviewLoading = false;
+    this.peerReviewService.getVisibility(user.userId).subscribe({
+      next: visibility => {
+        this.peerReviewVisible = visibility.visible && visibility.departmentAssigned;
+        if (!this.peerReviewVisible) {
+          this.peerReviewPendingCount = 0;
+          this.peerReviewCompletedCount = 0;
+          this.peerReviewLoading = false;
+          return;
+        }
+        this.peerReviewService.getReviewerAssignments(user.userId).subscribe({
+          next: assignments => {
+            this.peerReviewCompletedCount = assignments.filter(a => a.completed).length;
+            this.peerReviewPendingCount = assignments.filter(a => !a.completed).length;
+            this.peerReviewLoading = false;
+          },
+          error: () => {
+            this.peerReviewLoading = false;
+            this.peerReviewCompletedCount = 0;
+            this.peerReviewPendingCount = 0;
+          }
+        });
       },
       error: () => {
+        this.peerReviewVisible = false;
         this.peerReviewLoading = false;
-        this.peerReviewCompletedCount = 0;
-        this.peerReviewPendingCount = 0;
       }
     });
   }

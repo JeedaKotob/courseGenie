@@ -18,6 +18,9 @@ export class PeerReviewReviewerComponent implements OnInit {
   selectedAssignment: ReviewerAssignment | null = null;
   loading = false;
   submitting = false;
+  peerReviewVisible = false;
+  departmentAssigned = false;
+  availabilityWarning = '';
   message = '';
   isError = false;
 
@@ -56,8 +59,31 @@ export class PeerReviewReviewerComponent implements OnInit {
       this.showMessage('Please sign in again.', true);
       return;
     }
+    this.peerReviewService.getVisibility(user.userId).subscribe({
+      next: (visibility) => {
+        this.peerReviewVisible = visibility.visible;
+        this.departmentAssigned = visibility.departmentAssigned;
+        this.availabilityWarning = visibility.warning;
+        if (!visibility.visible || !visibility.departmentAssigned) {
+          this.assignments = [];
+          this.receivedReviews = [];
+          this.loading = false;
+          this.router.navigate(['/professor']);
+          return;
+        }
+        this.loadVisibleData(user.userId);
+      },
+      error: () => {
+        this.peerReviewVisible = false;
+        this.loading = false;
+        this.showMessage('Could not verify peer review availability.', true);
+      }
+    });
+  }
+
+  private loadVisibleData(userId: number): void {
     this.loading = true;
-    this.peerReviewService.getReviewerAssignments(user.userId).subscribe({
+    this.peerReviewService.getReviewerAssignments(userId).subscribe({
       next: data => {
         this.assignments = data;
         this.loading = false;
@@ -67,7 +93,7 @@ export class PeerReviewReviewerComponent implements OnInit {
         this.loading = false;
       }
     });
-    this.peerReviewService.getReceivedReviews(user.userId).subscribe({
+    this.peerReviewService.getReceivedReviews(userId).subscribe({
       next: reviews => {
         this.receivedReviews = reviews.map(review => ({
           ...review,

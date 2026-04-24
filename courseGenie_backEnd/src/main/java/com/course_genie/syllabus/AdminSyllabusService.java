@@ -3,10 +3,13 @@ import org.springframework.stereotype.Service;
 
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterService;
 import com.course_genie.user.User;
 import com.course_genie.user.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,24 +21,31 @@ public class AdminSyllabusService {
     private final SyllabusRepository syllabusRepository;
     private final SectionRepository sectionRepository;
     private final SyllabusDetailDTOMapper syllabusDetailDTOMapper;
+    private final SemesterService semesterService;
 
     public AdminSyllabusService(
             UserRepository userRepository,
             SectionRepository sectionRepository,
             SyllabusRepository syllabusRepository,
-            SyllabusDetailDTOMapper syllabusDetailDTOMapper
+            SyllabusDetailDTOMapper syllabusDetailDTOMapper,
+            SemesterService semesterService
     ){
         this.userRepository = userRepository;
         this.sectionRepository = sectionRepository;
         this.syllabusRepository = syllabusRepository;
         this.syllabusDetailDTOMapper = syllabusDetailDTOMapper;
+        this.semesterService = semesterService;
     }
 
     public Map<String, List<SyllabusProgressDTO>> getSyllabusProgressByDepartment() {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         List<User> professors = userRepository.findByRoles("ROLE_PROFESSOR");
 
         List<SyllabusProgressDTO> flatList = professors.stream().map(user -> {
-            List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId());
+            List<Section> sections = sectionRepository.findByProfessorUserId(user.getUserId()).stream()
+                    .filter(section -> section.getSemester() != null)
+                    .filter(section -> Objects.equals(section.getSemester().getSemesterId(), currentSemester.getSemesterId()))
+                    .toList();
             int totalSections = sections.size();
             List<SyllabusDetailDTO> sectionDetails = sections.stream()
                     .map(section -> syllabusRepository.findSyllabusBySection(section)

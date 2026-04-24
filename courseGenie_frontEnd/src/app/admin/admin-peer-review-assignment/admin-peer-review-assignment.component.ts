@@ -23,10 +23,13 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
   selectedRevieweeSectionId: number | null = null;
   reviewsPerSection = 1;
   assignments: PeerReviewAssignment[] = [];
+  globallyVisible = false;
+  unassignedDepartments: string[] = [];
 
   loading = false;
   autoPairLoading = false;
   saveLoading = false;
+  publishLoading = false;
   message = '';
   isError = false;
 
@@ -38,6 +41,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDepartments();
+    this.loadPublishStatus();
   }
 
   get selectedDepartmentProfessors(): ProfessorOption[] {
@@ -62,6 +66,19 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
       error: () => {
         this.showMessage('Could not load departments.', true);
         this.loading = false;
+      }
+    });
+  }
+
+  loadPublishStatus(): void {
+    this.adminService.getPeerReviewPublishStatus().subscribe({
+      next: (status) => {
+        this.globallyVisible = status.globallyVisible;
+        this.unassignedDepartments = status.unassignedDepartments;
+      },
+      error: () => {
+        this.globallyVisible = false;
+        this.unassignedDepartments = [];
       }
     });
   }
@@ -165,11 +182,36 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
         this.saveLoading = false;
         this.showMessage('Assignments saved successfully.');
         this.loadDepartments();
+        this.loadPublishStatus();
       },
       error: (err) => {
         const msg = err?.error?.message || 'Failed to save assignments.';
         this.showMessage(msg, true);
         this.saveLoading = false;
+      }
+    });
+  }
+
+  publishForAllDepartments(): void {
+    if (this.unassignedDepartments.length > 0) {
+      this.showMessage('Assign all departments first before publishing visibility.', true);
+      return;
+    }
+    this.publishLoading = true;
+    this.adminService.publishPeerReviewForAllDepartments().subscribe({
+      next: (status) => {
+        this.globallyVisible = status.globallyVisible;
+        this.unassignedDepartments = status.unassignedDepartments;
+        this.publishLoading = false;
+        if (status.unassignedDepartments.length > 0) {
+          this.showMessage('Published globally. Warning: some departments still have no assignments.', true);
+        } else {
+          this.showMessage('Peer review is now visible for all departments.');
+        }
+      },
+      error: () => {
+        this.publishLoading = false;
+        this.showMessage('Failed to publish peer review visibility.', true);
       }
     });
   }

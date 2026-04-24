@@ -26,6 +26,7 @@ public class PeerReviewAssignment {
     private User reviewee;
 
     private Long revieweeSectionId;
+    private Long semesterId;
 
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)

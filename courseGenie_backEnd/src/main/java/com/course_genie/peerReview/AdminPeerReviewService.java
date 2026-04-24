@@ -4,6 +4,8 @@ import com.course_genie.department.Department;
 import com.course_genie.department.DepartmentRepository;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
+import com.course_genie.semester.Semester;
+import com.course_genie.semester.SemesterService;
 import com.course_genie.user.User;
 import com.course_genie.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -22,20 +24,24 @@ public class AdminPeerReviewService {
     private final DepartmentRepository departmentRepository;
     private final PeerReviewAssignmentRepository assignmentRepository;
     private final SectionRepository sectionRepository;
+    private final SemesterService semesterService;
 
     public AdminPeerReviewService(
             UserRepository userRepository,
             DepartmentRepository departmentRepository,
             PeerReviewAssignmentRepository assignmentRepository,
-            SectionRepository sectionRepository
+            SectionRepository sectionRepository,
+            SemesterService semesterService
     ) {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.assignmentRepository = assignmentRepository;
         this.sectionRepository = sectionRepository;
+        this.semesterService = semesterService;
     }
 
     public List<PeerReviewDepartmentOverviewDTO> getDepartmentOverviews() {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         List<User> professors = userRepository.findByRoles("ROLE_PROFESSOR");
         Map<String, List<User>> grouped = professors.stream()
                 .filter(user -> user.getDepartment() != null && user.getDepartment().getDepartmentName() != null)
@@ -49,7 +55,7 @@ public class AdminPeerReviewService {
                                 .map(user -> new ProfessorOptionDTO(user.getUserId(), user.getFullName(), user.getEmail()))
                                 .sorted(Comparator.comparing(ProfessorOptionDTO::fullName, String.CASE_INSENSITIVE_ORDER))
                                 .toList(),
-                        getDepartmentSections(entry.getKey()).stream()
+                        getDepartmentSections(entry.getKey(), currentSemester.getSemesterId()).stream()
                                 .map(section -> new RevieweeSectionOptionDTO(
                                         section.getSectionId(),
                                         section.getCourse() != null ? section.getCourse().getCode() : "",
@@ -62,16 +68,40 @@ public class AdminPeerReviewService {
                                         .comparing(RevieweeSectionOptionDTO::courseCode, String.CASE_INSENSITIVE_ORDER)
                                         .thenComparing(RevieweeSectionOptionDTO::sectionCode, String.CASE_INSENSITIVE_ORDER))
                                 .toList(),
-                        assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(entry.getKey()).size()
+                        (int) assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(entry.getKey()).stream()
+                                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
+                                .count()
                 ))
                 .toList();
     }
 
     public List<PeerReviewAssignmentDTO> getAssignmentsByDepartment(String departmentName) {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         validateDepartment(departmentName);
         return assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
+                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
                 .map(this::toDTO)
                 .toList();
+    }
+
+    public PeerReviewPublishResponseDTO getPublishStatus() {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
+        boolean visible = currentSemester.isPeerReviewVisible();
+        return new PeerReviewPublishResponseDTO(visible, getUnassignedDepartmentNames());
+    }
+
+    @Transactional
+    public PeerReviewPublishResponseDTO setGlobalVisibility(boolean visible) {
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
+        List<String> unassigned = getUnassignedDepartmentNames();
+        if (visible && !unassigned.isEmpty()) {
+            throw new ResponseStatusException(
+                    BAD_REQUEST,
+                    "Cannot publish yet. Assign peer reviews for all departments first: " + String.join(", ", unassigned)
+            );
+        }
+        currentSemester.setPeerReviewVisible(visible);
+        return new PeerReviewPublishResponseDTO(visible, unassigned);
     }
 
     @Transactional
@@ -83,8 +113,9 @@ public class AdminPeerReviewService {
         }
 
         Department department = validateDepartment(departmentName);
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
         List<User> professors = userRepository.findProfessorsByDepartmentName(departmentName);
-        List<Section> sections = new ArrayList<>(getDepartmentSections(departmentName));
+        List<Section> sections = new ArrayList<>(getDepartmentSections(departmentName, currentSemester.getSemesterId()));
         if (professors.size() < 2 || sections.isEmpty()) {
             throw new ResponseStatusException(BAD_REQUEST, "At least 2 professors and 1 section are required.");
         }
@@ -119,13 +150,17 @@ public class AdminPeerReviewService {
                         .reviewer(reviewer)
                         .reviewee(reviewee)
                         .revieweeSectionId(section.getSectionId())
+                        .semesterId(currentSemester.getSemesterId())
                         .department(department)
                         .pairingSource("AUTO")
                         .build());
             }
         }
 
-        assignmentRepository.deleteByDepartmentDepartmentNameIgnoreCase(departmentName);
+        assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
+                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
+                .map(PeerReviewAssignment::getAssignmentId)
+                .forEach(assignmentRepository::deleteById);
         return assignmentRepository.saveAll(generated).stream().map(this::toDTO).toList();
     }
 
@@ -133,10 +168,14 @@ public class AdminPeerReviewService {
     public List<PeerReviewAssignmentDTO> saveManualAssignments(PeerReviewManualAssignmentRequest request) {
         String departmentName = request.departmentName();
         Department department = validateDepartment(departmentName);
+        Semester currentSemester = semesterService.getCurrentSemesterOrThrow();
 
         List<PeerReviewPairRequest> pairs = Optional.ofNullable(request.assignments()).orElse(List.of());
         if (pairs.isEmpty()) {
-            assignmentRepository.deleteByDepartmentDepartmentNameIgnoreCase(departmentName);
+            assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
+                    .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
+                    .map(PeerReviewAssignment::getAssignmentId)
+                    .forEach(assignmentRepository::deleteById);
             return List.of();
         }
 
@@ -166,12 +205,16 @@ public class AdminPeerReviewService {
                     .reviewer(reviewer)
                     .reviewee(reviewee)
                     .revieweeSectionId(revieweeSection.getSectionId())
+                    .semesterId(currentSemester.getSemesterId())
                     .department(department)
                     .pairingSource("MANUAL")
                     .build());
         }
 
-        assignmentRepository.deleteByDepartmentDepartmentNameIgnoreCase(departmentName);
+        assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
+                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
+                .map(PeerReviewAssignment::getAssignmentId)
+                .forEach(assignmentRepository::deleteById);
         return assignmentRepository.saveAll(assignments).stream().map(this::toDTO).toList();
     }
 
@@ -208,9 +251,10 @@ public class AdminPeerReviewService {
         );
     }
 
-    private List<Section> getDepartmentSections(String departmentName) {
+    private List<Section> getDepartmentSections(String departmentName, Long semesterId) {
         return sectionRepository.findAll().stream()
                 .filter(section -> section.getProfessor() != null)
+                .filter(section -> section.getSemester() != null && Objects.equals(section.getSemester().getSemesterId(), semesterId))
                 .filter(section -> section.getProfessor().getDepartment() != null)
                 .filter(section -> {
                     String profDepartment = section.getProfessor().getDepartment().getDepartmentName();
@@ -224,5 +268,12 @@ public class AdminPeerReviewService {
             return null;
         }
         return sectionRepository.findById(sectionId).orElse(null);
+    }
+
+    private List<String> getUnassignedDepartmentNames() {
+        return getDepartmentOverviews().stream()
+                .filter(dept -> dept.assignmentCount() == 0)
+                .map(PeerReviewDepartmentOverviewDTO::departmentName)
+                .toList();
     }
 }
