@@ -11,7 +11,6 @@ public record PeerReviewAssignmentDTO(
         String courseName,
         String sectionCode,
         String departmentName,
-        String pairingSource,
         String progressStatus
 ) {
 }

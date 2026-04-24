@@ -158,16 +158,11 @@ public class AdminPeerReviewService {
                         .revieweeSectionId(section.getSectionId())
                         .semesterId(currentSemester.getSemesterId())
                         .department(department)
-                        .pairingSource("AUTO")
                         .build());
             }
         }
 
-        assignmentRepository.findByDepartmentDepartmentNameIgnoreCase(departmentName).stream()
-                .filter(a -> Objects.equals(a.getSemesterId(), currentSemester.getSemesterId()))
-                .map(PeerReviewAssignment::getAssignmentId)
-                .forEach(assignmentRepository::deleteById);
-        return assignmentRepository.saveAll(generated).stream().map(this::toDTO).toList();
+        return generated.stream().map(this::toDraftDTO).toList();
     }
 
     @Transactional
@@ -213,7 +208,6 @@ public class AdminPeerReviewService {
                     .revieweeSectionId(revieweeSection.getSectionId())
                     .semesterId(currentSemester.getSemesterId())
                     .department(department)
-                    .pairingSource("MANUAL")
                     .build());
         }
 
@@ -253,7 +247,6 @@ public class AdminPeerReviewService {
                 section != null && section.getCourse() != null ? section.getCourse().getName() : "",
                 section != null ? section.getCode() : "",
                 assignment.getDepartment().getDepartmentName(),
-                assignment.getPairingSource(),
                 resolveProgressStatus(assignment.getAssignmentId())
         );
     }
@@ -285,6 +278,9 @@ public class AdminPeerReviewService {
     }
 
     private String resolveProgressStatus(Long assignmentId) {
+        if (assignmentId == null || assignmentId <= 0) {
+            return "NOT_STARTED";
+        }
         PeerReview review = peerReviewRepository.findByAssignmentId(assignmentId).orElse(null);
         if (review == null) {
             return "NOT_STARTED";
@@ -294,5 +290,22 @@ public class AdminPeerReviewService {
             return "DONE";
         }
         return "REVIEWER_FINISHED";
+    }
+
+    private PeerReviewAssignmentDTO toDraftDTO(PeerReviewAssignment assignment) {
+        Section section = resolveSection(assignment.getRevieweeSectionId());
+        return new PeerReviewAssignmentDTO(
+                0L,
+                assignment.getReviewer().getUserId(),
+                assignment.getReviewer().getFullName(),
+                assignment.getReviewee().getUserId(),
+                assignment.getReviewee().getFullName(),
+                assignment.getRevieweeSectionId(),
+                section != null && section.getCourse() != null ? section.getCourse().getCode() : "",
+                section != null && section.getCourse() != null ? section.getCourse().getName() : "",
+                section != null ? section.getCode() : "",
+                assignment.getDepartment().getDepartmentName(),
+                "NOT_STARTED"
+        );
     }
 }

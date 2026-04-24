@@ -122,6 +122,12 @@ $border-color: #e9ecef;
   border: 1px solid transparent;
 }
 
+.status-summary {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .status-chip.not-started {
   background: #fff3cd;
   border-color: #ffe08a;

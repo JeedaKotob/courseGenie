@@ -332,7 +332,6 @@ export interface PeerReviewAssignment {
   courseName: string;
   sectionCode: string;
   departmentName: string;
-  pairingSource: string;
   progressStatus: 'NOT_STARTED' | 'REVIEWER_FINISHED' | 'DONE';
 }
 

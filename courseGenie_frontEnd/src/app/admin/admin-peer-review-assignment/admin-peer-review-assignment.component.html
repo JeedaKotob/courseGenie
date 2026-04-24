@@ -95,6 +95,18 @@
         <span class="count-badge">{{ assignments.length }} pair(s)</span>
       </div>
 
+      <div class="status-summary mb-3" *ngIf="assignments.length > 0">
+        <div class="status-chip not-started">
+          Not Started: {{ notStartedCount }}
+        </div>
+        <div class="status-chip reviewer-finished">
+          Reviewer Finished: {{ reviewerFinishedCount }}
+        </div>
+        <div class="status-chip done">
+          Done: {{ doneCount }}
+        </div>
+      </div>
+
       <div *ngIf="!loading && assignments.length === 0" class="empty-state">
         No assignments yet. Use Auto Pair or add manual pairs.
       </div>

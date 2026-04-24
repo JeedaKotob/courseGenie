@@ -52,6 +52,18 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
     return this.departments.find(dept => dept.departmentName === this.selectedDepartment)?.revieweeSections ?? [];
   }
 
+  get notStartedCount(): number {
+    return this.assignments.filter(a => a.progressStatus === 'NOT_STARTED').length;
+  }
+
+  get reviewerFinishedCount(): number {
+    return this.assignments.filter(a => a.progressStatus === 'REVIEWER_FINISHED').length;
+  }
+
+  get doneCount(): number {
+    return this.assignments.filter(a => a.progressStatus === 'DONE').length;
+  }
+
   loadDepartments(): void {
     this.loading = true;
     this.adminService.getPeerReviewDepartments().subscribe({
@@ -106,7 +118,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
       next: (data) => {
         this.assignments = data;
         this.autoPairLoading = false;
-        this.showMessage('Auto pairing completed.');
+        this.showMessage('Auto pairing generated. Click Save Assignments to apply.');
       },
       error: (err) => {
         const msg = err?.error?.message || 'Auto pairing failed.';
@@ -157,7 +169,6 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
         courseName: revieweeSection.courseName,
         sectionCode: revieweeSection.sectionCode,
         departmentName: this.selectedDepartment,
-        pairingSource: 'MANUAL',
         progressStatus: 'NOT_STARTED'
       }
     ];

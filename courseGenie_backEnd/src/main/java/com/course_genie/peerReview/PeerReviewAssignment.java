@@ -32,7 +32,6 @@ public class PeerReviewAssignment {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
-    private String pairingSource;
     private LocalDateTime createdAt;
 
     @PrePersist
