@@ -7,4 +7,5 @@ import java.util.List;
 public interface PeerReviewAssignmentRepository extends JpaRepository<PeerReviewAssignment, Long> {
     List<PeerReviewAssignment> findByDepartmentDepartmentNameIgnoreCase(String departmentName);
     void deleteByDepartmentDepartmentNameIgnoreCase(String departmentName);
+    void deleteByRevieweeSectionId(Long revieweeSectionId);
 }

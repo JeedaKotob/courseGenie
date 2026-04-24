@@ -17,4 +17,6 @@ public interface CategoryDescriptionRepository extends JpaRepository<CategoryDes
 
     // Return a strongly typed list, not List<Object>.
     List<CategoryDescription> findBySection_SectionId(@NonNull Long sectionId);
+
+    void deleteBySection_SectionId(Long sectionId);
 }

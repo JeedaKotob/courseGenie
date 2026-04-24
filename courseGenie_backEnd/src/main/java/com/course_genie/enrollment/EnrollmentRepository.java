@@ -19,4 +19,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             Long semesterId,
             Enrollment.EnrollmentStatus status
     );
+
+    void deleteBySectionSectionId(Long sectionId);
 }

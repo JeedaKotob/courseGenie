@@ -18,6 +18,7 @@ public interface SectionExamAllocationRepository extends JpaRepository<SectionEx
     );
 
     void deleteBySectionSectionIdAndExamScheduleExamScheduleId(Long sectionId, Long examScheduleId);
+    void deleteBySectionSectionId(Long sectionId);
 
     long countByExamScheduleExamScheduleIdAndExamRoomRoomId(Long examScheduleId, Long roomId);
 }

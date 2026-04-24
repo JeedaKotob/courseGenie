@@ -1,13 +1,11 @@
 package com.course_genie.assessment;
 
-import com.course_genie.section.Section;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +32,7 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
     void deleteCategoryDescription(@Param("sectionId") Long sectionId, @Param("categoryName") String categoryName);
 
     long countBySectionSectionId(Long sectionId);
+
+    void deleteBySectionSectionId(Long sectionId);
 
 }

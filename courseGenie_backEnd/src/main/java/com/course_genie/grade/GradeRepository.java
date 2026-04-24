@@ -22,5 +22,6 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
 
     Optional<List<Grade>> findGradeByEnrollmentSectionSectionId(long sectionId);
 
+    void deleteByEnrollmentSectionSectionId(Long sectionId);
 
 }

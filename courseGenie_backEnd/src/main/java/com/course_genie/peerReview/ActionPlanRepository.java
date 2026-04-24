@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface ActionPlanRepository extends JpaRepository<ActionPlan, Long> {
     Optional<ActionPlan> findByPeerReviewPeerReviewId(Long peerReviewId);
+    void deleteByPeerReviewPeerReviewId(Long peerReviewId);
 }

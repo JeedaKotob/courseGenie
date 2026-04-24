@@ -10,4 +10,5 @@ public interface SyllabusRepository extends JpaRepository<Syllabus, Long> {
 
     Optional<Syllabus> findBySectionSectionId(Long sectionId);
 
+    void deleteBySectionSectionId(Long sectionId);
 }

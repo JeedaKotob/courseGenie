@@ -7,9 +7,16 @@ import com.course_genie.user.UserRepository;
 import com.course_genie.assessment.AssessmentDTO;
 import com.course_genie.assessment.AssessmentDTOMapper;
 import com.course_genie.assessment.AssessmentRepository;
+import com.course_genie.assessment.CategoryDescriptionRepository;
+import com.course_genie.car.CarRepository;
 import com.course_genie.clo.CLODTO;
 import com.course_genie.clo.CLODTOMapper;
 import com.course_genie.clo.CLORepository;
+import com.course_genie.enrollment.EnrollmentRepository;
+import com.course_genie.grade.GradeRepository;
+import com.course_genie.peerReview.ActionPlanRepository;
+import com.course_genie.peerReview.PeerReviewAssignmentRepository;
+import com.course_genie.peerReview.PeerReviewRepository;
 import com.course_genie.semester.Semester;
 import com.course_genie.semester.SemesterRepository;
 import com.course_genie.section.Section;
@@ -17,8 +24,12 @@ import com.course_genie.section.SectionArtifactService;
 import com.course_genie.section.SectionDTO;
 import com.course_genie.section.SectionDTOMapper;
 import com.course_genie.section.SectionRepository;
+import com.course_genie.sectionExamAllocation.SectionExamAllocationRepository;
+import com.course_genie.studentExam.StudentExamRepository;
+import com.course_genie.syllabus.SyllabusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,8 +48,18 @@ public class CourseService {
     private final UserRepository userRepository;
     private final SemesterRepository semesterRepository;
     private final SectionArtifactService sectionArtifactService;
+    private final SectionExamAllocationRepository sectionExamAllocationRepository;
+    private final StudentExamRepository studentExamRepository;
+    private final GradeRepository gradeRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final CategoryDescriptionRepository categoryDescriptionRepository;
+    private final SyllabusRepository syllabusRepository;
+    private final CarRepository carRepository;
+    private final PeerReviewAssignmentRepository peerReviewAssignmentRepository;
+    private final PeerReviewRepository peerReviewRepository;
+    private final ActionPlanRepository actionPlanRepository;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository, SectionArtifactService sectionArtifactService) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository, SectionArtifactService sectionArtifactService, SectionExamAllocationRepository sectionExamAllocationRepository, StudentExamRepository studentExamRepository, GradeRepository gradeRepository, EnrollmentRepository enrollmentRepository, CategoryDescriptionRepository categoryDescriptionRepository, SyllabusRepository syllabusRepository, CarRepository carRepository, PeerReviewAssignmentRepository peerReviewAssignmentRepository, PeerReviewRepository peerReviewRepository, ActionPlanRepository actionPlanRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseDTOMapper = courseDTOMapper;
@@ -51,6 +72,16 @@ public class CourseService {
         this.userRepository = userRepository;
         this.semesterRepository = semesterRepository;
         this.sectionArtifactService = sectionArtifactService;
+        this.sectionExamAllocationRepository = sectionExamAllocationRepository;
+        this.studentExamRepository = studentExamRepository;
+        this.gradeRepository = gradeRepository;
+        this.enrollmentRepository = enrollmentRepository;
+        this.categoryDescriptionRepository = categoryDescriptionRepository;
+        this.syllabusRepository = syllabusRepository;
+        this.carRepository = carRepository;
+        this.peerReviewAssignmentRepository = peerReviewAssignmentRepository;
+        this.peerReviewRepository = peerReviewRepository;
+        this.actionPlanRepository = actionPlanRepository;
     }
 
     public CourseDTO createCourse(CourseDTO courseDTO) {
@@ -349,6 +380,7 @@ public class CourseService {
         return sectionDTOMapper.apply(saved);
     }
     
+    @Transactional
     public void deleteSection(String courseCode, Long sectionId) {
         courseRepository.findCourseByCode(courseCode)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
@@ -359,7 +391,22 @@ public class CourseService {
         if (section.getCourse() == null || !courseCode.equals(section.getCourse().getCode())) {
             throw new IllegalArgumentException("Section does not belong to the specified course");
         }
-    
+
+        // Delete only data directly tied to this section, in FK-safe order.
+        sectionExamAllocationRepository.deleteBySectionSectionId(sectionId);
+        studentExamRepository.deleteByEnrollmentSectionSectionId(sectionId);
+        gradeRepository.deleteByEnrollmentSectionSectionId(sectionId);
+        enrollmentRepository.deleteBySectionSectionId(sectionId);
+        assessmentRepository.deleteBySectionSectionId(sectionId);
+        categoryDescriptionRepository.deleteBySection_SectionId(sectionId);
+        syllabusRepository.deleteBySectionSectionId(sectionId);
+        carRepository.deleteBySectionSectionId(sectionId);
+        peerReviewAssignmentRepository.deleteByRevieweeSectionId(sectionId);
+        peerReviewRepository.findByRevieweeSectionId(sectionId).forEach(review -> {
+            actionPlanRepository.deleteByPeerReviewPeerReviewId(review.getPeerReviewId());
+            peerReviewRepository.delete(review);
+        });
+
         sectionRepository.delete(section);
     }
 }
