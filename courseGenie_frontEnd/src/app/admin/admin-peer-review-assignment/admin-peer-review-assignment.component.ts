@@ -118,10 +118,10 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
       next: (data) => {
         this.assignments = data;
         this.autoPairLoading = false;
-        this.showMessage('Auto pairing generated. Click Save Assignments to apply.');
+        this.showMessage('Random pairing generated. Click Save Assignments to apply.');
       },
       error: (err) => {
-        const msg = err?.error?.message || 'Auto pairing failed.';
+        const msg = err?.error?.message || 'Random pairing failed.';
         this.showMessage(msg, true);
         this.autoPairLoading = false;
       }

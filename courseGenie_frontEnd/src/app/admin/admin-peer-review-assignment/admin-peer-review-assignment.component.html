@@ -52,7 +52,7 @@
 
       <div class="control-block action-block">
         <button class="secondary-btn" (click)="autoPair()" [disabled]="autoPairLoading || !selectedDepartment">
-          <span *ngIf="!autoPairLoading"><i class="bi bi-magic me-2"></i>Auto Pair</span>
+          <span *ngIf="!autoPairLoading">Pair Randomly</span>
           <span *ngIf="autoPairLoading"><i class="bi bi-arrow-repeat spin me-2"></i>Pairing...</span>
         </button>
       </div>
@@ -108,7 +108,7 @@
       </div>
 
       <div *ngIf="!loading && assignments.length === 0" class="empty-state">
-        No assignments yet. Use Auto Pair or add manual pairs.
+        No assignments yet. Use Pair Randomly or add manual pairs.
       </div>
 
       <div *ngFor="let assignment of assignments; let i = index" class="assignment-row">

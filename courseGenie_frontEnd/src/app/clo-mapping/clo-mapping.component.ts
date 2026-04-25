@@ -14,6 +14,8 @@ import { ButtonComponent } from '../shared/button/button.component';
   styleUrls: ['./clo-mapping.component.scss']
 })
 export class CloMappingComponent implements OnInit {
+  private readonly successMessageDurationMs = 2500;
+  private successMessageTimeoutId: ReturnType<typeof setTimeout> | null = null;
   course: Course | null = null;
   selectedMappings: { [assessmentId: number]: number[] } = {};
 
@@ -126,7 +128,7 @@ export class CloMappingComponent implements OnInit {
         this.course!.sections![0].configured = true;
         this.sharedDataService.setSelectedCourse(this.course);
 
-        this.showSuccessMessage = true;
+        this.showSuccessMessageForDuration();
         this.showAssessmentError = false;
         this.showCloError = false;
 
@@ -136,10 +138,6 @@ export class CloMappingComponent implements OnInit {
         console.error('Error saving CLO mappings', error);
       }
     });
-  }
-
-  closeSuccessMessage() {
-    this.showSuccessMessage = false;
   }
 
   closeAssessmentError() {
@@ -167,5 +165,16 @@ export class CloMappingComponent implements OnInit {
       // e.g., this.saveGrades() or this.saveConfiguration(), etc.
     }
     // Handle other actions as needed
+  }
+
+  private showSuccessMessageForDuration(): void {
+    this.showSuccessMessage = true;
+    if (this.successMessageTimeoutId) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+    this.successMessageTimeoutId = setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.successMessageTimeoutId = null;
+    }, this.successMessageDurationMs);
   }
 }

@@ -138,9 +138,9 @@ export interface User {
 
 export interface UserProfileUpdateRequest {
   email?: string | null;
-  office?: string | null;
-  officeHours?: string | null;
-  phone?: string | null;
+  office: string;
+  officeHours: string;
+  phone: string;
 }
 
 export interface Benchmark {

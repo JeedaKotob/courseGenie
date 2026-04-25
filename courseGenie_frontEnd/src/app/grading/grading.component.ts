@@ -18,6 +18,8 @@ type GradeHighlight = {
   standalone: false
 })
 export class GradingComponent implements OnInit {
+  private readonly successMessageDurationMs = 2500;
+  private successMessageTimeoutId: ReturnType<typeof setTimeout> | null = null;
   course: Course | null = null;
   enrollments: Enrollment[] = [];
   grades: Grade[] = [];
@@ -180,13 +182,20 @@ export class GradingComponent implements OnInit {
     }
 
     this.gradeService.saveGrades(this.grades).subscribe({
-      next: () => this.showSuccessMessage = true,
+      next: () => this.showSuccessMessageForDuration(),
       error: (error) => console.error('Error saving grades', error)
     });
   }
 
-  dismissSuccessMessage() {
-    this.showSuccessMessage = false;
+  private showSuccessMessageForDuration(): void {
+    this.showSuccessMessage = true;
+    if (this.successMessageTimeoutId) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+    this.successMessageTimeoutId = setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.successMessageTimeoutId = null;
+    }, this.successMessageDurationMs);
   }
 
 

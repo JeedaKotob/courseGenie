@@ -42,9 +42,9 @@ public class UserService {
         }
     
         User user = findUserByUsername(username);
-        user.setOffice(normalizeOptionalValue(request.office(), "Office location", 100));
-        user.setOfficeHours(normalizeOptionalValue(request.officeHours(), "Office hours", 255));
-        user.setPhone(normalizeOptionalValue(request.phone(), "Phone number", 50));
+        user.setOffice(normalizeRequiredValue(request.office(), "Office location", 100));
+        user.setOfficeHours(normalizeRequiredValue(request.officeHours(), "Office hours", 255));
+        user.setPhone(normalizeRequiredValue(request.phone(), "Phone number", 50));
     
         return userDTOMapper.apply(userRepository.save(user));
     }
@@ -54,20 +54,20 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User profile was not found."));
     }
     
-    private String normalizeOptionalValue(String value, String fieldName, int maxLength) {
+    private String normalizeRequiredValue(String value, String fieldName, int maxLength) {
         if (value == null) {
-            return null;
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
-    
+
         String normalizedValue = value.trim();
         if (normalizedValue.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
-    
+
         if (normalizedValue.length() > maxLength) {
             throw new IllegalArgumentException(fieldName + " must be " + maxLength + " characters or fewer.");
         }
-    
+
         return normalizedValue;
     }
 }

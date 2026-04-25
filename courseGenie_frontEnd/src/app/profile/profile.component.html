@@ -52,6 +52,10 @@
   
       <div class="col-12 col-lg-8">
         <div class="profile-card shadow-sm">
+          <div *ngIf="showSuccessMessage" class="success-message">
+            <span>Profile saved successfully.</span>
+          </div>
+
           <div class="mb-4">
             <button class="back-btn mb-2" (click)="goBack()">
               <i class="bi bi-arrow-left"></i> Back
@@ -133,8 +137,15 @@
               </div>
             </div>
   
-            <div class="d-flex justify-content-end mt-4">
-              <button type="submit" class="btn btn-primary save-btn" [disabled]="saving">
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button
+                type="button"
+                class="btn cancel-btn"
+                (click)="cancelChanges()"
+                [disabled]="saving || profileForm.pristine">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary save-btn" [disabled]="saving || profileForm.invalid">
                 <span *ngIf="!saving">Save Changes</span>
                 <span *ngIf="saving" class="d-inline-flex align-items-center gap-2">
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

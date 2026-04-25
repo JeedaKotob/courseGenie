@@ -2,7 +2,6 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs/operators';
 import { User, UserProfileUpdateRequest } from '../home/course.model';
 import { AuthService } from '../services/auth.service';
@@ -16,8 +15,11 @@ import { UserProfileService } from '../services/user-profile.service';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
+  private readonly successMessageDurationMs = 2500;
+  private successMessageTimeoutId: ReturnType<typeof setTimeout> | null = null;
   loading = true;
   saving = false;
+  showSuccessMessage = false;
   loadError: string | null = null;
   profile: User | null = null;
   readonly profileForm: FormGroup;
@@ -28,8 +30,7 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userProfileService: UserProfileService,
     private authService: AuthService,
-    private sharedDataService: SharedDataService,
-    private toastr: ToastrService
+    private sharedDataService: SharedDataService
   ) {
     this.profileForm = this.formBuilder.group({
       firstName: [{ value: '', disabled: true }],
@@ -37,9 +38,9 @@ export class ProfileComponent implements OnInit {
       userName: [{ value: '', disabled: true }],
       departmentName: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
-      office: ['', [Validators.maxLength(100)]],
-      officeHours: ['', [Validators.maxLength(255)]],
-      phone: ['', [Validators.maxLength(50)]]
+      office: ['', [Validators.required, Validators.maxLength(100)]],
+      officeHours: ['', [Validators.required, Validators.maxLength(255)]],
+      phone: ['', [Validators.required, Validators.maxLength(50)]]
     });
   }
 
@@ -72,9 +73,9 @@ export class ProfileComponent implements OnInit {
     }
 
     const payload: UserProfileUpdateRequest = {
-      office: this.optionalFormValue('office'),
-      officeHours: this.optionalFormValue('officeHours'),
-      phone: this.optionalFormValue('phone')
+      office: this.requiredFormValue('office'),
+      officeHours: this.requiredFormValue('officeHours'),
+      phone: this.requiredFormValue('phone')
     };
 
     this.saving = true;
@@ -85,12 +86,26 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (profile: User) => {
           this.applyProfile(profile);
-          this.toastr.success('Your profile has been updated successfully.');
+          this.showSuccessMessageForDuration();
         },
         error: (error) => {
-          this.toastr.error(error?.error?.message || 'Unable to save your profile right now.');
+          this.loadError = error?.error?.message || 'Unable to save your profile right now.';
         }
       });
+  }
+
+  cancelChanges(): void {
+    if (!this.profile) {
+      return;
+    }
+
+    this.profileForm.patchValue({
+      office: this.profile.office || '',
+      officeHours: this.profile.officeHours || '',
+      phone: this.profile.phone || ''
+    });
+    this.profileForm.markAsPristine();
+    this.profileForm.markAsUntouched();
   }
 
   isInvalid(fieldName: string): boolean {
@@ -138,6 +153,8 @@ export class ProfileComponent implements OnInit {
     });
 
     this.profileForm.markAsPristine();
+    this.profileForm.markAsUntouched();
+    this.loadError = null;
     this.authService.setCurrentUser(mergedProfile);
     this.sharedDataService.setCurrentUser(mergedProfile);
   }
@@ -169,12 +186,29 @@ export class ProfileComponent implements OnInit {
     return (this.profileForm.get(fieldName)?.value ?? '').toString().trim();
   }
 
-  private optionalFormValue(fieldName: string): string | null {
-    const value = this.formValue(fieldName);
-    return value ? value : null;
+  private requiredFormValue(fieldName: string): string {
+    return this.formValue(fieldName);
+  }
+
+  private showSuccessMessageForDuration(): void {
+    this.showSuccessMessage = true;
+    if (this.successMessageTimeoutId) {
+      clearTimeout(this.successMessageTimeoutId);
+    }
+    this.successMessageTimeoutId = setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.successMessageTimeoutId = null;
+    }, this.successMessageDurationMs);
   }
 
   goBack(): void {
+    if (this.profileForm.dirty && !this.saving) {
+      const shouldLeave = window.confirm('You have unsaved changes. Discard them and go back?');
+      if (!shouldLeave) {
+        return;
+      }
+    }
+
     if (window.history.length > 1) {
       this.location.back();
       return;
