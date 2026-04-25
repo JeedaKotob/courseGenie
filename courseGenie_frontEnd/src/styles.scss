@@ -50,8 +50,11 @@ button {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    width: 60%;
-    left: 10%;
+    width: min(100%, 520px);
+    margin: 0 auto;
+    left: 0;
+    padding: 2rem;
+    box-sizing: border-box;
 }
 
 .white {

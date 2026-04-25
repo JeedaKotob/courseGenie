@@ -1,5 +1,23 @@
+.guest-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.centered-card {
+  width: 100%;
+}
+
+.guest-form-container > h1,
+.guest-form-container > p {
+  text-align: center;
+}
+
 .welcome-bg {
   background-image: url("/assets/welcome.png");
+  background: linear-gradient(135deg, #024964 0%, #00A7E1 100%);
+  background-blend-mode: overlay;
   height: 80vh;
   width: 100%;
   background-size: cover;
@@ -21,18 +39,42 @@
 
 .input-field {
   border-color: transparent;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .input-group {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(2, 73, 100, 0.2);
   border-radius: 6px;
   padding-right: 10px;
   padding-left: 10px;
   padding-top: 6px;
   padding-bottom: 6px;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #024964, #00A7E1);
+  border: none;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 167, 225, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(0, 167, 225, 0.35);
+  }
+}
+
+.reset-password-link {
+  color: #00A7E1;
+
+  &:hover {
+    color: #024964;
+  }
 }
 
 .input-field:focus,
@@ -42,4 +84,11 @@
   border-color: transparent !important;
   box-shadow: none !important;
   outline: none !important;
+}
+
+@media (max-width: 768px) {
+  .guest-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }

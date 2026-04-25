@@ -3,7 +3,7 @@
     <div class="row g-0">
       <!-- Left column with background image -->
       <div class="col-6">
-        <div class="welcome-bg h-100 d-flex align-items-center justify-content-center rounded-start" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+        <div class="welcome-bg h-100 d-flex align-items-center justify-content-center rounded-start">
           <!-- You can add a logo or welcome image here -->
           <div class="text-center p-4 text-white">
             <h2 class="fw-bold mb-3">Welcome Back</h2>
@@ -45,7 +45,7 @@
             <div class="form-group mb-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <label for="password" class="form-label fw-semibold mb-0">Password</label>
-                <a href="/reset-password-request" class="text-decoration-none small text-primary">Reset Password</a>
+                <a href="/reset-password-request" class="reset-password-link text-decoration-none small">Reset Password</a>
               </div>
               <div class="input-group">
                 <span class="input-icon">
@@ -68,9 +68,8 @@
             <!-- Submit Button -->
             <button
               type="submit"
-              class="btn btn-primary w-100 py-2 mt-2 fw-semibold d-flex align-items-center justify-content-center"
+              class="btn login-btn w-100 py-2 mt-2 fw-semibold d-flex align-items-center justify-content-center"
               [disabled]="loading"
-              style="background: linear-gradient(to right, #2575fc, #6a11cb); border: none;"
             >
               <ng-container *ngIf="!loading">Login</ng-container>
               <ng-container *ngIf="loading">
