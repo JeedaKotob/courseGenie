@@ -13,10 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class BenchmarkService {
+    private static final Pattern CLO_NAME_SUFFIX_PATTERN = Pattern.compile("(\\d+)$");
     private final BenchmarkRepository benchmarkRepository;
     private final AssessmentRepository assessmentRepository;
     private final CLORepository cloRepository;
@@ -39,7 +43,12 @@ public class BenchmarkService {
         List<Map<String, Object>> results = new ArrayList<>();
 
         // Fetch all CLOs
-        List<CLO> clos = cloRepository.findCLOBySectionId(sectionId).orElse(new ArrayList<>());
+        List<CLO> clos = cloRepository.findCLOBySectionId(sectionId).orElse(new ArrayList<>())
+                .stream()
+                .sorted(Comparator
+                        .comparingInt((CLO clo) -> extractCloOrder(clo.getName()))
+                        .thenComparing(clo -> clo.getName() == null ? "" : clo.getName(), String.CASE_INSENSITIVE_ORDER))
+                .toList();
 
         // Fetch selected benchmarks
         Benchmark bm1 = benchmarkRepository.findById(bm1Id)
@@ -111,6 +120,17 @@ public class BenchmarkService {
         }
 
         return false;
+    }
+
+    private int extractCloOrder(String cloName) {
+        if (cloName == null) {
+            return Integer.MAX_VALUE;
+        }
+        Matcher matcher = CLO_NAME_SUFFIX_PATTERN.matcher(cloName.trim());
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return Integer.MAX_VALUE;
     }
 
 }

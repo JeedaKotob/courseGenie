@@ -13,10 +13,13 @@
                     <label class="bold" for="name">Name</label>
                     <input
                         [class]="{'form-control': true, 'is-invalid': cloForm.controls['name'].invalid && isSubmitted}"
-                        formControlName="name" type="text" name="name" id="name">
+                        formControlName="name" type="text" name="name" id="name" placeholder="CLO1">
+                    <small class="text-danger" *ngIf="isSubmitted && cloForm.controls['name'].errors?.['pattern']">
+                        Name must be in format CLO1, CLO2, etc.
+                    </small>
                 </fieldset>
                 <fieldset class="form-group position-relative">
-                    <label class="bold" for="description">Category</label>
+                    <label class="bold" for="description">Description</label>
                     <input
                         [class]="{'form-control': true, 'is-invalid': cloForm.controls['description'].invalid && isSubmitted}"
                         formControlName="description" type="text" name="description" id="description">

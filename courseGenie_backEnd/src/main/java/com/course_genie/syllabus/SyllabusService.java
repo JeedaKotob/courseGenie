@@ -24,11 +24,14 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
 public class SyllabusService {
+    private static final Pattern CLO_NAME_SUFFIX_PATTERN = Pattern.compile("(\\d+)$");
 
     private final SyllabusRepository syllabusRepository;
     private final SyllabusMapper syllabusMapper;
@@ -135,8 +138,14 @@ public class SyllabusService {
         List<CLO> cloList = cloRepository.findCLOBySectionId(section.getSectionId()).orElse(null);
         assert cloList != null;
         String cloHtml = cloList.stream()
-                .sorted(Comparator.comparingInt(clo -> Integer.parseInt(clo.getName())))
-                .map(clo -> "CLO - " + clo.getName() + ": " + clo.getDescription())
+                .sorted(Comparator
+                        .comparingInt((CLO clo) -> extractCloOrder(clo.getName()))
+                        .thenComparing(clo -> clo.getName() == null ? "" : clo.getName(), String.CASE_INSENSITIVE_ORDER))
+                .map(clo -> {
+                    String cloName = clo.getName() == null ? "" : clo.getName().trim();
+                    String cloDescription = clo.getDescription() == null ? "" : clo.getDescription().trim();
+                    return cloName.isBlank() ? cloDescription : cloName + ": " + cloDescription;
+                })
                 .collect(Collectors.joining("<br/>")); // Using <br/> to separate each item
 
         context.setVariable("courseLearningOutcomesStr", cloHtml);
@@ -257,6 +266,17 @@ public class SyllabusService {
                 .orElseThrow(() -> new EntityNotFoundException("Syllabus not found"));
 
         return syllabusDTOMapper.apply(syllabus);
+    }
+
+    private int extractCloOrder(String cloName) {
+        if (cloName == null) {
+            return Integer.MAX_VALUE;
+        }
+        Matcher matcher = CLO_NAME_SUFFIX_PATTERN.matcher(cloName.trim());
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return Integer.MAX_VALUE;
     }
 
 

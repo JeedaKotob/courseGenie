@@ -22,7 +22,7 @@ export class CreateCLOComponent {
 
   constructor(private sharedDataService: SharedDataService, private modalService: NgbModal, private formBuilder: FormBuilder, private cloService: CloService) {
     this.cloForm = this.formBuilder.group({
-      name: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required, Validators.pattern(/^CLO\d+$/i)]),
       description: new FormControl(null, [Validators.required]),
     });
   }
@@ -42,7 +42,7 @@ export class CreateCLOComponent {
   saveCLO() {
     this.isSubmitted = true;
     let payload = {
-      name: this.cloForm.value.name,
+      name: this.cloForm.value.name?.trim().toUpperCase(),
       description: this.cloForm.value.description,
       courseId: this.course?.courseId,
     }

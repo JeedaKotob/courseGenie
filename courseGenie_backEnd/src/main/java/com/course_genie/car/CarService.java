@@ -20,11 +20,14 @@ import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class CarService {
     private static final List<String> GRADE_ORDER = List.of("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F", "I", "W");
+    private static final Pattern CLO_NAME_SUFFIX_PATTERN = Pattern.compile("(\\d+)$");
 
     private final CarRepository carRepository;
     private final SectionRepository sectionRepository;
@@ -180,7 +183,9 @@ public class CarService {
         List<String> courseClos = cloRepository.findCLOByCourseCourseId(course.getCourseId())
                 .orElse(List.of())
                 .stream()
-                .sorted(Comparator.comparingLong(CLO::getCloId))
+                .sorted(Comparator
+                        .comparingInt((CLO clo) -> extractCloOrder(clo.getName()))
+                        .thenComparing(clo -> clo.getName() == null ? "" : clo.getName(), String.CASE_INSENSITIVE_ORDER))
                 .map(this::formatCloLine)
                 .toList();
         context.setVariable("undergraduate", course.isUndergraduate() ? "Yes" : "No");
@@ -221,11 +226,22 @@ public class CarService {
     }
 
     private String formatCloLine(CLO clo) {
-        String cloCode = (clo.getDescription() == null || clo.getDescription().isBlank())
+        String cloCode = (clo.getName() == null || clo.getName().isBlank())
                 ? "CLO" + clo.getCloId()
-                : clo.getDescription().trim();
-        String cloText = clo.getName() == null ? "" : clo.getName().trim();
+                : clo.getName().trim();
+        String cloText = clo.getDescription() == null ? "" : clo.getDescription().trim();
         return cloText.isBlank() ? cloCode : cloCode + ": " + cloText;
+    }
+
+    private int extractCloOrder(String cloName) {
+        if (cloName == null) {
+            return Integer.MAX_VALUE;
+        }
+        Matcher matcher = CLO_NAME_SUFFIX_PATTERN.matcher(cloName.trim());
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return Integer.MAX_VALUE;
     }
 
     private List<String> getBenchmarkDescriptions() {

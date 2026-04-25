@@ -570,21 +570,21 @@
 }
 
 .tool-card.syllabus-progress {
-  background: linear-gradient(135deg, #5b7bff 0%, #6f42c1 100%);
+  background: linear-gradient(135deg, #5b3db4 0%, #8e63f8 100%);
   border-color: transparent;
-  --progress-inner-bg: #5e54d1;
+  --progress-inner-bg: #6a48cc;
 }
 
 .tool-card.car-progress {
-  background: linear-gradient(135deg, #4f8cff 0%, #5b6bff 100%);
+  background: linear-gradient(135deg, #024964 0%, #00A7E1 100%);
   border-color: transparent;
-  --progress-inner-bg: #5677f8;
+  --progress-inner-bg: #036b8f;
 }
 
 .tool-card.peer-progress {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #0b8a7f 0%, #27d7a1 100%);
   border-color: transparent;
-  --progress-inner-bg: #1cab8f;
+  --progress-inner-bg: #138f77;
 }
 
 .tool-card.syllabus-progress .tool-content h4,
