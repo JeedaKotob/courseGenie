@@ -66,6 +66,7 @@ const routes: Routes = [
       {path: 'admin/car/:sectionId', component: AdminCarViewComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'examRooms', component: ExamRoomComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       {path: 'professor/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_PROFESSOR'] }},
+      {path: 'admin/calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
       { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
     ],
   },

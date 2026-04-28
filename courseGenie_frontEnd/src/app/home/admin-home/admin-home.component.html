@@ -13,6 +13,37 @@
       </div>
     </div>
 
+    <div class="dashboard-card mt-4 mb-5 p-4 shadow-sm rounded">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Today's Schedule</h3>
+        <button class="dashboard-action-btn" (click)="goToCalendar()">
+          View Full Calendar
+          <i class="pi pi-arrow-right ms-2"></i>
+        </button>
+      </div>
+
+      <div *ngIf="isTodayLoading" class="text-muted">
+        Loading today’s events...
+      </div>
+
+      <div *ngIf="!isTodayLoading && todayEvents.length === 0" class="text-muted">
+        No events scheduled for today.
+      </div>
+
+      <div *ngFor="let event of todayEvents" class="event-row py-2 border-bottom">
+        <div class="event-time">
+          {{ event.startTime | slice:0:5 }} - {{ event.endTime | slice:0:5 }}
+        </div>
+        <div class="event-title">
+          {{ event.title }}
+        </div>
+        <div class="event-location" *ngIf="event.room">
+          <i class="pi pi-map-marker"></i>
+          {{ event.room }}
+        </div>
+      </div>
+    </div>
+
     <div class="overview-card links-card mb-4" *ngFor="let group of toolGroups">
       <div class="card-header grouped-header">
         <div>

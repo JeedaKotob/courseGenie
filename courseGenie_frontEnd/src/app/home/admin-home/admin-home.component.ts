@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CourseService } from '../../services/course.service';
-import { Course } from '../course.model';
+import { CalendarEvent, Course } from '../course.model';
 import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
+import { CalendarService } from '../../services/calendar.service';
+import { SharedDataService } from '../../services/shared-data.sevice';
+import { filter, switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-home',
@@ -16,6 +19,8 @@ export class AdminHomeComponent implements OnInit {
   groupedCourses: { [department: string]: Course[] } = {};
   expandedDepartments: { [department: string]: boolean } = {};
   animationClass = '';
+  todayEvents: CalendarEvent[] = [];
+  isTodayLoading = false;
   adminTools = [
     {
       title: 'Exam Room Allocation',
@@ -68,12 +73,15 @@ export class AdminHomeComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private adminService: AdminService,
+    private calendarService: CalendarService,
+    private sharedDataService: SharedDataService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.loadCourses();
     this.loadToolProgress();
+    this.loadTodayEvents();
     setTimeout(() => this.animationClass = 'animate-hero', 100);
   }
 
@@ -169,6 +177,32 @@ export class AdminHomeComponent implements OnInit {
         this.toolProgress['Peer Review Assignment'] = summary.completionPercentage || 0;
       }
     });
+  }
+
+  goToCalendar(): void {
+    this.router.navigate(['/admin/calendar']);
+  }
+
+  private loadTodayEvents(): void {
+    this.isTodayLoading = true;
+    const todayIso = new Date().toISOString().split('T')[0];
+
+    this.sharedDataService.currentUser$
+      .pipe(
+        filter(user => !!user),
+        take(1),
+        switchMap(user => this.calendarService.getCalendar(user!.userId, todayIso, todayIso))
+      )
+      .subscribe({
+        next: events => {
+          this.todayEvents = events;
+          this.isTodayLoading = false;
+        },
+        error: () => {
+          this.todayEvents = [];
+          this.isTodayLoading = false;
+        }
+      });
   }
 
   navigateToCourse(courseCode: string) {

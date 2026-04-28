@@ -35,6 +35,7 @@ export class CalendarComponent implements OnInit {
     room: ''
   };
   timeOptions: string[] = [];
+  isAdminView = false;
 
   constructor(
     private calendarService: CalendarService,
@@ -47,6 +48,7 @@ export class CalendarComponent implements OnInit {
     const today = new Date();
     this.currentYear = today.getFullYear();
     this.currentMonth = today.getMonth();
+    this.isAdminView = this.sharedDataService.currentUserValue?.roles?.includes('ROLE_ADMIN') ?? false;
     this.generateTimeOptions();
     this.loadCalendar();
   }
@@ -261,6 +263,6 @@ export class CalendarComponent implements OnInit {
       this.location.back();
       return;
     }
-    this.router.navigate(['/professor']);
+    this.router.navigate([this.isAdminView ? '/admin' : '/professor']);
   }
 }

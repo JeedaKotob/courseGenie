@@ -6,7 +6,7 @@
           <i class="bi bi-arrow-left"></i> Back
         </button>
         <h2>Calendar</h2>
-        <p class="subtitle">Your teaching and event schedule, day by day.</p>
+        <p class="subtitle">{{ isAdminView ? 'Your administrative events and schedule, day by day.' : 'Your teaching and event schedule, day by day.' }}</p>
       </div>
 
       <div class="calendar-controls">
