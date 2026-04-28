@@ -37,7 +37,7 @@ export class CloListingComponent implements OnInit {
       confirmSave: true
     },
     */
-    noDataMessage: 'Aucune donnée trouvée',
+    noDataMessage: 'No clos listed',
     attr: {
       class: "table table-bordered"
     },
