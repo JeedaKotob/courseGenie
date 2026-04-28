@@ -33,6 +33,7 @@
     </div>
 
     <div *ngIf="peerReviewVisible && departmentAssigned && !selectedAssignment">
+      <h4 class="mb-3">Assigned Reviews</h4>
       <div *ngIf="loading" class="text-muted">Loading assignments...</div>
       <div *ngIf="!loading && assignments.length === 0" class="empty-state">
         No peer review assignments available.
