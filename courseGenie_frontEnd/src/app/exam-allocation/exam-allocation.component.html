@@ -72,7 +72,7 @@
               >
                 <option [ngValue]="null">Unassigned</option>
                 <option *ngFor="let room of examData.rooms" [ngValue]="room.roomId">
-                  {{ room.roomNumber }} ({{ room.capacity }} seats)
+                  Room {{ room.roomNumber }}
                 </option>
               </select>
             </span>
