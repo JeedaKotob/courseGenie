@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { map, switchMap, filter, withLatestFrom, tap, take } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 import { CourseService } from '../../services/course.service';
 import { SemesterService } from '../../services/semester.service';
@@ -173,10 +174,19 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
           this.peerReviewLoading = false;
           return;
         }
-        this.peerReviewService.getReviewerAssignments(user.userId).subscribe({
-          next: assignments => {
-            this.peerReviewCompletedCount = assignments.filter(a => a.completed).length;
-            this.peerReviewPendingCount = assignments.filter(a => !a.completed).length;
+        forkJoin({
+          assignments: this.peerReviewService.getReviewerAssignments(user.userId),
+          receivedReviews: this.peerReviewService.getReceivedReviews(user.userId)
+        }).subscribe({
+          next: ({ assignments, receivedReviews }) => {
+            const pendingReviews = assignments.filter(a => !a.completed).length;
+            const completedReviews = assignments.filter(a => a.completed).length;
+            const pendingActionPlans = receivedReviews.filter(r => !r.reflectionSubmitted).length;
+            const submittedActionPlans = receivedReviews.filter(r => r.reflectionSubmitted).length;
+
+            // "Pending" reflects all remaining peer-review tasks.
+            this.peerReviewPendingCount = pendingReviews + pendingActionPlans;
+            this.peerReviewCompletedCount = completedReviews + submittedActionPlans;
             this.peerReviewLoading = false;
           },
           error: () => {

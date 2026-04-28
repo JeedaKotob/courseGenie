@@ -9,6 +9,19 @@
       </div>
     </div>
 
+    <div class="rubric-card mb-4">
+      <div class="rubric-header">
+        <h5 class="mb-1">Peer Review Rubric</h5>
+      </div>
+      <a href="assets/images/peer-review-image.jpeg" target="_blank" rel="noopener noreferrer">
+        <img
+          src="assets/images/peer-review-image.jpeg"
+          alt="Peer review rubric"
+          class="rubric-image"
+        />
+      </a>
+    </div>
+
     <div *ngIf="message" class="status-alert" [class.error]="isError">{{ message }}</div>
 
     <div *ngIf="!peerReviewVisible" class="empty-state">
@@ -78,10 +91,11 @@
               [(ngModel)]="review.draftActionPlan"
               [disabled]="review.reflectionSubmitted"
               [ngModelOptions]="{standalone: true}"
+              required
               placeholder="Write your reflection based on reviewer feedback">
             </textarea>
             <div class="d-flex align-items-center gap-2">
-              <button class="action-btn" (click)="submitReflection(review)" [disabled]="review.saving || review.reflectionSubmitted">
+              <button class="action-btn" (click)="submitReflection(review)" [disabled]="review.saving || review.reflectionSubmitted || !review.draftActionPlan.trim()">
                 {{ review.saving ? 'Submitting...' : (review.reflectionSubmitted ? 'Submitted' : 'Submit Reflection') }}
               </button>
             </div>
@@ -90,7 +104,7 @@
       </div>
     </div>
 
-    <form *ngIf="peerReviewVisible && departmentAssigned && selectedAssignment" (ngSubmit)="submitReview()">
+    <form *ngIf="peerReviewVisible && departmentAssigned && selectedAssignment" #reviewForm="ngForm" (ngSubmit)="submitReview(reviewForm)">
       <div class="prefill-card mb-4">
         <h5 class="mb-2">Review Context</h5>
         <div><strong>Reviewee:</strong> {{ selectedAssignment.revieweeName }}</div>
@@ -102,42 +116,55 @@
       <div class="criteria-card mb-3">
         <h5>1) Alignment with Learning Outcomes</h5>
         <label>Score (1-5)</label>
-        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.alignmentScore" name="alignmentScore" required />
-        <textarea class="form-control" rows="2" [(ngModel)]="form.alignmentComment" name="alignmentComment" placeholder="Comments"></textarea>
+        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.alignmentScore" name="alignmentScore" #alignmentScoreModel="ngModel" required />
+        <div class="text-danger small mb-2" *ngIf="alignmentScoreModel.invalid && (alignmentScoreModel.touched || reviewForm.submitted)">Score is required.</div>
+        <textarea class="form-control" rows="2" [(ngModel)]="form.alignmentComment" name="alignmentComment" #alignmentCommentModel="ngModel" placeholder="Comments" required></textarea>
+        <div class="text-danger small" *ngIf="alignmentCommentModel.invalid && (alignmentCommentModel.touched || reviewForm.submitted)">Comment is required.</div>
       </div>
 
       <div class="criteria-card mb-3">
         <h5>2) Assessment Design</h5>
         <label>Score (1-5)</label>
-        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.assessmentDesignScore" name="assessmentDesignScore" required />
-        <textarea class="form-control" rows="2" [(ngModel)]="form.assessmentDesignComment" name="assessmentDesignComment" placeholder="Comments"></textarea>
+        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.assessmentDesignScore" name="assessmentDesignScore" #assessmentDesignScoreModel="ngModel" required />
+        <div class="text-danger small mb-2" *ngIf="assessmentDesignScoreModel.invalid && (assessmentDesignScoreModel.touched || reviewForm.submitted)">Score is required.</div>
+        <textarea class="form-control" rows="2" [(ngModel)]="form.assessmentDesignComment" name="assessmentDesignComment" #assessmentDesignCommentModel="ngModel" placeholder="Comments" required></textarea>
+        <div class="text-danger small" *ngIf="assessmentDesignCommentModel.invalid && (assessmentDesignCommentModel.touched || reviewForm.submitted)">Comment is required.</div>
       </div>
 
       <div class="criteria-card mb-3">
         <h5>3) Grading Criteria Clarity & Distribution</h5>
         <label>Score (1-5)</label>
-        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.gradingClarityScore" name="gradingClarityScore" required />
-        <textarea class="form-control" rows="2" [(ngModel)]="form.gradingClarityComment" name="gradingClarityComment" placeholder="Comments"></textarea>
+        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.gradingClarityScore" name="gradingClarityScore" #gradingClarityScoreModel="ngModel" required />
+        <div class="text-danger small mb-2" *ngIf="gradingClarityScoreModel.invalid && (gradingClarityScoreModel.touched || reviewForm.submitted)">Score is required.</div>
+        <textarea class="form-control" rows="2" [(ngModel)]="form.gradingClarityComment" name="gradingClarityComment" #gradingClarityCommentModel="ngModel" placeholder="Comments" required></textarea>
+        <div class="text-danger small" *ngIf="gradingClarityCommentModel.invalid && (gradingClarityCommentModel.touched || reviewForm.submitted)">Comment is required.</div>
       </div>
 
       <div class="criteria-card mb-3">
         <h5>4) Feedback & Process Efficiency</h5>
         <label>Score (1-5)</label>
-        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.feedbackEfficiencyScore" name="feedbackEfficiencyScore" required />
-        <textarea class="form-control" rows="2" [(ngModel)]="form.feedbackEfficiencyComment" name="feedbackEfficiencyComment" placeholder="Comments"></textarea>
+        <input type="number" min="1" max="5" class="form-control mb-2" [(ngModel)]="form.feedbackEfficiencyScore" name="feedbackEfficiencyScore" #feedbackEfficiencyScoreModel="ngModel" required />
+        <div class="text-danger small mb-2" *ngIf="feedbackEfficiencyScoreModel.invalid && (feedbackEfficiencyScoreModel.touched || reviewForm.submitted)">Score is required.</div>
+        <textarea class="form-control" rows="2" [(ngModel)]="form.feedbackEfficiencyComment" name="feedbackEfficiencyComment" #feedbackEfficiencyCommentModel="ngModel" placeholder="Comments" required></textarea>
+        <div class="text-danger small" *ngIf="feedbackEfficiencyCommentModel.invalid && (feedbackEfficiencyCommentModel.touched || reviewForm.submitted)">Comment is required.</div>
       </div>
 
       <div class="criteria-card mb-3">
         <h5>Additional Notes</h5>
-        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.courseGradeDistributionNote" name="courseGradeDistributionNote" placeholder="Course grade distribution note"></textarea>
-        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.courseReflectionNote" name="courseReflectionNote" placeholder="Course reflection note"></textarea>
-        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.innovationJourneyNote" name="innovationJourneyNote" placeholder="Innovation journey note"></textarea>
-        <textarea class="form-control" rows="2" [(ngModel)]="form.otherNote" name="otherNote" placeholder="Other note"></textarea>
+        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.courseGradeDistributionNote" name="courseGradeDistributionNote" #courseGradeDistributionNoteModel="ngModel" placeholder="Course grade distribution note" required></textarea>
+        <div class="text-danger small mb-2" *ngIf="courseGradeDistributionNoteModel.invalid && (courseGradeDistributionNoteModel.touched || reviewForm.submitted)">This note is required.</div>
+        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.courseReflectionNote" name="courseReflectionNote" #courseReflectionNoteModel="ngModel" placeholder="Course reflection note" required></textarea>
+        <div class="text-danger small mb-2" *ngIf="courseReflectionNoteModel.invalid && (courseReflectionNoteModel.touched || reviewForm.submitted)">This note is required.</div>
+        <textarea class="form-control mb-2" rows="2" [(ngModel)]="form.innovationJourneyNote" name="innovationJourneyNote" #innovationJourneyNoteModel="ngModel" placeholder="Innovation journey note" required></textarea>
+        <div class="text-danger small mb-2" *ngIf="innovationJourneyNoteModel.invalid && (innovationJourneyNoteModel.touched || reviewForm.submitted)">This note is required.</div>
+        <textarea class="form-control" rows="2" [(ngModel)]="form.otherNote" name="otherNote" #otherNoteModel="ngModel" placeholder="Other note" required></textarea>
+        <div class="text-danger small" *ngIf="otherNoteModel.invalid && (otherNoteModel.touched || reviewForm.submitted)">This note is required.</div>
       </div>
 
       <div class="criteria-card mb-3">
         <h5>Reviewer Summary</h5>
-        <textarea class="form-control" rows="4" [(ngModel)]="form.summary" name="summary" placeholder="Summary of strengths and challenges"></textarea>
+        <textarea class="form-control" rows="4" [(ngModel)]="form.summary" name="summary" #summaryModel="ngModel" placeholder="Summary of strengths and challenges" required></textarea>
+        <div class="text-danger small" *ngIf="summaryModel.invalid && (summaryModel.touched || reviewForm.submitted)">Summary is required.</div>
       </div>
 
       <div class="d-flex gap-2">

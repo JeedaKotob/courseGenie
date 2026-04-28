@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import { SharedDataService } from '../services/shared-data.sevice';
 import { PeerReviewService } from '../services/peer-review.service';
 import { RevieweeReceivedReview, ReviewerAssignment, ReviewerSubmitPeerReviewRequest } from '../home/course.model';
@@ -131,8 +132,19 @@ export class PeerReviewReviewerComponent implements OnInit {
     };
   }
 
-  submitReview(): void {
+  submitReview(reviewForm?: NgForm): void {
     if (!this.selectedAssignment) return;
+    if (reviewForm) {
+      Object.values(reviewForm.controls).forEach(control => control.markAsTouched());
+      if (reviewForm.invalid) {
+        this.showMessage('Please complete all required peer review fields before submitting.', true);
+        return;
+      }
+    }
+    if (!this.isReviewerFormComplete()) {
+      this.showMessage('Please complete all required peer review fields before submitting.', true);
+      return;
+    }
     this.submitting = true;
     this.peerReviewService.submitReview(this.form).subscribe({
       next: (response) => {
@@ -197,5 +209,31 @@ export class PeerReviewReviewerComponent implements OnInit {
       this.message = '';
       this.isError = false;
     }, 4000);
+  }
+
+  private isReviewerFormComplete(): boolean {
+    const scores = [
+      this.form.alignmentScore,
+      this.form.assessmentDesignScore,
+      this.form.gradingClarityScore,
+      this.form.feedbackEfficiencyScore
+    ];
+    const hasValidScores = scores.every(score => score !== null && score >= 1 && score <= 5);
+    if (!hasValidScores) {
+      return false;
+    }
+
+    const requiredTextFields = [
+      this.form.alignmentComment,
+      this.form.assessmentDesignComment,
+      this.form.gradingClarityComment,
+      this.form.feedbackEfficiencyComment,
+      this.form.courseGradeDistributionNote,
+      this.form.courseReflectionNote,
+      this.form.innovationJourneyNote,
+      this.form.otherNote,
+      this.form.summary
+    ];
+    return requiredTextFields.every(value => !!value?.trim());
   }
 }
