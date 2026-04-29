@@ -5,6 +5,26 @@
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.06);
 }
 
+.status-alert {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.success-alert {
+  background: #e8f8ee;
+  color: #1f6f43;
+  border-color: #bde6cb;
+}
+
+.error-alert {
+  background: #ffe7e7;
+  color: #a60000;
+  border-color: #ffb3b3;
+}
+
 .exam-header {
   display: flex;
   justify-content: space-between;

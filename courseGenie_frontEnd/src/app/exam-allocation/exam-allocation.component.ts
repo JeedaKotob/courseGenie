@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import {
   Course,
   ProfessorExamAllocation,
@@ -25,6 +24,8 @@ export class ExamAllocationComponent implements OnInit {
   saving = false;
   notifying = false;
   errorMessage = '';
+  successMessage = '';
+  inlineErrorMessage = '';
 
   examData: ProfessorExamAllocation | null = null;
   students: ProfessorExamStudent[] = [];
@@ -38,8 +39,7 @@ export class ExamAllocationComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private courseService: CourseService,
-    private professorExamAllocationService: ProfessorExamAllocationService,
-    private toastr: ToastrService
+    private professorExamAllocationService: ProfessorExamAllocationService
   ) {}
 
   ngOnInit(): void {
@@ -110,7 +110,7 @@ export class ExamAllocationComponent implements OnInit {
     }
 
     if (!this.isFullyAssigned()) {
-      this.toastr.error('All students must be assigned to a room before saving.');
+      this.showInlineErrorMessage('All students must be assigned to a room before saving.');
       return;
     }
 
@@ -129,11 +129,11 @@ export class ExamAllocationComponent implements OnInit {
         next: (saved) => {
           this.setData(saved);
           this.saving = false;
-          this.toastr.success('Exam allocation saved.');
+          this.showSuccessMessage('Exam allocation saved successfully.');
         },
         error: (error) => {
           this.saving = false;
-          this.toastr.error(error?.error?.message || 'Unable to save exam allocation.');
+          this.showInlineErrorMessage(error?.error?.message || 'Unable to save exam allocation.');
         }
       });
   }
@@ -194,7 +194,7 @@ export class ExamAllocationComponent implements OnInit {
 
   downloadReportPdf(): void {
     if (!this.examData) {
-      this.toastr.error('Report content is not ready.');
+      this.showInlineErrorMessage('Report content is not ready.');
       return;
     }
 
@@ -210,13 +210,13 @@ export class ExamAllocationComponent implements OnInit {
         URL.revokeObjectURL(rawUrl);
       })
       .catch(() => {
-        this.toastr.error('Unable to generate PDF report.');
+        this.showInlineErrorMessage('Unable to generate PDF report.');
       });
   }
 
   notifyStudents(): void {
     if (!this.examData || !this.professorId) {
-      this.toastr.error('Allocation data is not ready.');
+      this.showInlineErrorMessage('Allocation data is not ready.');
       return;
     }
 
@@ -226,11 +226,11 @@ export class ExamAllocationComponent implements OnInit {
       .subscribe({
         next: (message) => {
           this.notifying = false;
-          this.toastr.success(message || 'Student notifications sent.');
+          this.showSuccessMessage(message || 'Student notifications sent successfully.');
         },
         error: (error) => {
           this.notifying = false;
-          this.toastr.error(error?.error || 'Unable to notify students.');
+          this.showInlineErrorMessage(error?.error || 'Unable to notify students.');
         }
       });
   }
@@ -238,13 +238,13 @@ export class ExamAllocationComponent implements OnInit {
   printReport(): void {
     const element = document.getElementById('examAllocationReport');
     if (!element) {
-      this.toastr.error('Report content is not ready.');
+      this.showInlineErrorMessage('Report content is not ready.');
       return;
     }
 
     const printWindow = window.open('', '_blank', 'width=1000,height=800');
     if (!printWindow) {
-      this.toastr.error('Unable to open print window.');
+      this.showInlineErrorMessage('Unable to open print window.');
       return;
     }
 
@@ -359,5 +359,21 @@ export class ExamAllocationComponent implements OnInit {
 
   private formatTime(value: string): string {
     return value?.slice(0, 5) || value;
+  }
+
+  private showSuccessMessage(message: string): void {
+    this.successMessage = message;
+    this.inlineErrorMessage = '';
+    setTimeout(() => {
+      this.successMessage = '';
+    }, 3500);
+  }
+
+  private showInlineErrorMessage(message: string): void {
+    this.inlineErrorMessage = message;
+    this.successMessage = '';
+    setTimeout(() => {
+      this.inlineErrorMessage = '';
+    }, 4000);
   }
 }

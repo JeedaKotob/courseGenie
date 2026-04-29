@@ -1,6 +1,8 @@
 <div class="m-3">
   <div class="exam-page-card" *ngIf="!loading; else loadingState">
     <ng-container *ngIf="!errorMessage && examData; else errorState">
+      <div *ngIf="successMessage" class="status-alert success-alert">{{ successMessage }}</div>
+      <div *ngIf="inlineErrorMessage" class="status-alert error-alert">{{ inlineErrorMessage }}</div>
       <div class="exam-header">
         <div>
           <h2>Exam Allocation</h2>

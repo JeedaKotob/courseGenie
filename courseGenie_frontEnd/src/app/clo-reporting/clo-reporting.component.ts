@@ -26,6 +26,10 @@ export class CloReportingComponent implements OnInit {
   bm1Id: number | null = null;
   bm2Id: number | null = null;
   benchmarks: Benchmark[] = [];
+  benchmarkReflection = '';
+  savingReflection = false;
+  reflectionMessage = '';
+  reflectionError = false;
   displayedColumns: string[] = ['CLO', 'Description', 'Assessment_Instruments', 'Benchmark_Score', 'Result'];
 
   constructor(
@@ -40,6 +44,7 @@ export class CloReportingComponent implements OnInit {
       console.error('No course data found in shared data service.');
     }
     this.loadBenchmarks();
+    this.loadReflection();
   }
 
   loadBenchmarks(): void {
@@ -107,6 +112,48 @@ export class CloReportingComponent implements OnInit {
     });
   }
 
+  private loadReflection(): void {
+    const sectionId = this.course?.sections?.[0]?.sectionId;
+    if (!sectionId) {
+      return;
+    }
+    this.benchmarkService.getBenchmarkReflection(sectionId).subscribe({
+      next: (response) => {
+        this.benchmarkReflection = response?.reflection || '';
+      },
+      error: () => {
+        this.reflectionMessage = 'Unable to load saved reflection.';
+        this.reflectionError = true;
+      }
+    });
+  }
+
+  saveBenchmarkReflection(): void {
+    const sectionId = this.course?.sections?.[0]?.sectionId;
+    if (!sectionId) {
+      this.showReflectionMessage('Section is not available for saving reflection.', true);
+      return;
+    }
+    const trimmedReflection = this.benchmarkReflection.trim();
+    if (!trimmedReflection) {
+      this.showReflectionMessage('Reflection is required before submitting.', true);
+      return;
+    }
+
+    this.savingReflection = true;
+    this.benchmarkService.saveBenchmarkReflection(sectionId, trimmedReflection).subscribe({
+      next: (response) => {
+        this.benchmarkReflection = response?.reflection || trimmedReflection;
+        this.savingReflection = false;
+        this.showReflectionMessage('Reflection saved successfully.');
+      },
+      error: () => {
+        this.savingReflection = false;
+        this.showReflectionMessage('Failed to save reflection.', true);
+      }
+    });
+  }
+
   // Returns a color based on the result value.
   getResultColor(result: string): string {
     if (!result) {
@@ -122,5 +169,14 @@ export class CloReportingComponent implements OnInit {
       default:
         return 'black';
     }
+  }
+
+  private showReflectionMessage(message: string, isError = false): void {
+    this.reflectionMessage = message;
+    this.reflectionError = isError;
+    setTimeout(() => {
+      this.reflectionMessage = '';
+      this.reflectionError = false;
+    }, 3500);
   }
 }

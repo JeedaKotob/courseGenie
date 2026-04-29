@@ -211,6 +211,7 @@ public class CarService {
         context.setVariable("courseClos", courseClos);
         context.setVariable("benchmarkDescriptions", getBenchmarkDescriptions());
         context.setVariable("carCloBenchmarkRows", getCarCloBenchmarkRows(sectionId));
+        context.setVariable("cloBenchmarkReflection", carEntityReflection(sectionId));
 
         return templateEngine.process("car", context);
     }
@@ -268,5 +269,11 @@ public class CarService {
                 benchmarks.get(0).getBenchmarkId(),
                 benchmarks.get(1).getBenchmarkId()
         );
+    }
+
+    private String carEntityReflection(Long sectionId) {
+        return carRepository.findCarBySectionSectionId(sectionId)
+                .map(Car::getCloBenchmarkReflection)
+                .orElse("");
     }
 }

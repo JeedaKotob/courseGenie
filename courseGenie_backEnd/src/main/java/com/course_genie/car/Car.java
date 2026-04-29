@@ -32,6 +32,9 @@ public class Car {
     @Column(columnDefinition="TEXT")
     private String aiReflection;
 
+    @Column(columnDefinition="TEXT")
+    private String cloBenchmarkReflection;
+
     private boolean submitted;
     private LocalDate submissionDate;
 }

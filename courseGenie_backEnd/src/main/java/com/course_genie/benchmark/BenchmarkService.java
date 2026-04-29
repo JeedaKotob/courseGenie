@@ -2,10 +2,14 @@ package com.course_genie.benchmark;
 
 import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentRepository;
+import com.course_genie.car.Car;
+import com.course_genie.car.CarRepository;
 import com.course_genie.clo.CLO;
 import com.course_genie.clo.CLORepository;
 import com.course_genie.grade.Grade;
 import com.course_genie.grade.GradeRepository;
+import com.course_genie.section.Section;
+import com.course_genie.section.SectionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +30,17 @@ public class BenchmarkService {
     private final CLORepository cloRepository;
     private final GradeRepository gradeRepository;
     private final BenchmarkDTOMapper benchmarkDTOMapper;
+    private final CarRepository carRepository;
+    private final SectionRepository sectionRepository;
 
-    public BenchmarkService(BenchmarkRepository benchmarkRepository, AssessmentRepository assessmentRepository, CLORepository cloRepository, GradeRepository gradeRepository, BenchmarkDTOMapper benchmarkDTOMapper) {
+    public BenchmarkService(BenchmarkRepository benchmarkRepository, AssessmentRepository assessmentRepository, CLORepository cloRepository, GradeRepository gradeRepository, BenchmarkDTOMapper benchmarkDTOMapper, CarRepository carRepository, SectionRepository sectionRepository) {
         this.benchmarkRepository = benchmarkRepository;
         this.assessmentRepository = assessmentRepository;
         this.cloRepository = cloRepository;
         this.gradeRepository = gradeRepository;
         this.benchmarkDTOMapper = benchmarkDTOMapper;
+        this.carRepository = carRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     public List<BenchmarkDTO> findAll() {
@@ -131,6 +139,29 @@ public class BenchmarkService {
             return Integer.parseInt(matcher.group(1));
         }
         return Integer.MAX_VALUE;
+    }
+
+    public String getCloBenchmarkReflection(Long sectionId) {
+        return getOrCreateCar(sectionId).getCloBenchmarkReflection();
+    }
+
+    public String saveCloBenchmarkReflection(Long sectionId, String reflection) {
+        Car car = getOrCreateCar(sectionId);
+        car.setCloBenchmarkReflection(reflection == null ? null : reflection.trim());
+        return carRepository.save(car).getCloBenchmarkReflection();
+    }
+
+    private Car getOrCreateCar(Long sectionId) {
+        return carRepository.findCarBySectionSectionId(sectionId)
+                .orElseGet(() -> {
+                    Section section = sectionRepository.findById(sectionId)
+                            .orElseThrow(() -> new EntityNotFoundException("Section not found"));
+                    Car newCar = Car.builder()
+                            .section(section)
+                            .submitted(false)
+                            .build();
+                    return carRepository.save(newCar);
+                });
     }
 
 }
