@@ -143,11 +143,14 @@
 
 .report-room-block {
   margin-top: .8rem;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
 }
 
 .report-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .report-table th,
@@ -159,6 +162,35 @@
 
 .report-table th {
   background: #f5f7f8;
+}
+
+.report-table thead {
+  display: table-header-group;
+}
+
+.report-table tr {
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+.report-table th:nth-child(1),
+.report-table td:nth-child(1) {
+  width: 22%;
+}
+
+.report-table th:nth-child(2),
+.report-table td:nth-child(2) {
+  width: 18%;
+}
+
+.report-table th:nth-child(3),
+.report-table td:nth-child(3) {
+  width: 24%;
+}
+
+.report-table th:nth-child(4),
+.report-table td:nth-child(4) {
+  width: 36%;
 }
 
 .students-table {

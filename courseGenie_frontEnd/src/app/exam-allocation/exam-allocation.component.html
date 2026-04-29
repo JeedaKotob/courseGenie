@@ -97,6 +97,7 @@
               <th>Student</th>
               <th>Student ID</th>
               <th>Email</th>
+              <th>Signature</th>
             </tr>
             </thead>
             <tbody>
@@ -104,9 +105,10 @@
               <td>{{ formatStudentName(student) }}</td>
               <td>{{ student.studentId }}</td>
               <td>{{ student.email }}</td>
+              <td></td>
             </tr>
             <tr *ngIf="getStudentsForRoom(room.roomId).length === 0">
-              <td colspan="3">No students assigned to this room.</td>
+              <td colspan="4">No students assigned to this room.</td>
             </tr>
             </tbody>
           </table>
@@ -120,6 +122,7 @@
               <th>Student</th>
               <th>Student ID</th>
               <th>Email</th>
+              <th>Signature</th>
             </tr>
             </thead>
             <tbody>
@@ -127,6 +130,7 @@
               <td>{{ formatStudentName(student) }}</td>
               <td>{{ student.studentId }}</td>
               <td>{{ student.email }}</td>
+              <td></td>
             </tr>
             </tbody>
           </table>

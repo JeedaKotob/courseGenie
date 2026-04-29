@@ -172,7 +172,11 @@ export class ExamAllocationComponent implements OnInit {
             logging: false,
             letterRendering: true
           },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+          pagebreak: {
+            mode: ['css', 'legacy'],
+            avoid: ['tr', '.report-room-block']
+          }
         };
 
         html2pdf()
@@ -254,9 +258,19 @@ export class ExamAllocationComponent implements OnInit {
         <title>Exam Allocation Report</title>
         <style>
           body { font-family: Arial, sans-serif; padding: 16px; }
-          .report-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+          .report-room-block { margin-bottom: 16px; break-inside: avoid-page; page-break-inside: avoid; }
+          .report-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; table-layout: fixed; }
           .report-table th, .report-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
           .report-table th { background: #f5f5f5; }
+          .report-table thead { display: table-header-group; }
+          .report-table tr { break-inside: avoid-page; page-break-inside: avoid; }
+          .report-table th:nth-child(1), .report-table td:nth-child(1) { width: 22%; }
+          .report-table th:nth-child(2), .report-table td:nth-child(2) { width: 18%; }
+          .report-table th:nth-child(3), .report-table td:nth-child(3) { width: 24%; }
+          .report-table th:nth-child(4), .report-table td:nth-child(4) { width: 36%; }
+          @media print {
+            h3, h4, p { break-after: avoid-page; page-break-after: avoid; }
+          }
         </style>
       </head>
       <body>${element.innerHTML}</body>
