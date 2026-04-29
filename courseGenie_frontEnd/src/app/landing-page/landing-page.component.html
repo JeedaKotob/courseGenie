@@ -127,8 +127,10 @@
       </div>
 
       <h3 class="team-group-title text-center">Mentors</h3>
+      <!-- Mentors Section -->
       <div class="row g-4 justify-content-center mb-5">
-        <div class="col-md-6 col-lg-4" *ngFor="let mentor of mentors; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+        <!-- Changed col-lg-4 to col-6 col-md-3 col-lg-2 -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3" *ngFor="let mentor of mentors; let i = index" ...>
           <div class="team-card">
             <div class="team-image-wrapper">
               <img [src]="mentor.image" [alt]="mentor.name" class="team-image">
@@ -140,9 +142,11 @@
         </div>
       </div>
 
+      <!-- Team Members Section -->
       <h3 class="team-group-title text-center">Team Members</h3>
       <div class="row g-4 justify-content-center">
-        <div class="col-md-6 col-lg-4" *ngFor="let member of teamMembers; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="(i + mentors.length) * 100">
+        <!-- Changed col-lg-4 to col-6 col-md-3 col-lg-2 -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3" *ngFor="let member of teamMembers; let i = index" ...>
           <div class="team-card">
             <div class="team-image-wrapper">
               <img [src]="member.image" [alt]="member.name" class="team-image">
@@ -153,6 +157,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
