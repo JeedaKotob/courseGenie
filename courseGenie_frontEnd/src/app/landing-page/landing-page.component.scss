@@ -434,7 +434,7 @@ $accent-color: #FF5A5F;
 
 // Demo Section
 .demo {
-  padding: 100px 0;
+  padding: 100px 0 60px;
   background: #f8f9fa;
   position: relative;
   overflow: hidden;
@@ -671,7 +671,7 @@ $accent-color: #FF5A5F;
 
 // Team Section
 .team {
-  padding: 100px 0;
+  padding: 60px 0 100px;
   background: #f8f9fa;
   position: relative;
 
@@ -686,6 +686,12 @@ $accent-color: #FF5A5F;
     border-radius: 50%;
     z-index: 0;
   }
+}
+
+.team-group-title {
+  color: $dark-color;
+  font-size: 1.6rem;
+  margin-bottom: 25px;
 }
 
 .team-card {
@@ -815,11 +821,12 @@ $accent-color: #FF5A5F;
 // CTA Section
 .cta {
   padding: 100px 0;
+  margin-top: 40px;
   background: linear-gradient(135deg, $primary-color, $dark-color);
   color: white;
   position: relative;
   overflow: hidden;
-  max-height: 450px;
+  max-height: none;
 
   &::before {
     content: '';
@@ -902,7 +909,7 @@ $accent-color: #FF5A5F;
   background: $dark-color;
   color: white;
   position: relative;
-  max-height: 500px;
+  max-height: none;
 
   &:before {
     content: '';

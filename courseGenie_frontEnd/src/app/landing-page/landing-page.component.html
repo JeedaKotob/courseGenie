@@ -23,9 +23,6 @@
             <a class="nav-link" href="#demo">Demo</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#testimonials">Testimonials</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="#team">Team</a>
           </li>
         </ul>
@@ -121,34 +118,6 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="testimonials" id="testimonials" data-aos="fade-up">
-    <div class="container">
-      <div class="section-header text-center mb-5">
-        <h2>What Educators Say</h2>
-        <p class="lead">Join hundreds of satisfied professors using CourseGenie</p>
-      </div>
-
-      <div class="testimonial-slider">
-        <div class="row">
-          <div class="col-md-4" *ngFor="let testimonial of testimonials">
-            <div class="testimonial-card">
-              <div class="testimonial-quote">
-                <i class="fas fa-quote-left"></i>
-                <p>{{ testimonial.quote }}</p>
-              </div>
-              <div class="testimonial-author">
-                <h4>{{ testimonial.author }}</h4>
-                <p>{{ testimonial.position }}</p>
-                <small>{{ testimonial.university }}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Team Section -->
   <section class="team" id="team" data-aos="fade-up">
     <div class="container">
@@ -157,15 +126,29 @@
         <p class="lead">The passionate minds behind CourseGenie</p>
       </div>
 
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-3" *ngFor="let member of teamMembers; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+      <h3 class="team-group-title text-center">Mentors</h3>
+      <div class="row g-4 justify-content-center mb-5">
+        <div class="col-md-6 col-lg-4" *ngFor="let mentor of mentors; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+          <div class="team-card">
+            <div class="team-image-wrapper">
+              <img [src]="mentor.image" [alt]="mentor.name" class="team-image">
+            </div>
+            <div class="team-info">
+              <h4>{{ mentor.name }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="team-group-title text-center">Team Members</h3>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-4" *ngFor="let member of teamMembers; let i = index" [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="(i + mentors.length) * 100">
           <div class="team-card">
             <div class="team-image-wrapper">
               <img [src]="member.image" [alt]="member.name" class="team-image">
             </div>
             <div class="team-info">
               <h4>{{ member.name }}</h4>
-              <p class="team-title">{{ member.title }}</p>
             </div>
           </div>
         </div>

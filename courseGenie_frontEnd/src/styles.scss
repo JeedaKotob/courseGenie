@@ -6,10 +6,6 @@ body {
     overflow-x: hidden;
 }
 
-.container {
-    height: 90vh;
-}
-
 .guest-container {
     height: 100vh !important;
 }
@@ -65,4 +61,4 @@ button {
     cursor: pointer;
 }
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; }

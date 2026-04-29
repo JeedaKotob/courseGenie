@@ -28,7 +28,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
 
   loading = false;
   autoPairLoading = false;
-  saveLoading = false;
+  manualAddLoading = false;
   publishLoading = false;
   message = '';
   isError = false;
@@ -116,9 +116,16 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
     this.autoPairLoading = true;
     this.adminService.autoPairPeerReviews(this.selectedDepartment, this.reviewsPerSection).subscribe({
       next: (data) => {
-        this.assignments = data;
-        this.autoPairLoading = false;
-        this.showMessage('Random pairing generated. Click Save Assignments to apply.');
+        const payload: PeerReviewPairRequest[] = data.map(a => ({
+          reviewerId: a.reviewerId,
+          revieweeSectionId: a.revieweeSectionId
+        }));
+        this.persistAssignments(
+          payload,
+          'Random pairing generated and saved successfully.',
+          'Random pairing generated but failed to save.',
+          () => (this.autoPairLoading = false)
+        );
       },
       error: (err) => {
         const msg = err?.error?.message || 'Random pairing failed.';
@@ -156,7 +163,7 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
       return;
     }
 
-    this.assignments = [
+    const updatedAssignments: PeerReviewAssignment[] = [
       ...this.assignments,
       {
         assignmentId: 0,
@@ -172,36 +179,25 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
         progressStatus: 'NOT_STARTED'
       }
     ];
+    const payload: PeerReviewPairRequest[] = updatedAssignments.map(a => ({
+      reviewerId: a.reviewerId,
+      revieweeSectionId: a.revieweeSectionId
+    }));
+
+    this.manualAddLoading = true;
     this.selectedReviewerId = null;
     this.selectedRevieweeSectionId = null;
-    this.showMessage('Pair added locally. Click Save Assignments to persist.');
+    this.persistAssignments(
+      payload,
+      'Pair added and saved successfully.',
+      'Pair added locally but failed to save.',
+      () => (this.manualAddLoading = false),
+      updatedAssignments
+    );
   }
 
   removeAssignment(index: number): void {
     this.assignments = this.assignments.filter((_, i) => i !== index);
-  }
-
-  saveAssignments(): void {
-    if (!this.selectedDepartment) return;
-    this.saveLoading = true;
-    const payload: PeerReviewPairRequest[] = this.assignments.map(a => ({
-      reviewerId: a.reviewerId,
-      revieweeSectionId: a.revieweeSectionId
-    }));
-    this.adminService.savePeerReviewAssignments(this.selectedDepartment, payload).subscribe({
-      next: (data) => {
-        this.assignments = data;
-        this.saveLoading = false;
-        this.showMessage('Assignments saved successfully.');
-        this.loadDepartments();
-        this.loadPublishStatus();
-      },
-      error: (err) => {
-        const msg = err?.error?.message || 'Failed to save assignments.';
-        this.showMessage(msg, true);
-        this.saveLoading = false;
-      }
-    });
   }
 
   publishForAllDepartments(): void {
@@ -234,6 +230,37 @@ export class AdminPeerReviewAssignmentComponent implements OnInit {
       return;
     }
     this.router.navigate(['/admin']);
+  }
+
+  private persistAssignments(
+    payload: PeerReviewPairRequest[],
+    successMessage: string,
+    fallbackErrorMessage: string,
+    onComplete: () => void,
+    fallbackLocalAssignments?: PeerReviewAssignment[]
+  ): void {
+    if (!this.selectedDepartment) {
+      onComplete();
+      return;
+    }
+
+    this.adminService.savePeerReviewAssignments(this.selectedDepartment, payload).subscribe({
+      next: (saved) => {
+        this.assignments = saved;
+        this.showMessage(successMessage);
+        this.loadDepartments();
+        this.loadPublishStatus();
+        onComplete();
+      },
+      error: (err) => {
+        if (fallbackLocalAssignments) {
+          this.assignments = fallbackLocalAssignments;
+        }
+        const msg = err?.error?.message || fallbackErrorMessage;
+        this.showMessage(msg, true);
+        onComplete();
+      }
+    });
   }
 
   private showMessage(message: string, isError = false): void {

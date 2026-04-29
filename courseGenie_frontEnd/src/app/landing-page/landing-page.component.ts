@@ -40,50 +40,29 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class LandingPageComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
+  mentors = [
+    {
+      name: 'Dr. Ali Assi',
+      image: 'assets/ali.jpg'
+    },
+    {
+      name: 'Mr. Qusai Hasan',
+      image: 'assets/qusai.jpeg'
+    }
+  ];
+
   teamMembers = [
     {
-      name: 'Vansh Purohit',
-      title: 'Lead Developer',
-      image: 'assets/vansh.jpg',
-      description: 'Expert in Full Stack Development with over 3 years experience.',
-      social: {
-        twitter: '#',
-        linkedin: '#',
-        github: '#'
-      }
+      name: 'Jeeda Kotob',
+      image: 'assets/jeeda.jpeg'
     },
     {
-      name: 'Aminu Muazu',
-      title: 'Frontend Developer',
-      image: 'assets/aminu.jpg',
-      description: 'Passionate about creating intuitive user experiences for educators.',
-      social: {
-        twitter: '#',
-        linkedin: '#',
-        github: '#'
-      }
+      name: 'Ibraheem Mustafa',
+      image: 'assets/ibrahim.jpeg'
     },
     {
-      name: 'Manav Hingorani',
-      title: 'Data Analytics Specialist',
-      image: 'assets/manav.jpg',
-      description: 'Former professor with a deep understanding of course management needs.',
-      social: {
-        twitter: '#',
-        linkedin: '#',
-        github: '#'
-      }
-    },
-    {
-      name: 'Fawzi Tahboub',
-      title: 'UI / UX Specialist',
-      image: 'assets/fawzi.jpg',
-      description: 'Driving innovation in educational software products.',
-      social: {
-        twitter: '#',
-        linkedin: '#',
-        github: '#'
-      }
+      name: 'Ryma Ait Tayeb',
+      image: 'assets/ryma.jpeg'
     }
   ];
 
