@@ -305,3 +305,41 @@
 .dropdown-item.logout:hover {
   background-color: #f8d7da;
 }
+
+/* Custom profile dropdown used in template */
+.custom-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 230px;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  z-index: 2000;
+}
+
+.custom-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: #212529;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.custom-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.custom-dropdown .logout-item {
+  color: #dc3545;
+}
+
+.custom-dropdown .logout-item:hover {
+  background-color: #fee2e2;
+}

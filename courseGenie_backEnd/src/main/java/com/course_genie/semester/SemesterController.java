@@ -20,4 +20,9 @@ public class SemesterController {
     public ResponseEntity<List<String>> getAllSemesters() {
         return ResponseEntity.ok(semesterService.getAllSemesterNames());
     }
+
+    @GetMapping("/current")
+    public ResponseEntity<String> getCurrentSemesterName() {
+        return ResponseEntity.ok(semesterService.getCurrentSemesterOrThrow().getSemesterName());
+    }
 }

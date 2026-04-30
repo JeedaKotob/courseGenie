@@ -14,12 +14,20 @@
 
       <hr class="my-4" />
 
-      <h3 class="bold mb-3">Sections</h3>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="bold mb-0">Sections</h3>
+        <div class="semester-filter" *ngIf="isAdmin">
+          <select class="form-select" [(ngModel)]="selectedSemester">
+            <option value="all">All Semesters</option>
+            <option *ngFor="let semester of allSemesters" [value]="semester">{{ semester }}</option>
+          </select>
+        </div>
+      </div>
 
       <!-- LOAD SECTIONS -->
       <ng-container *ngIf="sections$ | async as sections">
-        <div class="sections-grid" *ngIf="sections.length > 0; else noSections">
-          <div class="section-card" *ngFor="let sec of sections">
+        <div class="sections-grid" *ngIf="getFilteredSections(sections).length > 0; else noSections">
+          <div class="section-card" *ngFor="let sec of getFilteredSections(sections)">
             <div class="section-header">
               <span class="section-badge">Section {{ sec.code }}</span>
               <span class="section-term">{{ sec.semesterName }}</span>
@@ -90,7 +98,7 @@
 
         <ng-template #noSections>
           <div class="text-center mt-4">
-            <h5 class="text-muted mb-3">No sections available.</h5>
+            <h5 class="text-muted mb-3">No sections available for the selected semester.</h5>
 
             <button
               *ngIf="isAdmin"

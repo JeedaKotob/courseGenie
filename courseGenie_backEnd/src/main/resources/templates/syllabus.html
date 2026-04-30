@@ -326,6 +326,25 @@
     </tr>
 </table>
 <p class="c37 c27"><span class="c2"></span></p>
+<p class="c37">
+    <span class="c11">Program Learning Outcomes:</span>
+</p>
+<div th:if="${programLearningOutcomes != null and !#lists.isEmpty(programLearningOutcomes)}">
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr th:each="plo : ${programLearningOutcomes}">
+            <td style="width: 52px; vertical-align: top; padding: 0 8px 4px 20px;">
+                <span class="c2" th:text="${plo['shortName'] + ')'}">a)</span>
+            </td>
+            <td style="vertical-align: top; padding: 0 0 4px 0;">
+                <span class="c2" th:text="${plo['description']}">PLO description</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<p class="c37" th:if="${programLearningOutcomes == null or #lists.isEmpty(programLearningOutcomes)}">
+    <span class="c2">No program learning outcomes available.</span>
+</p>
+<p class="c37 c27"><span class="c2"></span></p>
 
 <!-- Teaching & Learning Methodologies -->
 <p class="c60 c97">

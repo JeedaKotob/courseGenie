@@ -4,6 +4,15 @@
   gap: 20px;
 }
 
+.semester-filter {
+  min-width: 220px;
+}
+
+.semester-filter .form-select {
+  border-radius: 10px;
+  border: 1px solid #d6dde5;
+}
+
 .back-btn {
   background: linear-gradient(135deg, #024964, #0394ca);
   border: none;

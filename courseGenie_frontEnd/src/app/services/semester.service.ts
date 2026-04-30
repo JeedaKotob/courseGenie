@@ -14,4 +14,8 @@ export class SemesterService {
   getAllSemesters(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl);
   }
+
+  getCurrentSemesterName(): Observable<string> {
+    return this.http.get(`${this.apiUrl}/current`, { responseType: 'text' });
+  }
 }

@@ -8,6 +8,9 @@ import { map, switchMap, distinctUntilChanged, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SemesterService } from '../services/semester.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-course-overview',
@@ -26,6 +29,8 @@ export class CourseOverviewComponent implements OnInit {
   isSubmitting = false;
   modalError: string | null = null;
   semesterNames: string[] = [];
+  allSemesters: string[] = [];
+  selectedSemester: string = 'all';
   professors: { userId: number; firstName: string; lastName: string; userName: string }[] = [];
 
   selectedSectionId: number | null = null;
@@ -40,7 +45,8 @@ export class CourseOverviewComponent implements OnInit {
     private authService: AuthService,
     private modalService: NgbModal,
     private location: Location,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private semesterService: SemesterService
   ) {}
 
   ngOnInit() {
@@ -58,6 +64,8 @@ export class CourseOverviewComponent implements OnInit {
     this.sections$ = this.course$.pipe(
       map(course => course.sections ?? [])
     );
+
+    this.loadSectionSemesterFilterOptions();
   }
 
   private buildSectionForm(): FormGroup {
@@ -126,6 +134,32 @@ export class CourseOverviewComponent implements OnInit {
       next: (data) => this.semesterNames = data ?? [],
       error: () => this.semesterNames = []
     });
+  }
+
+  private loadSectionSemesterFilterOptions(): void {
+    this.semesterService.getAllSemesters().subscribe({
+      next: semesters => {
+        this.allSemesters = semesters ?? [];
+        this.semesterService.getCurrentSemesterName()
+          .pipe(catchError(() => of('')))
+          .subscribe(currentSemester => {
+            this.selectedSemester = currentSemester && this.allSemesters.includes(currentSemester)
+              ? currentSemester
+              : 'all';
+          });
+      },
+      error: () => {
+        this.allSemesters = [];
+        this.selectedSemester = 'all';
+      }
+    });
+  }
+
+  getFilteredSections(sections: Section[]): Section[] {
+    if (this.selectedSemester === 'all') {
+      return sections;
+    }
+    return sections.filter(section => section.semesterName === this.selectedSemester);
   }
 
   private loadProfessorsForCourse(course: Course) {

@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { map, switchMap, filter, withLatestFrom, tap, take } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { CourseService } from '../../services/course.service';
 import { SemesterService } from '../../services/semester.service';
@@ -154,9 +156,17 @@ export class ProfHomeComponent implements OnInit, OnDestroy {
     this.semesterService.getAllSemesters().subscribe({
       next: (semesters) => {
         this.allSemesters = semesters;
+        this.semesterService.getCurrentSemesterName()
+          .pipe(catchError(() => of('')))
+          .subscribe(currentSemester => {
+            this.selectedSemester = currentSemester && this.allSemesters.includes(currentSemester)
+              ? currentSemester
+              : 'all';
+          });
       },
       error: () => {
         this.allSemesters = [];
+        this.selectedSemester = 'all';
       }
     });
   }

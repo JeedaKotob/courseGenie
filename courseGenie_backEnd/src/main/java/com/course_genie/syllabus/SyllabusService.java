@@ -174,6 +174,16 @@ public class SyllabusService {
                 .map(plo -> plo.getShortName() == null ? "" : plo.getShortName().toString())
                 .toList();
 
+        List<Map<String, String>> programLearningOutcomes = sortedPlos.stream()
+                .map(plo -> {
+                    Map<String, String> ploData = new HashMap<>();
+                    String shortName = plo.getShortName() == null ? "" : plo.getShortName().toString().toLowerCase();
+                    ploData.put("shortName", shortName);
+                    ploData.put("description", plo.getDescription() == null ? "" : plo.getDescription().trim());
+                    return ploData;
+                })
+                .toList();
+
         if (cloPloHeaders.isEmpty()) {
             cloPloHeaders = List.of("-");
         }
@@ -213,6 +223,7 @@ public class SyllabusService {
 
         context.setVariable("cloPloHeaders", cloPloHeaders);
         context.setVariable("cloPloRows", cloPloRows);
+        context.setVariable("programLearningOutcomes", programLearningOutcomes);
 
         // Creating course calendar mapping with week and assessments
 
