@@ -6,10 +6,11 @@ import com.course_genie.assessment.CategoryDescription;
 import com.course_genie.assessment.Assessment;
 import com.course_genie.assessment.AssessmentRepository;
 import com.course_genie.booksection.BookSection;
-import com.course_genie.booksection.*;
 import com.course_genie.booksection.BookSectionService;
 import com.course_genie.clo.CLO;
 import com.course_genie.clo.CLORepository;
+import com.course_genie.plo.PLO;
+import com.course_genie.plo.PLORepository;
 import com.course_genie.course.CourseRepository;
 import com.course_genie.section.Section;
 import com.course_genie.section.SectionRepository;
@@ -38,6 +39,7 @@ public class SyllabusService {
     private final SyllabusDTOMapper syllabusDTOMapper;
     private final CourseRepository courseRepository;
     private final CLORepository cloRepository;
+    private final PLORepository ploRepository;
     private final SectionRepository sectionRepository;
     private final AssessmentRepository assessmentRepository;
     private final SpringTemplateEngine templateEngine;
@@ -50,6 +52,7 @@ public class SyllabusService {
             SyllabusDTOMapper syllabusDTOMapper,
             CourseRepository courseRepository,
             CLORepository cloRepository,
+            PLORepository ploRepository,
             SectionRepository sectionRepository,
             AssessmentRepository assessmentRepository,
             CategoryDescriptionRepository categoryDescriptionRepository,
@@ -61,6 +64,7 @@ public class SyllabusService {
         this.syllabusDTOMapper = syllabusDTOMapper;
         this.courseRepository = courseRepository;
         this.cloRepository = cloRepository;
+        this.ploRepository = ploRepository;
         this.sectionRepository = sectionRepository;
         this.assessmentRepository = assessmentRepository;
         this.categoryDescriptionRepository = categoryDescriptionRepository;
@@ -149,6 +153,67 @@ public class SyllabusService {
                 .collect(Collectors.joining("<br/>")); // Using <br/> to separate each item
 
         context.setVariable("courseLearningOutcomesStr", cloHtml);
+
+        List<CLO> courseClos = cloRepository.findCLOByCourseCourseId(section.getCourse().getCourseId())
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator
+                        .comparingInt((CLO clo) -> extractCloOrder(clo.getName()))
+                        .thenComparing(clo -> clo.getName() == null ? "" : clo.getName(), String.CASE_INSENSITIVE_ORDER))
+                .toList();
+
+        List<PLO> coursePlos = ploRepository.findAllWithClos();
+
+        List<PLO> sortedPlos = coursePlos.stream()
+                .sorted(Comparator
+                        .comparing((PLO plo) -> plo.getShortName() == null ? "" : plo.getShortName().toString(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(plo -> plo.getName() == null ? "" : plo.getName(), String.CASE_INSENSITIVE_ORDER))
+                .toList();
+
+        List<String> cloPloHeaders = sortedPlos.stream()
+                .map(plo -> plo.getShortName() == null ? "" : plo.getShortName().toString())
+                .toList();
+
+        if (cloPloHeaders.isEmpty()) {
+            cloPloHeaders = List.of("-");
+        }
+
+        List<Map<String, Object>> cloPloRows = courseClos.stream()
+                .map(clo -> {
+                    Set<Long> mappedPloIds = sortedPlos.stream()
+                            .filter(plo -> plo.getClos() != null && plo.getClos().stream()
+                                    .anyMatch(mappedClo -> Objects.equals(mappedClo.getCloId(), clo.getCloId())))
+                            .map(PLO::getPloId)
+                            .collect(Collectors.toSet());
+
+                    List<String> marks = sortedPlos.stream()
+                            .map(plo -> mappedPloIds.contains(plo.getPloId()) ? "X" : "")
+                            .toList();
+
+                    String cloDisplay = (clo.getName() == null || clo.getName().isBlank())
+                            ? "CLO"
+                            : clo.getName().trim();
+
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("cloLabel", cloDisplay);
+                    row.put("description", clo.getDescription() == null ? "" : clo.getDescription().trim());
+                    row.put("marks", marks);
+                    return row;
+                })
+                .toList();
+
+        if (cloPloRows.isEmpty()) {
+            List<String> emptyMarks = cloPloHeaders.stream().map(header -> "").toList();
+            Map<String, Object> emptyRow = new HashMap<>();
+            emptyRow.put("cloLabel", "");
+            emptyRow.put("description", "No CLOs available for this course yet.");
+            emptyRow.put("marks", emptyMarks);
+            cloPloRows = List.of(emptyRow);
+        }
+
+        context.setVariable("cloPloHeaders", cloPloHeaders);
+        context.setVariable("cloPloRows", cloPloRows);
+
         // Creating course calendar mapping with week and assessments
 
 // Build the unsorted courseCalendar as before.

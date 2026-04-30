@@ -293,6 +293,39 @@
       </span>
 </p>
 <p class="c37 c27"><span class="c2"></span></p>
+<p class="c37">
+    <span class="c11">CLOs-PLOs Mapping Table</span>
+</p>
+<table class="c20">
+    <tr class="c24">
+        <td style="border:1px solid #000; padding: 6px 8px; width: 40px; text-align: center; font-weight: 700;"></td>
+        <td style="border:1px solid #000; padding: 6px 8px; font-weight: 700;">
+            <span class="c15 c3" th:text="${courseTitleFull}">Course Title</span>
+        </td>
+        <td style="border:1px solid #000; padding: 6px 8px; text-align: center; font-weight: 700;"
+            th:each="header : ${cloPloHeaders}"
+            th:text="${header}">
+            a
+        </td>
+    </tr>
+    <tr class="c24" th:each="row, rowStat : ${cloPloRows}">
+        <td style="border:1px solid #000; padding: 6px 8px; width: 40px; text-align: center;"
+            th:text="${rowStat.count}">
+            1
+        </td>
+        <td style="border:1px solid #000; padding: 6px 8px;">
+            <span class="c2">
+                <span th:text="${row['description']}">CLO description</span>
+            </span>
+        </td>
+        <td style="border:1px solid #000; padding: 6px 8px; text-align: center;"
+            th:each="mark : ${row['marks']}"
+            th:text="${mark}">
+            X
+        </td>
+    </tr>
+</table>
+<p class="c37 c27"><span class="c2"></span></p>
 
 <!-- Teaching & Learning Methodologies -->
 <p class="c60 c97">
