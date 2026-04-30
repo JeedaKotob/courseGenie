@@ -92,9 +92,18 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="bold mb-0">Course Directory</h1>
       </div>
+      <div class="course-search mb-4">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by course code or name"
+          [(ngModel)]="searchTerm"
+        />
+      </div>
 
-      <div *ngIf="courses.length > 0; else noCourses">
-        <div *ngFor="let entry of groupedCourses | keyvalue" class="dept-section mb-5">
+      <div *ngIf="hasFilteredCourses; else noCourses">
+        <div *ngFor="let entry of filteredGroupedCourses | keyvalue" class="dept-section mb-5">
           <div class="dept-header d-flex align-items-center justify-content-between mb-4" (click)="toggleDepartment(entry.key)">
             <div class="d-flex align-items-center">
               <div class="dept-indicator"></div>
@@ -137,7 +146,7 @@
 
       <ng-template #noCourses>
         <div class="text-center mt-5">
-          <h4 class="text-muted">No courses available.</h4>
+          <h4 class="text-muted">No courses match your search.</h4>
         </div>
       </ng-template>
     </div>

@@ -239,6 +239,25 @@
   color: #6c757d;
 }
 
+.course-search {
+  position: relative;
+  max-width: 420px;
+}
+
+.course-search i {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.course-search .form-control {
+  border-radius: 12px;
+  border: 1px solid #d6dde5;
+  padding: 0.6rem 0.9rem 0.6rem 2.3rem;
+}
+
 .course-card {
   background: #fff;
   border-radius: 12px;

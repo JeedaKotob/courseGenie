@@ -17,6 +17,7 @@ export class AdminHomeComponent implements OnInit {
 
   courses: Course[] = [];
   groupedCourses: { [department: string]: Course[] } = {};
+  searchTerm: string = '';
   expandedDepartments: { [department: string]: boolean } = {};
   animationClass = '';
   todayEvents: CalendarEvent[] = [];
@@ -118,6 +119,30 @@ export class AdminHomeComponent implements OnInit {
 
   get totalDepartments(): number {
     return Object.keys(this.groupedCourses).length;
+  }
+
+  get filteredGroupedCourses(): { [department: string]: Course[] } {
+    const normalizedSearch = this.searchTerm.trim().toLowerCase();
+    if (!normalizedSearch) {
+      return this.groupedCourses;
+    }
+
+    const filteredEntries = Object.entries(this.groupedCourses)
+      .map(([departmentName, courses]) => {
+        const filteredCourses = courses.filter(course => {
+          const code = (course.code || '').toLowerCase();
+          const name = (course.name || '').toLowerCase();
+          return code.includes(normalizedSearch) || name.includes(normalizedSearch);
+        });
+        return [departmentName, filteredCourses] as const;
+      })
+      .filter(([, courses]) => courses.length > 0);
+
+    return Object.fromEntries(filteredEntries);
+  }
+
+  get hasFilteredCourses(): boolean {
+    return Object.keys(this.filteredGroupedCourses).length > 0;
   }
 
   get unassignedCoursesCount(): number {
