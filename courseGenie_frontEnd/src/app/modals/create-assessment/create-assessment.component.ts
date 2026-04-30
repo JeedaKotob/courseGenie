@@ -72,6 +72,8 @@ export class CreateAssessmentComponent {
       assessmentCategory = categoryOption;
       const mapping: { [key: string]: string } = {
         'Quiz': 'QZ',
+        'Assignment': 'HW',
+        'Project': 'PR',
         'Practical Examination': 'PE',
         'Midterm': 'ME',
         'Final': 'FE'

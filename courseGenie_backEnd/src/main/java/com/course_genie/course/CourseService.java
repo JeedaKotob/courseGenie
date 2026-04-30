@@ -219,7 +219,7 @@ public class CourseService {
 
         // Group courses by semester from their sections.
         // If a course has sections in multiple semesters, we clone the course for each semester,
-        // keeping only the sections that belong to that term.
+        // keeping only the sections that belong to that semester.
         Map<String, Set<CourseDTO>> groupedBySemester = new HashMap<>();
         for (CourseDTO courseDTO : courseDTOList) {
             Set<String> semesterNames = courseDTO.sections().stream()

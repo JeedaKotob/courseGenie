@@ -17,6 +17,14 @@ import { CreateAssessmentComponent } from '../modals/create-assessment/create-as
 
 export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: ADD OnDestroy HERE
   @ViewChild(CreateAssessmentComponent) createAssessmentComponent!: CreateAssessmentComponent;
+  categoryAssessmentSummary: Array<{
+    category: string;
+    shortName: string;
+    number: number | string;
+    totalWeight: number;
+    actionName: string;
+    isTotal?: boolean;
+  }> = [];
 
   settings: Settings = {
     hideSubHeader: true,
@@ -27,8 +35,14 @@ export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: 
     },
     columns: {
       category: {title: 'Category'},
-      shortName: {title: 'Short Name'},
-      number: {title: 'Number Of Assessments'},
+      number: {
+        title: 'Number Of Assessments',
+        valuePrepareFunction: (value: number | string) => String(value ?? '')
+      },
+      totalWeight: {
+        title: 'Total Weight (%)',
+        valuePrepareFunction: (value: number) => Number(value || 0).toFixed(2)
+      },
       actionName: {
         title: 'Actions',
         type: 'custom',
@@ -155,7 +169,8 @@ export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: 
       category: string;
       shortName: string;
       number: number;
-      actionName: string
+      totalWeight: number;
+      actionName: string;
     }> = {};
 
     this.course?.sections?.[0].assessments?.forEach((assessment: any) => {
@@ -165,13 +180,30 @@ export class AssessmentsComponent implements OnInit, OnDestroy { // <-- FIX #2: 
           category: assessment.category,
           shortName: assessment.shortName.replace(/[0-9]+$/, ''),
           number: 0,
+          totalWeight: 0,
           actionName: assessment.shortName.replace(/[0-9]+$/, '')
         };
       }
       assessmentCount[key].number++;
+      assessmentCount[key].totalWeight += Number(assessment.maxPoints || 0);
     });
 
-    this.tableData.load(Object.values(assessmentCount));
+    const categoryRows = Object.values(assessmentCount).map(item => ({
+      ...item,
+      totalWeight: Number(item.totalWeight.toFixed(2))
+    }));
+
+    const totalRow = {
+      category: 'Total',
+      shortName: '',
+      number: categoryRows.reduce((sum, item) => sum + Number(item.number || 0), 0),
+      totalWeight: Number(categoryRows.reduce((sum, item) => sum + item.totalWeight, 0).toFixed(2)),
+      actionName: '',
+      isTotal: true
+    };
+
+    this.categoryAssessmentSummary = [...categoryRows, totalRow];
+    this.tableData.load(this.categoryAssessmentSummary);
   }
 
   prepareCategoryDescriptions(): void {

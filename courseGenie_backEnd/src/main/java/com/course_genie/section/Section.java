@@ -28,7 +28,6 @@ public class Section {
     private long sectionId;
 
     private String code;
-    private String term; // remove this
     private String class_number;
     private String schedule;
     private String room;

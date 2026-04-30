@@ -56,6 +56,8 @@ export class AssessmentActionsComponent implements OnInit {
 
     const categoryMap: { [key: string]: string } = {
       QZ: 'Quiz',
+      HW: 'Assignment',
+      PR: 'Project',
       PE: 'Practical Examination',
       ME: 'Midterm',
       FE: 'Final'
@@ -64,7 +66,13 @@ export class AssessmentActionsComponent implements OnInit {
     const targetCategory = categoryMap[this.value];
 
     const filtered = allAssessments.filter(
-      assessment => assessment.category === targetCategory
+      assessment => {
+        const baseShortName = (assessment.shortName || '').replace(/[0-9]+$/, '');
+        const resolvedCategory = targetCategory || this.value;
+
+        // Support both default categories (via mapping) and custom "Other" categories.
+        return assessment.category === resolvedCategory || baseShortName === this.value;
+      }
     );
 
     this.assessments.load(filtered);

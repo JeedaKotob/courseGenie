@@ -17,6 +17,8 @@ public class PLO {
 
     private String name;
 
+    private Character shortName;
+
     private String description;
 
     @ManyToOne

@@ -161,7 +161,7 @@ public class CarService {
 
         Context context = new Context();
 
-        // Instructor and term (same sources as SyllabusService.generateSyllabus)
+        // Instructor and semester (same sources as SyllabusService.generateSyllabus)
         var professor = section.getProfessor();
         context.setVariable("instructorName", professor != null ? professor.getFullName() : "");
         context.setVariable("office", professor != null && professor.getOffice() != null ? professor.getOffice() : "");
@@ -169,14 +169,9 @@ public class CarService {
         context.setVariable("phone", professor != null && professor.getPhone() != null ? professor.getPhone() : "");
         context.setVariable("email", professor != null && professor.getEmail() != null ? professor.getEmail() : "");
 
-        String semesterYear = section.getTerm();
-        if (semesterYear == null || semesterYear.isBlank()) {
-            if (section.getSemester() != null && section.getSemester().getSemesterName() != null) {
-                semesterYear = section.getSemester().getSemesterName();
-            } else {
-                semesterYear = "";
-            }
-        }
+        String semesterYear = section.getSemester() != null && section.getSemester().getSemesterName() != null
+                ? section.getSemester().getSemesterName()
+                : "";
         context.setVariable("semesterYear", semesterYear);
 
         var course = section.getCourse();
