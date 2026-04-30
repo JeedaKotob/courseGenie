@@ -239,16 +239,8 @@ export class CalendarComponent implements OnInit {
       String(date.getDate()).padStart(2, '0');
   }
 
-  private generateTimeOptions(): void {
-    for (let hour = 0; hour < 24; hour++) {
-      this.timeOptions.push(`${String(hour).padStart(2, '0')}:00`);
-      this.timeOptions.push(`${String(hour).padStart(2, '0')}:30`);
-    }
-  }
-
   onStartTimeChange(): void {
     if (!this.newEvent.startTime) return;
-
     const [hour, minute] = this.newEvent.startTime.split(':').map(Number);
 
     let endHour = hour + 1;
@@ -256,6 +248,17 @@ export class CalendarComponent implements OnInit {
 
     this.newEvent.endTime =
       `${String(endHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+  }
+
+  private generateTimeOptions(): void {
+    this.timeOptions = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 5) {
+        this.timeOptions.push(
+          `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+        );
+      }
+    }
   }
 
   goBack(): void {
