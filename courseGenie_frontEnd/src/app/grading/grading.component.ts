@@ -19,6 +19,7 @@ type GradeHighlight = {
 })
 export class GradingComponent implements OnInit {
   private readonly successMessageDurationMs = 2500;
+  private readonly minimumPassingRatio = 0.6;
   private successMessageTimeoutId: ReturnType<typeof setTimeout> | null = null;
   course: Course | null = null;
   enrollments: Enrollment[] = [];
@@ -83,7 +84,8 @@ export class GradingComponent implements OnInit {
     for (const enrollment of this.enrollments) {
       for (const assessment of this.course.sections[0].assessments) {
         const max = assessment.maxPoints || 100;
-        const randomScore = Math.floor(Math.random() * (max + 1));
+        const minimumPassingScore = Math.ceil(max * this.minimumPassingRatio);
+        const randomScore = this.getRandomIntInRange(minimumPassingScore, max);
         const index = this.grades.findIndex(
           grade =>
             grade.assessmentId === assessment.assessmentId &&
@@ -118,6 +120,12 @@ export class GradingComponent implements OnInit {
 
     this.computeHighlights();
     this.sortStudentsByTotal();
+  }
+
+  private getRandomIntInRange(min: number, max: number): number {
+    const safeMin = Math.max(0, Math.min(min, max));
+    const safeMax = Math.max(safeMin, max);
+    return Math.floor(Math.random() * (safeMax - safeMin + 1)) + safeMin;
   }
 
   computeHighlights() {

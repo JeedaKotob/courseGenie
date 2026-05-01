@@ -577,13 +577,11 @@
             <h1 class="c23" th:text="${weekEntry.key}">Week 1</h1>
         </td>
 
-        <!-- Topic column: For example, you might decide to show the course schedule
-             from the first assessment’s section data or another related property.
-             (Adjust this as needed for your case.) -->
+        <!-- Topic column: intentionally kept as a fixed placeholder. -->
         <td class="c1">
             <h1 class="c23"
-                th:text="${#lists.isEmpty(weekEntry.value) ? 'N/A' : weekEntry.value[0].section.schedule}">
-                Nothing Yet
+                th:text="'N/A'">
+                N/A
             </h1>
         </td>
 
