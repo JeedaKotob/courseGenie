@@ -239,12 +239,16 @@ export class ExamRoomComponent implements OnInit {
         const roomRemainingBefore = new Map<number, number>(remainingByRoom);
 
         const effectiveSeats = selectedRoomIds.reduce(
+          (total, roomId) => total + (baseCapacityByRoom.get(roomId) || 0),
+          0
+        );
+        const allocatableSeats = selectedRoomIds.reduce(
           (total, roomId) => total + (remainingByRoom.get(roomId) || 0),
           0
         );
 
         const requiredSeats = slotCard.enrolledStudentCount || 0;
-        let toConsume = Math.min(requiredSeats, effectiveSeats);
+        let toConsume = Math.min(requiredSeats, allocatableSeats);
 
         selectedRoomIds.forEach((roomId) => {
           if (toConsume <= 0) {
@@ -258,7 +262,7 @@ export class ExamRoomComponent implements OnInit {
 
         context.set(slotCard.examScheduleId, {
           effectiveSeats,
-          unseated: Math.max(0, requiredSeats - effectiveSeats),
+          unseated: Math.max(0, requiredSeats - allocatableSeats),
           roomRemainingBefore,
           roomRemainingAfter: new Map<number, number>(remainingByRoom)
         });
