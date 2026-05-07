@@ -25,7 +25,6 @@ import com.course_genie.section.SectionDTO;
 import com.course_genie.section.SectionDTOMapper;
 import com.course_genie.section.SectionRepository;
 import com.course_genie.sectionExamAllocation.SectionExamAllocationRepository;
-import com.course_genie.studentExam.StudentExamRepository;
 import com.course_genie.syllabus.SyllabusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,6 @@ public class CourseService {
     private final SemesterRepository semesterRepository;
     private final SectionArtifactService sectionArtifactService;
     private final SectionExamAllocationRepository sectionExamAllocationRepository;
-    private final StudentExamRepository studentExamRepository;
     private final GradeRepository gradeRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final CategoryDescriptionRepository categoryDescriptionRepository;
@@ -59,7 +57,7 @@ public class CourseService {
     private final PeerReviewRepository peerReviewRepository;
     private final ActionPlanRepository actionPlanRepository;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository, SectionArtifactService sectionArtifactService, SectionExamAllocationRepository sectionExamAllocationRepository, StudentExamRepository studentExamRepository, GradeRepository gradeRepository, EnrollmentRepository enrollmentRepository, CategoryDescriptionRepository categoryDescriptionRepository, SyllabusRepository syllabusRepository, CarRepository carRepository, PeerReviewAssignmentRepository peerReviewAssignmentRepository, PeerReviewRepository peerReviewRepository, ActionPlanRepository actionPlanRepository) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, CourseDTOMapper courseDTOMapper, SectionRepository sectionRepository, SectionDTOMapper sectionDTOMapper, AssessmentRepository assessmentRepository, AssessmentDTOMapper assessmentDTOMapper, CLORepository cloRepository, CLODTOMapper cloDTOMapper, UserRepository userRepository, SemesterRepository semesterRepository, SectionArtifactService sectionArtifactService, SectionExamAllocationRepository sectionExamAllocationRepository, GradeRepository gradeRepository, EnrollmentRepository enrollmentRepository, CategoryDescriptionRepository categoryDescriptionRepository, SyllabusRepository syllabusRepository, CarRepository carRepository, PeerReviewAssignmentRepository peerReviewAssignmentRepository, PeerReviewRepository peerReviewRepository, ActionPlanRepository actionPlanRepository) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.courseDTOMapper = courseDTOMapper;
@@ -73,7 +71,6 @@ public class CourseService {
         this.semesterRepository = semesterRepository;
         this.sectionArtifactService = sectionArtifactService;
         this.sectionExamAllocationRepository = sectionExamAllocationRepository;
-        this.studentExamRepository = studentExamRepository;
         this.gradeRepository = gradeRepository;
         this.enrollmentRepository = enrollmentRepository;
         this.categoryDescriptionRepository = categoryDescriptionRepository;
@@ -394,7 +391,6 @@ public class CourseService {
 
         // Delete only data directly tied to this section, in FK-safe order.
         sectionExamAllocationRepository.deleteBySectionSectionId(sectionId);
-        studentExamRepository.deleteByEnrollmentSectionSectionId(sectionId);
         gradeRepository.deleteByEnrollmentSectionSectionId(sectionId);
         enrollmentRepository.deleteBySectionSectionId(sectionId);
         assessmentRepository.deleteBySectionSectionId(sectionId);
